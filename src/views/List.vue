@@ -1,84 +1,89 @@
 <template>
     <div class="wrap">
-        <div class="indexList">
-            <div class="db"> 
-                <div class="picList">
-                    <div class="picInfo" v-bind:style="{backgroundImage:'url('+vo.thumb_b+')'}">
-                        <div class="slider-money">
-                            <span v-if="vo.price == 0">详情请咨询</span>
-                            <span v-else-if="vo.price == 0.10">自助</span>
-                            <span v-else-if="vo.price == 0.1">自助</span>
-                            <span v-else>{{fixHead}}${{vo.price}}</span>
-                            <div class="tag4" v-if="vo.tag4 !='' ">{{vo.tag4}}</div>
+        <van-nav-bar :title="cateName" left-arrow @click-left="onClickLeft"/>
+        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+            <van-row class="news" v-for="vo in info" :key="vo.articleid">
+                <van-col span="8"><div class="img" @click="detail(vo.articleid)"><img v-lazy="vo.thumb_s"></div></van-col>
+                <van-col span="16">
+                    <div class="info" @click="detail(vo.articleid)">
+                        <div class="title">
+                        <h1>{{vo.title}}</h1>
                         </div>
-                        <div class="slider-tag">
-                            <span class="tag1" v-if="vo.tag1 !=''">{{vo.tag1}}</span>
-                            <span class="tag2" v-if="vo.tag2 !=''">{{vo.tag2}}</span>
-                            <span class="tag3" v-if="vo.tag3 !=''">{{vo.tag3}}</span>
+                        <div class="address"><van-icon class-prefix="icon" name="weizhi" /> {{vo.address|empty}}</div>
+                        <div class="bottom">
+                            <div class="price"><van-icon class-prefix="icon" name="meiyuan" /> {{vo.price}}</div>
+                            <div class="date">
+                            {{vo.createTime}}
+                            </div>
                         </div>
                     </div>
-                    <div class="info">
-                        <p>{{vo.title}}</p>
-                        <div class="address"><van-icon name="location-o" /> {{vo.address|empty}}</div>
-                    </div>
-                </div>   
-            </div>
-        </div>
+                </van-col>
+            </van-row>
+        </van-list>
     </div>
 </template>
 
 <script>
+import Vue from 'vue';
+import { Lazyload } from 'vant';
+Vue.use(Lazyload,{
+    loading:'../static/image/default_320.jpg'
+});
 export default {
     data() {
         return {
-            ad :'',
-            cate:'',
-            info:''
+            cateName:'',
+            info:[],
+            loading: false,
+            finished: false,
+            canPost:true,
+            page:1
         };
     },
     watch: {
         $route(to) {
-            if (to.path == "/") {
-                this.init();
+            if (to.name == "list") {
+                this.info = [];
+                this.page = 1;
+                this.onLoad();
             }
         }
     },
-    created() {
-        this.init();
-    },
-    methods: {        
-        init() {
-            var that = this;
-            this.$toast.loading({mask: true,duration:0});
-            let data = {
-                cityID : that.config.CITYID
+    created() {},
+    methods: {
+        onClickLeft() {
+            this.$router.go(-1);
+        },
+        detail(infoid){
+            let type = this.$route.params.type;
+            console.log(type,infoid);
+            this.$router.push({name:'detail',params:{type: type,id:infoid}})
+        },
+        onLoad() {
+            var that = this;            
+            if(!that.canPost){
+                return false;
             }
-            that.$http.post("V1/article/getads",data).then(result => {
-				this.isLoading=false;
-				this.$toast.clear();
-                let res = result.data;
-                if (res.code == 0) {              
-					that.ad = res.body.ads;
-                }else{
-                    that.$dialog.alert({title:'错误信息',message:res.desc});
-                }
-            });
-            that.$http.post("V3/article/getmodels",data).then(result => {
-				this.isLoading=false;
-				this.$toast.clear();
+            that.canPost = false;
+            let data = {
+                cityID : that.config.CITYID,
+                type : that.$route.params.type,
+                page : that.page
+            };
+            this.$toast.loading({mask: true,duration:0});
+            that.$http.post("V3/weixin/infolist",data).then(result => {
+                this.$toast.clear();
                 let res = result.data;
                 if (res.code == 0) {
-					that.cate = res.body;
-                }else{
-                    that.$dialog.alert({title:'错误信息',message:res.desc});
-                }
-            });
-            that.$http.post("V3/article/getmain",data).then(result => {
-				this.isLoading=false;
-				this.$toast.clear();
-                let res = result.data;
-                if (res.code == 0) {
-					that.info = res.body;
+                    // 加载状态结束
+                    that.loading = false;
+                    that.canPost = true;                 
+                    that.info = that.info.concat(res.body.data);  
+                    that.cateName = res.body.cateName;                  
+                    that.page++;          
+                    if(res.body.next==0){
+                        that.finished = true;
+                    }
                 }else{
                     that.$dialog.alert({title:'错误信息',message:res.desc});
                 }
@@ -87,29 +92,16 @@ export default {
     }
 };
 </script>
+
 <style scoped>
-.wrap {min-height: 100vh;}
-.banner{height: 30vh;}
-.banner img{width: 100%; height: 100%;}
-.indexMenu{clear: both; overflow: hidden;}
-.indexMenu li{float: left; width: 33.33%; text-align: center}
+.news{clear: both; overflow: hidden; display: flex; padding: 10px; border-bottom:1px #dbdbdb dashed}
+.news .img{width: 110px; margin-right: 10px; float: left;}
+.news .img img{width: 100%; height:80px}
 
-.indexList{clear: both; border-top: 1px #dbdbdb dashed; padding: 0 10px; padding-bottom: 10px}
-.indexList .hd{height: 40px; line-height: 40px;}
-.indexList .hd span{float: right; font-size: 12px; color: #05c1af}
-.news img{height: 200px; width: 100%;}
-
-.picInfo{position: relative; height: 180px; background-position: center; background-repeat: no-repeat;background-size: cover;}
-.picList .slider-money{position: absolute; left: 0; bottom: 40px; z-index: 99; width: 100%}
-.picList .slider-money span{background: rgba(0,0,0,0.7); color: #05c1af;padding: 5px 10px; display:block; float: left; margin-right: 15px; margin-top: -5px}
-.picList .slider-money .tag4{background: #06c2b0; float: left;color: #fff; border-radius: 5px; padding: 3px 6px; font-size: 12px;}
-.picList .slider-tag{position: absolute; left: 5px; bottom: 5px; width: 100%; z-index: 99}
-.picList .slider-tag span{display: inline-block; color: #fff; border-radius: 5px; padding: 3px 6px; font-size: 12px;}
-.picList .slider-tag span.tag1{background: #2bc3fa}
-.picList .slider-tag span.tag2{background: #f54d8f}
-.picList .slider-tag span.tag3{background: #8d8e8f}
-.picList .info{clear: both; overflow: hidden;}
-.picList .info p{font-size: 16px; font-weight: normal; width: 100%;overflow: hidden;text-overflow: ellipsis;white-space: nowrap; padding: 5px 0}
-.picList .info .address{font-size: 14px}
-.picList .info .address i{color:#05c1af}
+.news .info h1{font-size: 15px;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;}
+.news .info .title{height:40px; margin-bottom: 10px}
+.news .info .address{ overflow:hidden;  text-overflow:ellipsis; white-space:nowrap; width: 100%; font-size: 14px;color: #999}
+.news .info .bottom .price{float: left; font-size: 14px;color: #05c1af}
+.news .info .bottom .date{font-size: 12px; text-align: right; color: #999; line-height: 20px; float: right;}
+.news .info i{color: #05c1af}
 </style>

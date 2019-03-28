@@ -14,15 +14,22 @@ Vue.prototype.config = config
 Vue.prototype.$http = axios
 
 new Vue({
-  router,
-  store,
-  render: h => h(App)
+	router,
+	store,
+	render: h => h(App)
 }).$mount('#app')
 
 Vue.filter('empty', function (value) {
-  if (value=='' || value==null || value==undefined) {
-    return '详情请咨询'
-  }else{
-    return value
-  }
+	if (value == '' || value == null || value == undefined) {
+		return '详情请咨询'
+	} else {
+		return value
+	}
+})
+Vue.filter('emptyImg', function (value) {
+	if (value == '' || value == null || value == undefined) {
+		return '../static/image/default_320.jpg'
+	} else {
+		return value
+	}
 })

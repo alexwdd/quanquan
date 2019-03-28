@@ -3,9 +3,11 @@
         <van-nav-bar title="时事热点" left-arrow @click-left="onClickLeft"/>
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div class="news" v-for="vo in info" :key="vo.id" @click="detail(vo.id)">
-                <div class="img"><img :src="vo.picname"></div>
+                <div class="img"><img :src="vo.picname|emptyImg"></div>
                 <div class="info">
+                    <div class="title">
                     <h1>{{vo.title}}</h1>
+                    </div>
                     <div class="date">{{vo.createTime}}</div>
                 </div>
             </div>
@@ -70,5 +72,6 @@ export default {
 .news .img img{width: 100%; height:80px}
 .news .info{flex: 1}
 .news .info h1{font-size: 16px;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical; margin-bottom: 10px}
-.news .info .date{font-size: 12px; text-align: right; color: #999}
+.news .info .title{height: 60px;}
+.news .info .date{font-size: 12px; text-align: right; color: #999; line-height: 20px;}
 </style>

@@ -38,7 +38,7 @@ export default new Router({
             component: List
         },
         {
-            path: "/detail/:id",
+            path: "/detail/:type/:id",
             name: "detail",
             meta:{index:2},
             component: Detail

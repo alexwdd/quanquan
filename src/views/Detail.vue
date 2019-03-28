@@ -1,6 +1,6 @@
 <template>
     <div class="wrap">
-        <van-nav-bar title="文章详情" left-arrow @click-left="onClickLeft"/>
+        <van-nav-bar title="详情" left-arrow @click-left="onClickLeft"/>
         <div class="title">{{info.title}}</div>
         <div class="date">{{info.time}}</div>
         <div class="content" v-html="info.content"></div>
@@ -27,11 +27,33 @@ export default {
             this.$router.go(-1);
         },
         init(){
-            
+            var that = this;
+            that.id = that.$route.params.id;
+            console.log(that.id);
+			if (that.id>0 && that.id!=''){
+                let data = {
+                    articleid : that.id,
+                    type:that.$route.params.type
+                };
+                that.$toast.loading({mask: true,duration:0});
+				that.$http.post("/V3/weixin/getinfo",data).then(result => {
+                    that.$toast.clear();
+                    let res = result.data;
+                    if (res.code == 0) {
+                        // 加载状态结束
+                        that.info = res.body.data;
+                    }else{
+                        that.$dialog.alert({title:'错误信息',message:res.desc});
+                    }
+                });
+			}
 		}
     }
 };
 </script>
-<style scoped>
 
+<style scoped>
+.title{font-size: 18px; padding: 10px}
+.date{font-size: 12px; color:#999; padding: 10px; border-bottom: 1px #dbdbdb solid}
+.content{padding: 10px}
 </style>

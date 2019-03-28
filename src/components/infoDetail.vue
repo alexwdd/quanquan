@@ -1,14 +1,14 @@
 <template>	
     <div>
         <div class="news" v-if="type=='news'">
-            <router-link :to="'/article/detail/'+info.id">
+            <router-link :to="'/view/'+info.id">
             <img :src="info.thumb"/>                            
             <p>{{info.title}}</p>
             </router-link>
         </div>
 
         <div class="job" v-else-if="type=='zp'">   
-            <router-link :to="'/detail/'+info.articleid">
+            <router-link :to="'/detail/'+type+'/'+info.articleid">
             <h1>{{info.title}}</h1>
 			<p><van-icon class-prefix="icon" name="loufang" /> {{info.company|empty}}</p>
 			<p><van-icon class-prefix="icon" name="weizhi" /> {{info.address|empty}}</p>
@@ -24,7 +24,7 @@
         </div>
 
         <div class="picList" v-else="">
-            <router-link :to="'/detail/'+info.articleid">
+            <router-link :to="'/detail/'+type+'/'+info.articleid">
             <div class="picInfo" v-bind:style="{backgroundImage:'url('+info.thumb_b+')'}">
                 <div class="slider-money">
                     <span>{{info.price}}</span>

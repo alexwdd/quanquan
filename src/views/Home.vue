@@ -12,7 +12,7 @@
             <div class="hd" @click="goto(item.type)">{{item.name}} <span>查看更多</span></div>
             <div class="db">
                 <van-swipe :show-indicators=false>
-                    <van-swipe-item v-for="vo in item.child" :key="vo.name">                        
+                    <van-swipe-item v-for="vo in item.child" :key="vo.name">
                     <infoDetail :info="vo" :type="item.type"></infoDetail>
                     </van-swipe-item>
                 </van-swipe>
