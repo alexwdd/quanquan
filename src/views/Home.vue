@@ -71,7 +71,7 @@ export default {
         },
         goto(type){
             if(type=='news'){
-                this.$router.push({path:'/article/'+type});
+                this.$router.push({path:'/news'});
             }else{
                 this.$router.push({path:'/list/'+type});
             }
