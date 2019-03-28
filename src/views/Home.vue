@@ -5,29 +5,15 @@
 		</van-swipe>
 
         <div class="indexMenu">
-            <li v-for="item in cate" :key="item.type"><router-link :to="'/list/'+item.type"><img src=""><p>{{item.name}}</p></router-link></li>
+            <li v-for="item in cate" :key="item.type" @click="goto(item.type)"><img :src="item.icon"/><p>{{item.name}}</p></li>
         </div>
 
-        <div class="indexList">
-            <div class="hd">时事热点 <span>查看更多</span></div>
+        <div class="indexList" v-for="item in cate" :key="item.type">
+            <div class="hd" @click="goto(item.type)">{{item.name}} <span>查看更多</span></div>
             <div class="db">
                 <van-swipe :show-indicators=false>
-                    <van-swipe-item v-for="vo in news" :key="vo.name">
-                        <div class="news">
-                            <img :src="vo.thumb"/>                            
-                            <p>{{vo.title}}</p>
-                        </div>
-                    </van-swipe-item>
-                </van-swipe>
-            </div>
-        </div>
-
-        <div class="indexList">
-            <div class="hd">同城活动 <span>查看更多</span></div>
-            <div class="db">
-                <van-swipe :show-indicators=false>
-                    <van-swipe-item v-for="vo in tongcheng" :key="vo.name">                        
-                    <infoDetail :info="vo"></infoDetail>
+                    <van-swipe-item v-for="vo in item.child" :key="vo.name">                        
+                    <infoDetail :info="vo" :type="item.type"></infoDetail>
                     </van-swipe-item>
                 </van-swipe>
             </div>
@@ -58,43 +44,37 @@ export default {
         this.init();
     },
     methods: {        
-        init() {
+        init(){
             var that = this;
             this.$toast.loading({mask: true,duration:0});
             let data = {
                 cityID : that.config.CITYID
             }
-            that.$http.post("V1/article/getads",data).then(result => {
+            that.$http.post("V3/weixin/getmain",data).then(result => {
 				this.isLoading=false;
 				this.$toast.clear();
                 let res = result.data;
                 if (res.code == 0) {              
-					that.ad = res.body.ads;
+                    that.ad = res.body.ads;
+                    for(var i in res.body.cate){
+                        if(res.body.cate[i]['type']=='mall'){
+                            res.body.cate[i]['icon'] = res.body.cate[i]['image'];
+                        }else{
+                            res.body.cate[i]['icon'] = '../static/image/'+res.body.cate[i]['type']+'_icon@2x.png';
+                        }                        
+                    }
+                    that.cate = res.body.cate;
                 }else{
                     that.$dialog.alert({title:'错误信息',message:res.desc});
                 }
             });
-            that.$http.post("V3/article/getmodels",data).then(result => {
-				this.isLoading=false;
-				this.$toast.clear();
-                let res = result.data;
-                if (res.code == 0) {
-					that.cate = res.body;
-                }else{
-                    that.$dialog.alert({title:'错误信息',message:res.desc});
-                }
-            });
-            that.$http.post("V3/article/getmain",data).then(result => {
-				this.isLoading=false;
-				this.$toast.clear();
-                let res = result.data;
-                if (res.code == 0) {
-					that.news = res.body[0]['news'];
-					that.tongcheng = res.body[1]['tc'];
-                }else{
-                    that.$dialog.alert({title:'错误信息',message:res.desc});
-                }
-            });
+        },
+        goto(type){
+            if(type=='news'){
+                this.$router.push({path:'/article/'+type});
+            }else{
+                this.$router.push({path:'/list/'+type});
+            }
         }
     }
 };
@@ -103,13 +83,11 @@ export default {
 .wrap {min-height: 100vh;}
 .banner{height: 30vh;}
 .banner img{width: 100%; height: 100%;}
-.indexMenu{clear: both; overflow: hidden;}
-.indexMenu li{float: left; width: 33.33%; text-align: center}
+.indexMenu{clear: both; overflow: hidden; padding: 15px 0}
+.indexMenu li{float: left; width: 33.33%; text-align: center; padding: 10px; box-sizing: border-box; font-size: 14px}
+.indexMenu li img{ height: 40px; display: block; margin: auto; margin-bottom: 10px}
 
 .indexList{clear: both; border-top: 1px #dbdbdb dashed; padding: 0 10px; padding-bottom: 10px}
 .indexList .hd{height: 40px; line-height: 40px;}
 .indexList .hd span{float: right; font-size: 12px; color: #05c1af}
-.news img{height: 200px; width: 100%;}
-
-
 </style>

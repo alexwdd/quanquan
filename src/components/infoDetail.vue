@@ -1,40 +1,65 @@
 <template>	
-    <div class="picList">
-        <div class="picInfo" v-bind:style="{backgroundImage:'url('+info.thumb_b+')'}">
-            <div class="slider-money">
-                <span v-if="info.price == 0">详情请咨询</span>
-                <span v-else-if="info.price == 0.10">自助</span>
-                <span v-else-if="info.price == 0.1">自助</span>
-                <span v-else>${{info.price}}</span>
-                <div class="tag4" v-if="info.tag4 !='' ">{{info.tag4}}</div>
-            </div>
-            <div class="slider-tag">
-                <span class="tag1" v-if="info.tag1 !=''">{{info.tag1}}</span>
-                <span class="tag2" v-if="info.tag2 !=''">{{info.tag2}}</span>
-                <span class="tag3" v-if="info.tag3 !=''">{{info.tag3}}</span>
-            </div>
-        </div>
-        <div class="info">
+    <div>
+        <div class="news" v-if="type=='news'">
+            <router-link :to="'/article/detail/'+info.id">
+            <img :src="info.thumb"/>                            
             <p>{{info.title}}</p>
-            <div class="address"><van-icon name="location-o" /> {{info.address|empty}}</div>
+            </router-link>
         </div>
-    </div>
+
+        <div class="job" v-else-if="type=='zp'">   
+            <router-link :to="'/detail/'+info.articleid">
+            <h1>{{info.title}}</h1>
+			<p><van-icon class-prefix="icon" name="loufang" /> {{info.company|empty}}</p>
+			<p><van-icon class-prefix="icon" name="weizhi" /> {{info.address|empty}}</p>
+			<div class="jobInfo">
+				<div class="job-left">{{info.price}}</div>
+				<div class="job-right">
+                    <van-tag type="success">{{info.sortName}}</van-tag>
+                    <van-tag type="primary" v-if="info.work!=''">{{info.work}}</van-tag>
+                    <van-tag type="danger" v-if="info.visa!=''">{{info.visa}}</van-tag>
+				</div>
+			</div>
+            </router-link>
+        </div>
+
+        <div class="picList" v-else="">
+            <router-link :to="'/detail/'+info.articleid">
+            <div class="picInfo" v-bind:style="{backgroundImage:'url('+info.thumb_b+')'}">
+                <div class="slider-money">
+                    <span>{{info.price}}</span>
+                </div>
+                <div class="slider-tag">
+                    <span class="tag1" v-if="info.tag1 !=''">{{info.tag1}}</span>
+                    <span class="tag2" v-if="info.tag2 !=''">{{info.tag2}}</span>
+                    <span class="tag3" v-if="info.tag3 !=''">{{info.tag3}}</span>
+                </div>
+            </div>
+            <div class="info">
+                <p>{{info.title}}</p>
+                <div class="address"><van-icon class-prefix="icon" name="weizhi" /> {{info.address|empty}}</div>
+            </div>
+            </router-link>
+        </div>
+    </div>    
 </template>
 
 <script>
+import '../assets/fonts/iconfont.css';
 export default {
-    name: "topnav",
     props: {
+        type:String,
         info:{}
     },
     created(){
-        console.log(this.info)
     },
     methods:{
     }
 };
 </script>
 <style scoped>
+.news img{height: 200px; width: 100%;}
+
 .picInfo{position: relative; height: 180px; background-position: center; background-repeat: no-repeat;background-size: cover;}
 .picList .slider-money{position: absolute; left: 0; bottom: 40px; z-index: 99; width: 100%}
 .picList .slider-money span{background: rgba(0,0,0,0.7); color: #05c1af;padding: 5px 10px; display:block; float: left; margin-right: 15px; margin-top: -5px}
@@ -48,4 +73,12 @@ export default {
 .picList .info p{font-size: 16px; font-weight: normal; width: 100%;overflow: hidden;text-overflow: ellipsis;white-space: nowrap; padding: 5px 0}
 .picList .info .address{font-size: 14px}
 .picList .info .address i{color:#05c1af}
+
+.job{clear: both; overflow: hidden;}
+.job h1{font-size: 16px;}
+.job p{font-size: 14px; padding: 5px 0}
+.job p i{color:#05c1af; font-size: 14px;}
+.job .jobInfo{clear: both; overflow:hidden;}
+.job .jobInfo .job-left{float: left;}
+.job .jobInfo .job-right{float: right;}
 </style>
