@@ -12,6 +12,8 @@
 		"sass-loader": "^7.1.0",
 		"vant": "^1.6.9",
 		"vue": "^2.6.6",
+		"vue-google-maps": "^0.1.21",
+		"vue-googlemaps": "^0.1.2",
 		"vue-router": "^3.0.1",
 		"vue-waterfall-easy": "^2.4.3",
 		"vue-waterfall2": "^1.6.2",

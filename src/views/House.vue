@@ -58,7 +58,6 @@ export default {
         $route(to) {
             if (to.name == "list") {
                 this.info = [];
-                this.cate = [{title:'全部',id:0,checked:true}],
                 this.page = 1;
                 this.sort = 0;
                 this.onLoad();

@@ -17,7 +17,6 @@
                 </div>
             </div>
             <div class="cate"><van-tag type="danger" style="background:#05c1af">{{info.sortName}}</van-tag></div>
-
             <div class="content">
                 <div class="hd">描述</div>
                 <div class="bd" v-html="info.detail"></div>
@@ -29,7 +28,17 @@
             <van-cell title="联系电话" icon="phone-o" :value="info.phone|empty"/>
             <van-cell title="微信" icon="chat-o" :value="info.wechat|empty"/>
 
-            <div class="map"></div>
+            <div class="map">
+                <googlemaps-map
+                :center.sync="center"
+                :zoom.sync="zoom">
+                    <googlemaps-marker                        
+                        :position="infoCenter"
+                        icon="/static/image/map.png"
+                    />
+                </googlemaps-map>
+                <div class="address" v-if="info.address!=''">{{info.address}}</div>
+            </div>
 
             <div class="comment">
                 <div class="hd">
@@ -98,7 +107,7 @@
 
             <div class="container-water-fall">
                 <waterfall
-                    :col="col"
+                    :col=2
                     :width="itemWidth"
                     :gutterWidth="gutterWidth"
                     :data="fallData"
@@ -144,9 +153,20 @@ import Vue from 'vue';
 import { Lazyload } from 'vant';
 import infoCell from "../components/infoCell";
 import waterfall from "vue-waterfall2";
-
+import 'vue-googlemaps/dist/vue-googlemaps.css'
+import VueGoogleMaps from 'vue-googlemaps'
+Vue.use(VueGoogleMaps,{
+    load: {
+        // Google API key
+        apiKey: 'AIzaSyD6569ST34pV9m3ECxVXSakk8tz760nfAk',
+        // Enable more Google Maps libraries here
+        libraries: ['places'],
+        // Use new renderer
+        useBetaRenderer: false,
+    }
+})
 Vue.use(Lazyload,{
-    loading:'../static/image/default_320.jpg'
+    loading:'/static/image/default_320.jpg'
 });
 Vue.use(waterfall);
 export default {
@@ -160,7 +180,11 @@ export default {
             about:[],
             type:'',
             fallData:[],
-            page:1,
+            page:1,      
+
+            infoCenter : { lat: -34.8911, lng:138.6463},
+            center: { lat: -34.8911, lng:138.6463},
+            zoom : 14
 		}
     },
     components:{infoCell},
@@ -211,6 +235,10 @@ export default {
                         that.ad2 = res.body.ad2;
                         that.ad3 = res.body.ad3;
                         that.about = res.body.about;
+                        if(that.info.latitude!='' && that.info.longitude!=''){
+                            that.center = {lat: parseFloat(that.info.latitude), lng:parseFloat(that.info.longitude)}
+                            that.infoCenter = {lat: parseFloat(that.info.latitude), lng:parseFloat(that.info.longitude)}
+                        }
                     }else{
                         that.$dialog.alert({title:'错误信息',message:res.desc});
                     }
@@ -238,6 +266,14 @@ export default {
         }
     }
 };
+
+Vue.filter('empty', function (value) {
+	if (value == '' || value == null || value == undefined) {
+		return '详情请咨询'
+	} else {
+		return value
+	}
+})
 </script>
 
 <style scoped>
@@ -246,7 +282,8 @@ export default {
 .top .left{float: left;}
 .top .right{float: right;}
 .banner img{ width: 100%; height:250px;}
-.map{background: #f1f1f1; width: 100%; height: 200px}
+.map{background: #f1f1f1; width: 100%; height:154px; position: relative;}
+.map .address{position: absolute; background: rgba(0,0,0,0.6); color: #fff; font-size: 12px; left: 10%; top:52%;z-index: 999; width: 80%; text-align: center; padding: 5px; border-radius: 5px}
 .box{padding-top: 46px; padding-bottom: 60px; clear: both; overflow: hidden;}
 .footer{background: rgba(0,0,0,0.8); width:100%; height: 50px; border-radius: 5px; margin: auto; position: fixed; left: 0;bottom: 0px;}
 .footer .logo{float: left; height: 40px; margin-top: 5px; margin-left: 5px; margin-right: 10px}
