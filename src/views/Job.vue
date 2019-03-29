@@ -13,8 +13,7 @@
         <div style="height:92px"></div>
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <van-row class="news" v-for="vo in info" :key="vo.articleid">
-                <van-col span="8"><div class="img" @click="detail(vo.articleid)"><img v-lazy="vo.thumb_s"></div></van-col>
-                <van-col span="16">
+                <van-col span="24">
                     <div class="info" @click="detail(vo.articleid)">
                         <div class="title">
                         <h1>{{vo.title}}</h1>
@@ -34,22 +33,19 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import { Lazyload } from 'vant';
-Vue.use(Lazyload,{
-    loading:'../static/image/default_320.jpg'
-});
 export default {
     data() {
         return {
             cateName:'',
             sort:0,
-            cate:[{title:'全部',id:0,checked:true}],
-            cateActive:1,
+            cate:[{title:'招聘',id:0,checked:true},{title:'求职',id:1,checked:true}],
+            cateActive:0,
             info:[],
             loading: false,
             finished: false,
             canPost:true,
+            jobType:0,
+            type:'zp',
             page:1
         };
     },
@@ -70,13 +66,12 @@ export default {
             this.$router.go(-1);
         },
         detail(infoid){
-            let type = this.$route.params.type;
+            let type = this.type;
             this.$router.push({name:'detail',params:{type: type,id:infoid}})
         },
         changeCate(sort){
-            this.sort = sort;
+            this.jobType = sort;
             this.info = [];
-            //this.cate = [{title:'全部',id:0,checked:true}],
             this.page = 1;
             this.onLoad();
         },
@@ -89,7 +84,8 @@ export default {
             let data = {
                 sort : that.sort,
                 cityID : that.config.CITYID,
-                type : that.$route.params.type,
+                type : that.type,
+                jobType : that.jobType,
                 page : that.page,
             };
             this.$toast.loading({mask: true,duration:0});
@@ -101,9 +97,6 @@ export default {
                     that.loading = false;
                     that.canPost = true;                 
                     that.info = that.info.concat(res.body.data);  
-                    if(that.cate.length==1){
-                        that.cate = that.cate.concat(res.body.cate);
-                    }
                     that.cateName = res.body.cateName;        
                     that.page++;          
                     if(res.body.next==0){
@@ -123,10 +116,7 @@ export default {
 
 <style scoped>
 .topCate{position: fixed; top: 46px; width: 100%;}
-.news{clear: both; overflow: hidden; display: flex; padding: 10px; border-bottom:1px #dbdbdb dashed}
-.news .img{width: 110px; margin-right: 10px; float: left;}
-.news .img img{width: 100%; height:80px}
-
+.news{clear: both; overflow: hidden; display: flex; padding: 10px; border-bottom:1px #dbdbdb dashed;background:#fff}
 .news .info h1{font-size: 15px;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;}
 .news .info .title{height:40px; margin-bottom: 10px}
 .news .info .address{ overflow:hidden;  text-overflow:ellipsis; white-space:nowrap; width: 100%; font-size: 14px;color: #999}

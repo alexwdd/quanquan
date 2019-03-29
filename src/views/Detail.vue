@@ -1,40 +1,205 @@
 <template>
     <div class="wrap">
-        <van-nav-bar title="详情" left-arrow @click-left="onClickLeft"/>
-        <div class="title">{{info.title}}</div>
-        <div class="date">{{info.time}}</div>
-        <div class="content" v-html="info.content"></div>
+        <div class="top">
+            <div class="left" @click="onClickLeft"><img src="../assets/image/left.png"></div>
+            <div class="right"><img src="../assets/image/download.png"></div>
+        </div>
+
+        <div class="box">
+            <van-swipe :autoplay="3000" indicator-color="white">
+                <van-swipe-item v-for="vo in info.images" :key="vo"><div class="banner"><img :src="vo"/></div></van-swipe-item>
+            </van-swipe>
+            <div class="title">{{info.title}}</div>
+            <div class="priceBox">
+                <div class="price"><van-icon class-prefix="icon" name="meiyuan" /> {{info.price}}</div>
+                <div class="fav">
+                    <van-icon class-prefix="icon" name="xingxing" /> 收藏
+                </div>
+            </div>
+            <div class="cate"><van-tag type="danger" style="background:#05c1af">{{info.sortName}}</van-tag></div>
+
+            <div class="content">
+                <div class="hd">描述</div>
+                <div class="bd" v-html="info.detail"></div>
+            </div>
+
+            <infoCell :info="info" :type="type"></infoCell>
+
+            <van-cell title="联系人" icon="contact" :value="info.contact|empty"/>
+            <van-cell title="联系电话" icon="phone-o" :value="info.phone|empty"/>
+            <van-cell title="微信" icon="chat-o" :value="info.wechat|empty"/>
+
+            <div class="map"></div>
+
+            <div class="comment">
+                <div class="hd">
+                    <h4>最新评论</h4>
+                    <span><a href="#writeBox"><i class="icon icon-pinglun"></i> 写评论</a></span>
+                </div>
+                <div class="bd">
+                    <li v-for="item in info.comments" :key="item.id">
+                        <div class="face"><img :src="item.headimg"></div>
+                        <div class="info">
+                            <div class="userInfo">
+                                <div class="name">{{item.nickname}}</div>
+                                <div class="date">{{item.createTime}}</div>
+                            </div>
+                            <div class="con">{{item.content}}</div>
+                        </div>
+                        
+                    </li>				
+                </div>			
+                <div class="fd">
+                    <p>下载{{config.APP_NAME}}APP查看全部评论 <i class="mui-icon mui-icon-arrowright"></i></p>
+                </div>
+            </div>
+
+            <div class="cateTitle">
+                <p>{{config.APP_NAME}}更多精彩内容</p>
+            </div>
+
+            <div class="quick">
+                <li v-for="vo in ad3" :key="vo.name"><a :href="vo.url"><img :src="vo.image"><p>{{vo.name}}</p></a></li>
+            </div>
+
+            <div class="ad" v-if="ad2.image !=undefined"><a :href="ad1.url"><img :src="ad1.image"></a></div>
+
+            <div class="cateTitle">
+                <router-link :to="'/list/'+type">
+                <p>相关推荐</p>
+                <span>查看全部</span>
+                </router-link>
+            </div>
+
+            <van-row class="news" v-for="vo in about" :key="vo.articleid">
+                <van-col span="8"><div class="img" @click="detail(vo.articleid)"><img v-lazy="vo.thumb_s"></div></van-col>
+                <van-col span="16">
+                    <div class="info" @click="detail(vo.articleid)">
+                        <div class="title">
+                        <h1>{{vo.title}}</h1>
+                        </div>
+                        <div class="address"><van-icon class-prefix="icon" name="weizhi" /> {{vo.address|empty}}</div>
+                        <div class="bottom">
+                            <div class="price"><van-icon class-prefix="icon" name="meiyuan" /> {{vo.price}}</div>
+                            <div class="date">
+                            {{vo.createTime}}
+                            </div>
+                        </div>
+                    </div>
+                </van-col>
+            </van-row>
+
+            <div class="ad" v-if="ad2.image !=undefined"><a :href="ad2.url"><img :src="ad2.image"></a></div>
+
+            <div class="cateTitle">
+                <p>{{config.APP_NAME}}推荐</p>
+                <span>查看全部</span>
+            </div>
+
+            <div class="container-water-fall">
+                <waterfall
+                    :col="col"
+                    :width="itemWidth"
+                    :gutterWidth="gutterWidth"
+                    :data="fallData"
+                >
+                    <template>
+                        <div class="cell-item" v-for="(item,index) in fallData">
+                            <img :src="item.thumb_b">
+                            <div class="item-body">
+                                <div class="item-desc">{{item.title}}</div>
+                                <div class="item-footer">
+                                    <div class="avatar" :style="{backgroundImage : `url(${item.avatar})` }"></div>
+                                    <div class="name">{{item.user}}</div>
+                                    <div class="like" :class="item.liked?'active':''">
+                                        <i></i>
+                                        <div class="like-total">{{item.liked}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </waterfall>
+            </div> 
+        </div>
+        <div class="footer">
+            <div class="logo"><img src="../assets/image/logo.jpg"></div>
+            <div class="info">
+                <p>阿德莱德同城生活掌上宝</p>
+                <p>
+                    <van-icon name="star" />
+                    <van-icon name="star" />
+                    <van-icon name="star" />
+                    <van-icon name="star" />
+                    <van-icon name="star" />
+                </p>
+            </div>
+            <div class="download">下载APP</div>
+        </div>
     </div>
 </template>
 
 <script>
+import Vue from 'vue';
+import { Lazyload } from 'vant';
+import infoCell from "../components/infoCell";
+import waterfall from "vue-waterfall2";
+
+Vue.use(Lazyload,{
+    loading:'../static/image/default_320.jpg'
+});
+Vue.use(waterfall);
 export default {
     data(){
 		return {
 			id:'',
-			info:{}
+            info:{},
+            ad1:{},
+            ad2:{},
+            ad3:{},
+            about:[],
+            type:'',
+            fallData:[],
+            page:1,
 		}
-	},
+    },
+    components:{infoCell},
 	watch:{
 		// 如果路由有变化，会再次执行该方法
     	'$route':'init'
-	},
+    },
+    computed: {
+        itemWidth() {
+            //return 138 * 0.5 * (document.documentElement.clientWidth / 375); //rem布局 计算宽度
+            return document.documentElement.clientWidth / 2 - 5;
+        },
+        gutterWidth() {
+            //return 9 * 0.5 * (document.documentElement.clientWidth / 375); //rem布局 计算x轴方向margin(y轴方向的margin自定义在css中即可)
+            return 10;
+        }
+    },
 	created(){
-		this.init();
+        this.init();
+        this.getData();
 	},
     methods: {
         onClickLeft() {
             this.$router.go(-1);
         },
+        detail(infoid){
+            let type = this.$route.params.type;
+            this.$router.push({name:'detail',params:{type: type,id:infoid}})
+        },
         init(){
             var that = this;
             that.id = that.$route.params.id;
-            console.log(that.id);
+            that.type = that.$route.params.type;
 			if (that.id>0 && that.id!=''){
                 let data = {
+                    cityID : that.config.CITYID,
                     articleid : that.id,
                     type:that.$route.params.type
-                };
+                };                
                 that.$toast.loading({mask: true,duration:0});
 				that.$http.post("/V3/weixin/getinfo",data).then(result => {
                     that.$toast.clear();
@@ -42,18 +207,100 @@ export default {
                     if (res.code == 0) {
                         // 加载状态结束
                         that.info = res.body.data;
+                        that.ad1 = res.body.ad1;
+                        that.ad2 = res.body.ad2;
+                        that.ad3 = res.body.ad3;
+                        that.about = res.body.about;
                     }else{
                         that.$dialog.alert({title:'错误信息',message:res.desc});
                     }
                 });
 			}
-		}
+        },
+        getData() {
+            var that = this;
+            that.type = that.$route.params.type;
+            let data = {
+                cityID : that.config.CITYID,
+                type:that.$route.params.type,
+                page:that.page
+            };                
+            that.$http.post("/V3/weixin/getcomm",data).then(result => {
+                let res = result.data;
+                if (res.code == 0) {
+                    // 加载状态结束
+                    this.fallData = this.fallData.concat(res.body.data);
+                    this.page++
+                }else{
+                    that.$dialog.alert({title:'错误信息',message:res.desc});
+                }
+            });
+        }
     }
 };
 </script>
 
 <style scoped>
-.title{font-size: 18px; padding: 10px}
-.date{font-size: 12px; color:#999; padding: 10px; border-bottom: 1px #dbdbdb solid}
-.content{padding: 10px}
+.top{clear: both; overflow: hidden; height: 46px; position: fixed; left: 0; width: 100%; z-index: 999; background: #fff; border-bottom: 1px #f1f1f1 solid}
+.top img{display: block; height: 46px;}
+.top .left{float: left;}
+.top .right{float: right;}
+.banner img{ width: 100%; height:250px;}
+.map{background: #f1f1f1; width: 100%; height: 200px}
+.box{padding-top: 46px; padding-bottom: 60px; clear: both; overflow: hidden;}
+.footer{background: rgba(0,0,0,0.8); width:100%; height: 50px; border-radius: 5px; margin: auto; position: fixed; left: 0;bottom: 0px;}
+.footer .logo{float: left; height: 40px; margin-top: 5px; margin-left: 5px; margin-right: 10px}
+.footer .logo img{height: 40px; display: block;border-radius: 5px}
+.footer .info{float: left; font-size: 14px; color: #fff; padding-top: 5px}
+.footer .info p{line-height: 20px;}
+.footer .info p i{color:#f60 }
+.footer .download{float:right; height: 30px; line-height: 30px; background: #05c1af; border-radius: 5px; color: #fff; margin-right: 10px; margin-top: 10px; font-size: 14px; padding: 0 10px}
+
+.title{padding: 10px; background: #fff}
+.priceBox{background: #fff; padding: 0 10px; clear: both; overflow: hidden; font-size: 14px}
+.priceBox .price{float: left; color: #05c1af;}
+.priceBox .fav{float: right; color: #05c1af;}
+.cate{background: #fff; clear: both; overflow:hidden; border-bottom: 1px #dbdbdb dashed; padding: 10px}
+.content{clear: both; overflow: hidden; padding: 10px; background: #fff}
+.content .hd{text-align: center; font-weight: bold; line-height: 40px}
+.content .bd{color: #666; line-height: 150%}
+
+.comment{padding: 10px; padding-bottom: 0; clear: both; overflow: hidden; background: #fff}
+.comment .hd{clear: both; overflow: hidden; border-bottom:1px #ddd dashed; padding:10px 0}
+.comment .hd h4{float: left; margin: 0; color: #000}
+.comment .hd span{display: block; float: right;color: #05c1af}
+.comment .hd span a{color: #05c1af}
+.comment .bd{clear: both; overflow: hidden;}
+.comment .bd li{ border-bottom: 1px #ddd dashed; clear: both; overflow: hidden; padding: 10px 0}
+.comment .bd li .face{float: left; width: 50px; height: 50px;}
+.comment .bd li .face img{width: 50px; height: 50px;border-radius:50%;}
+.comment .bd li .info{margin-left: 60px;}
+.comment .bd li .userInfo{overflow: hidden; font-size: 14px}
+.comment .bd li .userInfo .name{float: left;}
+.comment .bd li .userInfo .date{float: right; font-size: 12px; color: #999}
+.comment .bd li .con{overflow: hidden; margin-top: 10px; font-size: 14px;color: #666}
+.comment .fd{padding: 20px 10px; clear: both; overflow: hidden; text-align: center}
+.comment .fd p{height: 30px; line-height:30px;display:inline-block; margin: auto; text-align: center; border:1px #05c1af solid; border-radius: 15px; color: #05c1af; font-size: 14px; padding: 0 20px}
+
+.cateTitle{background: #fff; clear: both; overflow: hidden; margin-top: 3px; height: 40px; line-height: 40px; padding-right:5px; font-size: 14px;margin-bottom: 1px;}
+.cateTitle p{float: left; border-left: 2px #05c1af solid; padding-left: 5px; font-weight: bold}
+.cateTitle span{display: block; float: right; font-size: 12px; color: #999}
+.ad{margin-top: 3px; clear: both; overflow: hidden; padding: 0 5px}
+.ad img{border-radius: 5px; display: block}
+
+.quick{background: #fff; clear: both;overflow: hidden; padding-top: 10px}
+.quick li{float: left;width: 20%; text-align: center;font-size: 12px; margin-bottom: 10px}
+.quick li img{display: block; width: 60%; border-radius: 50%; margin:auto; }
+
+.news{clear: both; overflow: hidden; display: flex; padding: 10px; border-bottom:1px #dbdbdb dashed;background: #fff}
+.news .img{width: 110px; margin-right: 10px; float: left;}
+.news .img img{width: 100%; height:80px}
+
+.news .info h1{font-size: 15px;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;}
+.news .info .title{height:40px; margin-bottom: 10px}
+.news .info .address{ overflow:hidden;  text-overflow:ellipsis; white-space:nowrap; width: 100%; font-size: 14px;color: #999}
+.news .info .bottom .price{float: left; font-size: 14px;color: #05c1af}
+.news .info .bottom .date{font-size: 12px; text-align: right; color: #999; line-height: 20px; float: right;}
+.news .info i{color: #05c1af}
+
 </style>

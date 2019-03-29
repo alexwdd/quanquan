@@ -13,6 +13,10 @@ Vue.config.productionTip = false
 Vue.prototype.config = config
 Vue.prototype.$http = axios
 
+router.afterEach((to,from,next) => {
+	window.scrollTo(0,0);
+})
+
 new Vue({
 	router,
 	store,
@@ -26,6 +30,7 @@ Vue.filter('empty', function (value) {
 		return value
 	}
 })
+
 Vue.filter('emptyImg', function (value) {
 	if (value == '' || value == null || value == undefined) {
 		return '../static/image/default_320.jpg'

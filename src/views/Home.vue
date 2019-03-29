@@ -48,7 +48,8 @@ export default {
             var that = this;
             this.$toast.loading({mask: true,duration:0});
             let data = {
-                cityID : that.config.CITYID
+                cityID : that.config.CITYID,
+                adID:92,
             }
             that.$http.post("V3/weixin/getmain",data).then(result => {
 				this.isLoading=false;
@@ -72,6 +73,10 @@ export default {
         goto(type){
             if(type=='news'){
                 this.$router.push({path:'/news'});
+            }else if(type=='zp'){
+                this.$router.push({path:'/job'});
+            }else if(type=='zf'){
+                this.$router.push({path:'/house'});
             }else{
                 this.$router.push({path:'/list/'+type});
             }

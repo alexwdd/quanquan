@@ -1,6 +1,7 @@
 <template>
     <div class="wrap">
-        <van-nav-bar title="时事热点" left-arrow @click-left="onClickLeft"/>
+        <van-nav-bar fixed title="时事热点" left-arrow @click-left="onClickLeft"/>
+        <div style="height:46px"></div>
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div class="news" v-for="vo in info" :key="vo.id" @click="detail(vo.id)">
                 <div class="img"><img :src="vo.picname|emptyImg"></div>

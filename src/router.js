@@ -5,6 +5,11 @@ import List from './views/List.vue'
 import Detail from './views/Detail.vue'
 import News from './views/News.vue'
 import View from './views/View.vue'
+import Job from './views/Job.vue'
+import House from './views/House.vue'
+
+import Test from './views/Test.vue'
+
 
 
 Vue.use(Router)
@@ -38,10 +43,28 @@ export default new Router({
             component: List
         },
         {
+            path: "/job",
+            name: "job",
+            meta:{index:1},
+            component: Job
+        },
+        {
+            path: "/house",
+            name: "house",
+            meta:{index:1},
+            component: House
+        },
+        {
             path: "/detail/:type/:id",
             name: "detail",
             meta:{index:2},
             component: Detail
+        },
+        {
+            path: "/test",
+            name: "test",
+            meta:{index:1},
+            component: Test
         },
     ]
 })

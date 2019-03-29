@@ -3,7 +3,7 @@
         <van-nav-bar fixed :title="cateName" left-arrow @click-left="onClickLeft"/>
 
         <div class="topCate">
-            <van-tabs color="#05c1af" v-model="cateActive">
+            <van-tabs color="#05c1af">
                 <van-tab v-for="vo in cate" :title="vo.title" :key="vo.id">
                     <div class="tab-title" slot="title" @click="changeCate(vo.id)">{{vo.title}}</div>
                 </van-tab>
@@ -44,12 +44,13 @@ export default {
         return {
             cateName:'',
             sort:0,
-            cate:[{title:'全部',id:0,checked:true}],
-            cateActive:1,
+            cate:[{title:'租房',id:0,checked:true},{title:'卖房',id:1,checked:true}],
             info:[],
             loading: false,
             finished: false,
             canPost:true,
+            houseType:0,
+            type:'zf',
             page:1
         };
     },
@@ -70,13 +71,12 @@ export default {
             this.$router.go(-1);
         },
         detail(infoid){
-            let type = this.$route.params.type;
+            let type = this.type;
             this.$router.push({name:'detail',params:{type: type,id:infoid}})
         },
         changeCate(sort){
-            this.sort = sort;
+            this.houseType = sort;
             this.info = [];
-            //this.cate = [{title:'全部',id:0,checked:true}],
             this.page = 1;
             this.onLoad();
         },
@@ -89,7 +89,8 @@ export default {
             let data = {
                 sort : that.sort,
                 cityID : that.config.CITYID,
-                type : that.$route.params.type,
+                type : that.type,
+                houseType : that.houseType,
                 page : that.page,
             };
             this.$toast.loading({mask: true,duration:0});
@@ -101,9 +102,6 @@ export default {
                     that.loading = false;
                     that.canPost = true;                 
                     that.info = that.info.concat(res.body.data);  
-                    if(that.cate.length==1){
-                        that.cate = that.cate.concat(res.body.cate);
-                    }
                     that.cateName = res.body.cateName;        
                     that.page++;          
                     if(res.body.next==0){
@@ -123,10 +121,8 @@ export default {
 
 <style scoped>
 .topCate{position: fixed; top: 46px; width: 100%;}
-.news{clear: both; overflow: hidden; display: flex; padding: 10px; border-bottom:1px #dbdbdb dashed}
-.news .img{width: 110px; margin-right: 10px; float: left;}
-.news .img img{width: 100%; height:80px}
-
+.news{clear: both; overflow: hidden; display: flex; padding: 10px; border-bottom:1px #dbdbdb dashed;background:#fff}
+.news .info{padding-left:5px}
 .news .info h1{font-size: 15px;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;}
 .news .info .title{height:40px; margin-bottom: 10px}
 .news .info .address{ overflow:hidden;  text-overflow:ellipsis; white-space:nowrap; width: 100%; font-size: 14px;color: #999}
