@@ -15,21 +15,23 @@ export default {
 			info:{}
 		}
 	},
-	watch:{
-		// 如果路由有变化，会再次执行该方法
-    	'$route':'init'
-	},
+	watch: {
+        $route(to) {
+            if (to.name == "view") {
+                this.init();
+            }
+        }
+    },
 	created(){
 		this.init();
 	},
     methods: {
         onClickLeft() {
             this.$router.go(-1);
-        },
+        },        
         init(){
             var that = this;
             that.id = that.$route.params.id;
-            console.log(that.id);
 			if (that.id>0 && that.id!=''){
                 let data = {
                     id : that.id
@@ -50,7 +52,9 @@ export default {
     }
 };
 </script>
-
+<style>
+.van-nav-bar .van-icon {color: #05c1af;}
+</style>
 <style scoped>
 .title{font-size: 18px; padding: 10px}
 .date{font-size: 12px; color:#999; padding: 10px; border-bottom: 1px #dbdbdb solid}

@@ -7,6 +7,7 @@ import News from './views/News.vue'
 import View from './views/View.vue'
 import Job from './views/Job.vue'
 import House from './views/House.vue'
+import Commend from './views/Commend.vue'
 
 import Test from './views/Test.vue'
 
@@ -59,6 +60,12 @@ export default new Router({
             name: "detail",
             meta:{index:2},
             component: Detail
+        },
+        {
+            path: "/commend",
+            name: "commend",
+            meta:{index:1},
+            component: Commend
         },
         {
             path: "/test",

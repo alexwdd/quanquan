@@ -46,7 +46,7 @@ export default {
     methods: {        
         init(){
             var that = this;
-            this.$toast.loading({mask: true,duration:0});
+            this.$toast.loading({duration:0});
             let data = {
                 cityID : that.config.CITYID,
                 adID:92,
@@ -88,11 +88,11 @@ export default {
 .wrap {min-height: 100vh;}
 .banner{height: 30vh;}
 .banner img{width: 100%; height: 100%;}
-.indexMenu{clear: both; overflow: hidden; padding: 15px 0}
+.indexMenu{clear: both; overflow: hidden; padding: 15px 0;background: #fff}
 .indexMenu li{float: left; width: 33.33%; text-align: center; padding: 10px; box-sizing: border-box; font-size: 14px}
 .indexMenu li img{ height: 40px; display: block; margin: auto; margin-bottom: 10px}
 
-.indexList{clear: both; border-top: 1px #dbdbdb dashed; padding: 0 10px; padding-bottom: 10px}
+.indexList{clear: both; border-top: 1px #dbdbdb dashed; padding: 0 10px; padding-bottom: 10px;background: #fff}
 .indexList .hd{height: 40px; line-height: 40px;}
 .indexList .hd span{float: right; font-size: 12px; color: #05c1af}
 </style>

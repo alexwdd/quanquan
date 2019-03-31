@@ -9,10 +9,10 @@
             <van-swipe :autoplay="3000" indicator-color="white">
                 <van-swipe-item v-for="vo in info.images" :key="vo"><div class="banner"><img :src="vo"/></div></van-swipe-item>
             </van-swipe>
-            <div class="title">{{info.title}}</div>
+            <div class="infoTitle">{{info.title}}</div>
             <div class="priceBox">
                 <div class="price"><van-icon class-prefix="icon" name="meiyuan" /> {{info.price}}</div>
-                <div class="fav">
+                <div class="fav" @click="download">
                     <van-icon class-prefix="icon" name="xingxing" /> 收藏
                 </div>
             </div>
@@ -43,7 +43,7 @@
             <div class="comment">
                 <div class="hd">
                     <h4>最新评论</h4>
-                    <span><a href="#writeBox"><i class="icon icon-pinglun"></i> 写评论</a></span>
+                    <span><a href="javascript:void(0)" @click="download"><i class="icon icon-pinglun"></i> 写评论</a></span>
                 </div>
                 <div class="bd">
                     <li v-for="item in info.comments" :key="item.id">
@@ -59,7 +59,7 @@
                     </li>				
                 </div>			
                 <div class="fd">
-                    <p>下载{{config.APP_NAME}}APP查看全部评论 <i class="mui-icon mui-icon-arrowright"></i></p>
+                    <p  @click="download">下载{{config.APP_NAME}}APP查看全部评论 <i class="mui-icon mui-icon-arrowright"></i></p>
                 </div>
             </div>
 
@@ -101,28 +101,32 @@
             <div class="ad" v-if="ad2.image !=undefined"><a :href="ad2.url"><img :src="ad2.image"></a></div>
 
             <div class="cateTitle">
+                <router-link to="/commend">
                 <p>{{config.APP_NAME}}推荐</p>
                 <span>查看全部</span>
+                </router-link>
             </div>
 
             <div class="container-water-fall">
                 <waterfall
                     :col=2
                     :width="itemWidth"
-                    :gutterWidth="gutterWidth"
+                    :gutterWidth=0
                     :data="fallData"
                 >
                     <template>
-                        <div class="cell-item" v-for="(item,index) in fallData">
-                            <img :src="item.thumb_b">
+                        <div class="cell-item" v-for="(item,index) in fallData"  @click="commInfo(item)" :key="item.id">
+                            <img :src="item.image">
                             <div class="item-body">
                                 <div class="item-desc">{{item.title}}</div>
                                 <div class="item-footer">
-                                    <div class="avatar" :style="{backgroundImage : `url(${item.avatar})` }"></div>
-                                    <div class="name">{{item.user}}</div>
-                                    <div class="like" :class="item.liked?'active':''">
-                                        <i></i>
-                                        <div class="like-total">{{item.liked}}</div>
+                                    <div class="avatar" v-if="item.user.headimg==''"><img src="../assets/image/logo.jpg"></div>
+                                    <div class="avatar" v-else=""><img :src="item.user.headimg"></div>
+                                    <div class="name" v-if="item.user.nickname==''">{{config.APP_NAME}}</div>
+                                    <div class="name" v-else="">{{item.user.nickname}}</div>
+                                    <div class="like">
+                                        <van-icon name="like-o" />
+                                        <div class="like-total">{{item.hit}}</div>
                                     </div>
                                 </div>
                             </div>
@@ -143,8 +147,18 @@
                     <van-icon name="star" />
                 </p>
             </div>
-            <div class="download">下载APP</div>
+            <div class="download" @click="download">下载APP</div>
         </div>
+
+        <van-popup v-model="show">
+            <div class="down">
+                <div class="hd">APP下载</div>
+                <div class="bd">
+                    <li><a :href="config.IOS"><img src="../assets/image/appstore.png"></a></li>
+                    <li><a :href="config.ANDROIDS"><img src="../assets/image/googleplay.png"></a></li>
+                </div>
+            </div>
+        </van-popup>
     </div>
 </template>
 
@@ -180,7 +194,8 @@ export default {
             about:[],
             type:'',
             fallData:[],
-            page:1,      
+
+            show:false,
 
             infoCenter : { lat: -34.8911, lng:138.6463},
             center: { lat: -34.8911, lng:138.6463},
@@ -188,14 +203,17 @@ export default {
 		}
     },
     components:{infoCell},
-	watch:{
-		// 如果路由有变化，会再次执行该方法
-    	'$route':'init'
+	watch: {
+        $route(to) {
+            if (to.name == "detail") {
+                this.init();
+            }
+        }
     },
     computed: {
         itemWidth() {
             //return 138 * 0.5 * (document.documentElement.clientWidth / 375); //rem布局 计算宽度
-            return document.documentElement.clientWidth / 2 - 5;
+            return document.documentElement.clientWidth / 2;
         },
         gutterWidth() {
             //return 9 * 0.5 * (document.documentElement.clientWidth / 375); //rem布局 计算x轴方向margin(y轴方向的margin自定义在css中即可)
@@ -207,12 +225,22 @@ export default {
         this.getData();
 	},
     methods: {
+        download(){
+            this.show = true
+        },
         onClickLeft() {
             this.$router.go(-1);
         },
         detail(infoid){
             let type = this.$route.params.type;
             this.$router.push({name:'detail',params:{type: type,id:infoid}})
+        },
+        commInfo(info){
+            if(info.type=='article'){
+                this.$router.push({name:'view',params:{id:info.articleid}})
+            }else{
+                this.$router.push({name:'detail',params:{type: info.type,id:info.articleid}})
+            }            
         },
         init(){
             var that = this;
@@ -249,16 +277,13 @@ export default {
             var that = this;
             that.type = that.$route.params.type;
             let data = {
-                cityID : that.config.CITYID,
-                type:that.$route.params.type,
-                page:that.page
+                cityID : that.config.CITYID
             };                
-            that.$http.post("/V3/weixin/getcomm",data).then(result => {
+            that.$http.post("/V3/weixin/topcomm",data).then(result => {
                 let res = result.data;
                 if (res.code == 0) {
                     // 加载状态结束
-                    this.fallData = this.fallData.concat(res.body.data);
-                    this.page++
+                    this.fallData = res.body;
                 }else{
                     that.$dialog.alert({title:'错误信息',message:res.desc});
                 }
@@ -275,7 +300,9 @@ Vue.filter('empty', function (value) {
 	}
 })
 </script>
-
+<style>
+.van-nav-bar .van-icon {color: #05c1af;}
+</style>
 <style scoped>
 .top{clear: both; overflow: hidden; height: 46px; position: fixed; left: 0; width: 100%; z-index: 999; background: #fff; border-bottom: 1px #f1f1f1 solid}
 .top img{display: block; height: 46px;}
@@ -293,7 +320,7 @@ Vue.filter('empty', function (value) {
 .footer .info p i{color:#f60 }
 .footer .download{float:right; height: 30px; line-height: 30px; background: #05c1af; border-radius: 5px; color: #fff; margin-right: 10px; margin-top: 10px; font-size: 14px; padding: 0 10px}
 
-.title{padding: 10px; background: #fff}
+.infoTitle{padding: 10px; background: #fff}
 .priceBox{background: #fff; padding: 0 10px; clear: both; overflow: hidden; font-size: 14px}
 .priceBox .price{float: left; color: #05c1af;}
 .priceBox .fav{float: right; color: #05c1af;}
@@ -340,4 +367,19 @@ Vue.filter('empty', function (value) {
 .news .info .bottom .date{font-size: 12px; text-align: right; color: #999; line-height: 20px; float: right;}
 .news .info i{color: #05c1af}
 
+.cell-item{ padding:5px;}
+.cell-item>img{width: 100%; border-radius: 5px; display: block}
+.item-body{background: #fff}
+.item-desc{font-size: 14px; padding: 5px;clear: both}
+.item-footer{clear: both;background: #fff; overflow: hidden; padding: 5px;}
+.item-footer .avatar{float: left; margin-right: 5px}
+.item-footer .avatar img{display: block; width: 30px; height: 30px; border-radius: 50%}
+.item-footer .name{line-height: 30px;float: left;font-size: 12px}
+.item-footer .like{float: right; line-height: 30px; color: #999}
+.item-footer .like i{float: left; margin-top: 7px; margin-right: 3px}
+.item-footer .like .like-total{float: left; font-size: 12px}
+
+.down{clear: both; overflow: hidden; padding: 20px; padding-bottom: 0}
+.down .hd{text-align: center; margin-bottom: 20px}
+.down .bd li{padding-bottom: 20px}
 </style>

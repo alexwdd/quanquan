@@ -123,7 +123,7 @@ export default {
 
 <style scoped>
 .topCate{position: fixed; top: 46px; width: 100%;}
-.news{clear: both; overflow: hidden; display: flex; padding: 10px; border-bottom:1px #dbdbdb dashed}
+.news{clear: both; background:#fff; overflow: hidden; display: flex; padding: 10px; border-bottom:1px #dbdbdb dashed}
 .news .img{width: 110px; margin-right: 10px; float: left;}
 .news .img img{width: 100%; height:80px}
 

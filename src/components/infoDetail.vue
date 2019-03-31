@@ -2,7 +2,7 @@
     <div>
         <div class="news" v-if="type=='news'">
             <router-link :to="'/view/'+info.id">
-            <img :src="info.thumb"/>                            
+            <img v-lazy="info.thumb"/>                            
             <p>{{info.title}}</p>
             </router-link>
         </div>
@@ -25,7 +25,7 @@
 
         <div class="picList" v-else="">
             <router-link :to="'/detail/'+type+'/'+info.articleid">
-            <div class="picInfo" v-bind:style="{backgroundImage:'url('+info.thumb_b+')'}">
+            <div class="picInfo" v-lazy:background-image="info.thumb_b">
                 <div class="slider-money">
                     <span>{{info.price}}</span>
                 </div>
@@ -45,6 +45,11 @@
 </template>
 
 <script>
+import Vue from 'vue';
+import { Lazyload } from 'vant';
+Vue.use(Lazyload,{
+    loading:'../static/image/default_320.jpg'
+});
 import '../assets/fonts/iconfont.css';
 export default {
     props: {

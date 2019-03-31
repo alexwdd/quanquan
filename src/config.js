@@ -1,6 +1,8 @@
 const global = {
     APP_NAME: '阿德莱德眼',
     CITYID: 9,
+    IOS:'https://itunes.apple.com/cn/app/id1386824572?l=zh&ls=1&mt=8',
+    ANDROIDS:'https://play.google.com/store/apps/details?id=com.ldw.life',
 
     checkMobile: function (checkVal) {
         var reg = /^[0-9]{8}$/;
