@@ -100,10 +100,20 @@
             <div class="cateTitle">
                 <p>{{config.APP_NAME}}更多精彩内容</p>
             </div>
-
-            <div class="quick">
-                <li v-for="vo in ad3" :key="vo.name"><a :href="vo.url"><img :src="vo.image"><p>{{vo.name}}</p></a></li>
-            </div>
+            
+            <van-swipe indicator-color="#f60" style="background:#fff" @change="onChange">
+                <van-swipe-item v-for="vo in quick" :key="vo">
+                    <div class="quick">
+                        <li v-for="f in vo" :key="f.name"><a :href="vo.url"><img :src="f.image"><p>{{f.name}}</p></a></li>
+                    </div>
+                </van-swipe-item>
+                <div class="custom-indicator" slot="indicator">
+                    <li v-for="(vo,index) in quick" :key="vo">
+                        <span v-if="index==current" class="active"></span>
+                        <span  v-else=""></span>
+                    </li>
+                </div>
+            </van-swipe>
 
             <div class="ad" v-if="ad2.image !=undefined"><a :href="ad1.url"><img :src="ad1.image"></a></div>
 
@@ -228,7 +238,7 @@ export default {
             info:{},
             ad1:{},
             ad2:{},
-            ad3:{},
+            quick:{},
             about:[],
             type:'',
             fallData:[],
@@ -241,6 +251,7 @@ export default {
             zoom : 14,
 
             isHide: true,    //初始值为true，显示为折叠画面
+            current:0
 		}
     },
     components:{infoCell},
@@ -281,6 +292,9 @@ export default {
                     instance.close();
                 }, timer);
             }
+        },
+        onChange(index) {
+            this.current = index;
         },
         onShow: function(){
             this.isHide = false;    //点击onShow切换为false，显示为展开画面
@@ -327,7 +341,7 @@ export default {
                         that.info = res.body.data;
                         that.ad1 = res.body.ad1;
                         that.ad2 = res.body.ad2;
-                        that.ad3 = res.body.ad3;
+                        that.quick = res.body.quick;
                         that.about = res.body.about;
                         if(that.info.latitude!='' && that.info.longitude!=''){
                             that.center = {lat: parseFloat(that.info.latitude), lng:parseFloat(that.info.longitude)}
@@ -367,6 +381,9 @@ Vue.filter('empty', function (value) {
 })
 </script>
 <style scoped>
+.van-swipe__indicator {
+    background-color: #ccc;
+}
 .top{clear: both; overflow: hidden; height: 46px; position: fixed; left: 0; width: 100%; z-index: 999; background: #fff; border-bottom: 1px #f1f1f1 solid}
 .top img{display: block; height: 46px;}
 .top .left{float: left;}
@@ -416,9 +433,9 @@ Vue.filter('empty', function (value) {
 .ad{margin-top: 3px; clear: both; overflow: hidden; padding: 0 5px}
 .ad img{border-radius: 5px; display: block}
 
-.quick{background: #fff; clear: both;overflow: hidden; padding-top: 10px}
+.quick{background: #fff; clear: both;overflow: hidden; padding-top: 10px; padding-bottom: 10px}
 .quick li{float: left;width: 20%; text-align: center;font-size: 12px; margin-bottom: 10px}
-.quick li img{display: block; width: 60%; border-radius: 50%; margin:auto; }
+.quick li img{display: block; width: 12vw; height: 12vw; border-radius: 50%; margin:auto; }
 
 .news{clear: both; overflow: hidden; display: flex; padding: 10px; border-bottom:1px #dbdbdb dashed;background: #fff}
 .news .img{width: 110px; margin-right: 10px; float: left;}
@@ -491,4 +508,16 @@ Vue.filter('empty', function (value) {
     transform: rotate(45deg);
     margin-top: 3px;
 }
+
+.custom-indicator {
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+    height: 20px;
+    text-align: center
+}
+.custom-indicator li{display: inline-block; padding: 0 3px}
+.custom-indicator li span{display: block; width: 6px; height: 6px; border-radius:3px; background: #ccc}
+.custom-indicator li span.active{background: #f60; width: 14px}
 </style>
