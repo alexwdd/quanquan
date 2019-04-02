@@ -114,10 +114,6 @@ export default {
     }
 };
 </script>
-<style>
-.van-nav-bar .van-icon {color: #05c1af;}
-</style>
-
 <style scoped>
 .topCate{position: fixed; top: 46px; width: 100%;}
 .news{clear: both; overflow: hidden; display: flex; padding: 10px; border-bottom:1px #dbdbdb dashed;background:#fff}

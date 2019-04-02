@@ -11,6 +11,7 @@
         </div>
 
         <div style="height:92px"></div>
+        <van-loading type="spinner" class="loadding" v-show="loadingShow"/>
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <van-row class="news" v-for="vo in info" :key="vo.articleid">
                 <van-col span="8"><div class="img" @click="detail(vo.articleid)"><img v-lazy="vo.thumb_s"></div></van-col>
@@ -42,6 +43,7 @@ Vue.use(Lazyload,{
 export default {
     data() {
         return {
+            loadingShow:true,
             cateName:'',
             sort:0,
             cate:[{title:'全部',id:0,checked:true}],
@@ -92,9 +94,8 @@ export default {
                 type : that.$route.params.type,
                 page : that.page,
             };
-            this.$toast.loading({mask: true,duration:0});
             that.$http.post("V3/weixin/infolist",data).then(result => {
-                this.$toast.clear();
+                this.loadingShow=false;
                 let res = result.data;
                 if (res.code == 0) {
                     // 加载状态结束
@@ -117,10 +118,6 @@ export default {
     }
 };
 </script>
-<style>
-.van-nav-bar .van-icon {color: #05c1af;}
-</style>
-
 <style scoped>
 .topCate{position: fixed; top: 46px; width: 100%;}
 .news{clear: both; background:#fff; overflow: hidden; display: flex; padding: 10px; border-bottom:1px #dbdbdb dashed}

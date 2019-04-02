@@ -1,5 +1,6 @@
 <template>
     <div class="wrap">
+        <van-loading type="spinner" class="loadding" v-show="loadingShow"/>
         <van-swipe :autoplay="3000" indicator-color="white">
 			<van-swipe-item v-for="vo in ad" :key="vo.name"><div class="banner"><img :src="vo.image"/></div></van-swipe-item>
 		</van-swipe>
@@ -26,6 +27,7 @@ import infoDetail from "../components/infoDetail";
 export default {
     data() {
         return {
+            loadingShow:true,
             ad :'',
             cate:'',
             news:'',
@@ -46,14 +48,12 @@ export default {
     methods: {        
         init(){
             var that = this;
-            this.$toast.loading({duration:0});
             let data = {
                 cityID : that.config.CITYID,
                 adID:92,
             }
             that.$http.post("V3/weixin/getmain",data).then(result => {
-				this.isLoading=false;
-				this.$toast.clear();
+				this.loadingShow=false;
                 let res = result.data;
                 if (res.code == 0) {              
                     that.ad = res.body.ads;

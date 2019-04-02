@@ -115,9 +115,6 @@ export default {
     }
 };
 </script>
-<style>
-.van-nav-bar .van-icon {color: #05c1af;}
-</style>
 <style scoped>
 .cell-item{ padding:5px;}
 .cell-item>img{width: 100%; border-radius: 5px; display: block}

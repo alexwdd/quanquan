@@ -2,6 +2,9 @@
     <div class="wrap">
         <van-nav-bar fixed title="时事热点" left-arrow @click-left="onClickLeft"/>
         <div style="height:46px"></div>
+
+        <van-loading type="spinner" class="loadding" v-show="loadingShow"/>
+
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div class="news" v-for="vo in info" :key="vo.id" @click="detail(vo.id)">
                 <div class="img"><img :src="vo.picname|emptyImg"></div>
@@ -20,6 +23,7 @@
 export default {
     data() {
         return {
+            loadingShow:true,
             info:[],
             loading: false,
             finished: false,
@@ -45,9 +49,8 @@ export default {
                 cityID : that.config.CITYID,
                 page : that.page
             };
-            this.$toast.loading({mask: true,duration:0});
             that.$http.post("V3/weixin/news",data).then(result => {
-                this.$toast.clear();
+                this.loadingShow=false;
                 let res = result.data;
                 if (res.code == 0) {
                     // 加载状态结束
@@ -66,9 +69,7 @@ export default {
     }
 };
 </script>
-<style>
-.van-nav-bar .van-icon {color: #05c1af;}
-</style>
+
 <style scoped>
 .news{clear: both; background: #fff; overflow: hidden; display: flex; padding: 10px; border-bottom:1px #dbdbdb dashed}
 .news .img{width: 110px; margin-right: 10px}
