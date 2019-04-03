@@ -1,11 +1,11 @@
 <template>
-    <div class="wrap">
-        <van-loading type="spinner" class="loadding" v-show="loadingShow"/>
+    <div class="wrap">        
         <van-swipe :autoplay="3000" indicator-color="white">
-			<van-swipe-item v-for="vo in ad" :key="vo.name"><div class="banner"><img :src="vo.image"/></div></van-swipe-item>
+			<van-swipe-item v-for="vo in ad" :key="vo.name"><div class="banner"><img :src="vo.image" @click="goLink(vo)"/></div></van-swipe-item>
 		</van-swipe>
 
         <div class="indexMenu">
+            <van-loading class="loadding" v-show="loadShow" size="20px"/>
             <li v-for="item in cate" :key="item.type" @click="goto(item.type)"><img :src="item.icon"/><p>{{item.name}}</p></li>
         </div>
 
@@ -27,7 +27,7 @@ import infoDetail from "../components/infoDetail";
 export default {
     data() {
         return {
-            loadingShow:true,
+            loadShow:true,
             ad :'',
             cate:'',
             news:'',
@@ -53,8 +53,8 @@ export default {
                 adID:92,
             }
             that.$http.post("V3/weixin/getmain",data).then(result => {
-				this.loadingShow=false;
                 let res = result.data;
+                this.loadShow = false;
                 if (res.code == 0) {              
                     that.ad = res.body.ads;
                     for(var i in res.body.cate){
@@ -69,6 +69,15 @@ export default {
                     that.$dialog.alert({title:'错误信息',message:res.desc});
                 }
             });
+        },
+        goLink(value){
+            if(value.url!=''){
+                window.location.href = value.url;
+            }else{
+                if(value.articleid>0){
+                    this.$router.push({name:'detail',params:{type: value.type,id:vaule.articleid}})
+                }
+            }
         },
         goto(type){
             if(type=='news'){

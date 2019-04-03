@@ -50,6 +50,7 @@ img{max-width: 100%;}
 * {margin: 0;padding: 0;font-family:"Microsoft YaHei","微软雅黑","Microsoft JhengHei"}
 a{color: #666}
 .loadding{text-align: center; padding: 30px; margin: auto}
+[v-cloak] {display: none;}
 #app {
     display: flex;
     height: 100%;

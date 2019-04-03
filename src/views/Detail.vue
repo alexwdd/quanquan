@@ -5,8 +5,6 @@
             <div class="right"><div class="btn" @click="download">下载APP</div></div>
         </div>
         <div class="box">
-            <van-loading type="spinner" class="loadding" v-show="loadingShow"/>
-            
             <template v-if="info.html!=''">
             <div class="infoTitle">{{info.title}}</div>
                 <template v-if="isHide">
@@ -49,7 +47,8 @@
                     <van-icon class-prefix="icon" name="xingxing" /> 收藏
                 </div>
             </div>
-            <div class="cate"><van-tag type="danger" style="background:#05c1af">{{info.sortName}}</van-tag></div>
+            <div class="cate"><span class="tag">{{info.sortName}}</span></div>
+
             <div class="content">
                 <div class="hd">描述</div>
                 <div class="bd" v-html="info.detail"></div>
@@ -104,7 +103,7 @@
             <van-swipe indicator-color="#f60" style="background:#fff" @change="onChange">
                 <van-swipe-item v-for="vo in quick" :key="vo">
                     <div class="quick">
-                        <li v-for="f in vo" :key="f.name"><a :href="vo.url"><img :src="f.image"><p>{{f.name}}</p></a></li>
+                        <li v-for="f in vo" :key="f.name" @click="goLink(f)"><a :href="vo.url"><img :src="f.image"><p>{{f.name}}</p></a></li>
                     </div>
                 </van-swipe-item>
                 <div class="custom-indicator" slot="indicator">
@@ -115,7 +114,7 @@
                 </div>
             </van-swipe>
 
-            <div class="ad" v-if="ad2.image !=undefined"><a :href="ad1.url"><img :src="ad1.image"></a></div>
+            <div class="ad" v-if="ad1.image !=undefined"><img :src="ad1.image" @click="goLink(ad1)"></div>
 
             <div class="cateTitle">
                 <router-link :to="'/list/'+type">
@@ -142,7 +141,7 @@
                 </van-col>
             </van-row>
 
-            <div class="ad" v-if="ad2.image !=undefined"><a :href="ad2.url"><img :src="ad2.image"></a></div>
+            <div class="ad" v-if="ad2.image !=undefined"><img :src="ad2.image" @click="goLink(ad2)"></div>
 
             <div class="cateTitle">
                 <router-link to="/commend">
@@ -194,13 +193,9 @@
             <div class="download" @click="download">下载APP</div>
         </div>
 
-        <van-popup v-model="show">
+        <van-popup position="top" v-model="show">
             <div class="down">
-                <div class="hd">APP下载</div>
-                <div class="bd">
-                    <li><a :href="config.IOS"><img src="../assets/image/appstore.png"></a></li>
-                    <li><a :href="config.ANDROIDS"><img src="../assets/image/googleplay.png"></a></li>
-                </div>
+                <img src="../assets/image/alert.jpg">
             </div>
         </van-popup>
     </div>
@@ -233,7 +228,6 @@ Vue.use(waterfall);
 export default {
     data(){
 		return {
-            loadingShow:true,
 			id:'',
             info:{},
             ad1:{},
@@ -293,6 +287,15 @@ export default {
                 }, timer);
             }
         },
+        goLink(value){
+            if(value.url!=''){
+                window.location.href = value.url;
+            }else{
+                if(value.articleid>0){
+                    this.$router.push({name:'detail',params:{type: value.type,id:vaule.articleid}})
+                }
+            }
+        },
         onChange(index) {
             this.current = index;
         },
@@ -303,7 +306,15 @@ export default {
             this.isHide = true;    //点击onHide切换为true，显示为折叠画面
         },
         download(){
-            this.show = true
+            if(this.config.isWeiXin()){
+                this.show = true
+            }else{
+                if(this.config.isIOS()){
+                    window.location.href = this.config.IOS
+                }else{
+                    window.location.href = this.config.ANDROIDS
+                }
+            }            
         },
         onClickLeft() {
             if(this.back){
@@ -333,8 +344,7 @@ export default {
                     articleid : that.id,
                     type:that.$route.params.type
                 };
-				that.$http.post("/V3/weixin/getinfo",data).then(result => {
-                    that.loadingShow=false;
+				that.$http.post("/V3/weixin/getinfo",data).then(result => {   
                     let res = result.data;
                     if (res.code == 0) {
                         // 加载状态结束
@@ -401,11 +411,14 @@ Vue.filter('empty', function (value) {
 .footer .info p i{color:#f60 }
 .footer .download{float:right; height: 30px; line-height: 30px; background: #05c1af; border-radius: 5px; color: #fff; margin-right: 10px; margin-top: 10px; font-size: 14px; padding: 0 10px}
 
+.tag{font-size: 14px; line-height: 24px; padding: 0 10px; display: block;float: left; margin-right: 10px;background: #def7f4; color: #05c1af}
+
+
 .infoTitle{padding: 10px; background: #fff}
 .priceBox{background: #fff; padding: 0 10px; clear: both; overflow: hidden; font-size: 14px}
 .priceBox .price{float: left; color: #05c1af;}
 .priceBox .fav{float: right; color: #05c1af;}
-.cate{background: #fff; clear: both; overflow:hidden; border-bottom: 1px #dbdbdb dashed; padding: 10px}
+.cate{background: #fff; clear: both; overflow:hidden; border-bottom: 1px #dbdbdb dashed; padding:5px 10px}
 .content{clear: both; overflow: hidden; padding: 10px; background: #fff}
 .content .hd{text-align: center; font-weight: bold; line-height: 40px}
 .content .bd{color: #666; line-height: 150%}
@@ -435,7 +448,7 @@ Vue.filter('empty', function (value) {
 
 .quick{background: #fff; clear: both;overflow: hidden; padding-top: 10px; padding-bottom: 10px}
 .quick li{float: left;width: 20%; text-align: center;font-size: 12px; margin-bottom: 10px}
-.quick li img{display: block; width: 12vw; height: 12vw; border-radius: 50%; margin:auto; }
+.quick li img{display: block; width: 12vw; height: 12vw; margin:auto; }
 
 .news{clear: both; overflow: hidden; display: flex; padding: 10px; border-bottom:1px #dbdbdb dashed;background: #fff}
 .news .img{width: 110px; margin-right: 10px; float: left;}
@@ -460,9 +473,8 @@ Vue.filter('empty', function (value) {
 .item-footer .like i{float: left; margin-top: 7px; margin-right: 3px}
 .item-footer .like .like-total{float: left; font-size: 12px}
 
-.down{clear: both; overflow: hidden; padding: 20px; padding-bottom: 0}
-.down .hd{text-align: center; margin-bottom: 20px}
-.down .bd li{padding-bottom: 20px}
+.down{width: 100%;}
+.down img{width: 100%}
 
 .hideBg {
     width: 100%;

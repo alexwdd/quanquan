@@ -87,9 +87,7 @@ export default {
                 jobType : that.jobType,
                 page : that.page,
             };
-            this.$toast.loading({mask: true,duration:0});
             that.$http.post("V3/weixin/infolist",data).then(result => {
-                this.$toast.clear();
                 let res = result.data;
                 if (res.code == 0) {
                     // 加载状态结束

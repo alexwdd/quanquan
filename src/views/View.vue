@@ -6,7 +6,6 @@
         </div>
 
         <div class="box">
-            <van-loading type="spinner" class="loadding" v-show="loadingShow"/>
             <div class="title">{{info.title}}</div>
             <div class="date">{{info.time}}</div>
             <!-- <div class="content" v-html="info.content"></div> -->
@@ -56,13 +55,9 @@
             <div class="download" @click="download">下载APP</div>
         </div>
 
-        <van-popup v-model="show">
+        <van-popup position="top" v-model="show">
             <div class="down">
-                <div class="hd">APP下载</div>
-                <div class="bd">
-                    <li><a :href="config.IOS"><img src="../assets/image/appstore.png"></a></li>
-                    <li><a :href="config.ANDROIDS"><img src="../assets/image/googleplay.png"></a></li>
-                </div>
+                <img src="../assets/image/alert.jpg">
             </div>
         </van-popup>
     </div>
@@ -72,7 +67,6 @@
 export default {
     data(){
 		return {
-            loadingShow:true,
             show:false,
 			id:'',
             info:{},
@@ -101,7 +95,15 @@ export default {
             }            
         },
         download(){
-            this.show = true
+            if(this.config.isWeiXin()){
+                this.show = true
+            }else{
+                if(this.config.isIOS()){
+                    window.location.href = this.config.IOS
+                }else{
+                    window.location.href = this.config.ANDROIDS
+                }
+            }            
         },
         onShow: function(){
             this.isHide = false;    //点击onShow切换为false，显示为展开画面
@@ -117,7 +119,6 @@ export default {
                     id : that.id
                 };
 				that.$http.post("/V3/weixin/view",data).then(result => {
-                    this.loadingShow=false;
                     let res = result.data;
                     if (res.code == 0) {
                         // 加载状态结束
@@ -199,4 +200,7 @@ export default {
     transform: rotate(45deg);
     margin-top: 3px;
 }
+
+.down{width: 100%;}
+.down img{width: 100%}
 </style>
