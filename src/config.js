@@ -1,6 +1,7 @@
 const global = {
     APP_NAME: '阿德莱德眼',
     CITYID: 9,
+    SCHEME:'ausAdelaide://startapp',
     IOS:'https://itunes.apple.com/cn/app/id1386824572?l=zh&ls=1&mt=8',
     ANDROIDS:'https://play.google.com/store/apps/details?id=com.ldw.life',
     //判断是否是微信浏览器的函数

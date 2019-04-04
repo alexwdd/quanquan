@@ -2,7 +2,7 @@
     <div class="wrap">
         <div class="top">
             <div class="left" @click="onClickLeft"><img src="../assets/image/left.png"></div>
-            <div class="right"><div class="btn" @click="download">下载APP</div></div>
+            <div class="right"><div class="btn" @click="download">打开APP</div></div>
         </div>
         <div class="box">
             <template v-if="info.html!=''">
@@ -114,7 +114,11 @@
                 </div>
             </van-swipe>
 
-            <div class="ad" v-if="ad1.image !=undefined"><img :src="ad1.image" @click="goLink(ad1)"></div>
+
+            <van-swipe :autoplay="3000" indicator-color="white">
+                <van-swipe-item v-for="vo in ad1" :key="vo.name"><div class="ad"><img :src="vo.image" @click="goLink(vo)"/></div></van-swipe-item>
+            </van-swipe>
+   
 
             <div class="cateTitle">
                 <router-link :to="'/list/'+type">
@@ -123,7 +127,7 @@
                 </router-link>
             </div>
 
-            <van-row class="news" v-for="vo in about" :key="vo.articleid">
+            <van-row class="news" v-for="vo in about" :key="vo.articleid" v-if="type=='job'">
                 <van-col span="8"><div class="img" @click="detail(vo.articleid)"><img v-lazy="vo.thumb_s"></div></van-col>
                 <van-col span="16">
                     <div class="info" @click="detail(vo.articleid)">
@@ -141,7 +145,29 @@
                 </van-col>
             </van-row>
 
-            <div class="ad" v-if="ad2.image !=undefined"><img :src="ad2.image" @click="goLink(ad2)"></div>
+            <van-row class="news" v-for="vo in about" :key="vo.articleid" v-else="">
+                <van-col span="8"><div class="img" @click="detail(vo.articleid)"><img v-lazy="vo.thumb_s"></div></van-col>
+                <van-col span="16">
+                    <div class="info" @click="detail(vo.articleid)">
+                        <div class="title">
+                        <h1>{{vo.title}}</h1>
+                        </div>
+                        <div class="address"><van-icon class-prefix="icon" name="weizhi" /> {{vo.address|empty}}</div>
+                        <div class="bottom">
+                            <div class="price"><van-icon class-prefix="icon" name="meiyuan" /> {{vo.price}}</div>
+                            <div class="date">
+                            {{vo.createTime}}
+                            </div>
+                        </div>
+                    </div>
+                </van-col>
+            </van-row>
+
+
+            <van-swipe :autoplay="3000" indicator-color="white">
+                <van-swipe-item v-for="vo in ad2" :key="vo.name"><div class="ad"><img :src="vo.image" @click="goLink(vo)"/></div></van-swipe-item>
+            </van-swipe>
+  
 
             <div class="cateTitle">
                 <router-link to="/commend">
@@ -190,7 +216,7 @@
                     <van-icon name="star" />
                 </p>
             </div>
-            <div class="download" @click="download">下载APP</div>
+            <div class="download" @click="download">打开APP</div>
         </div>
 
         <van-popup position="top" v-model="show">
@@ -230,8 +256,8 @@ export default {
 		return {
 			id:'',
             info:{},
-            ad1:{},
-            ad2:{},
+            ad1:[],
+            ad2:[],
             quick:{},
             about:[],
             type:'',
@@ -357,6 +383,7 @@ export default {
                             that.center = {lat: parseFloat(that.info.latitude), lng:parseFloat(that.info.longitude)}
                             that.infoCenter = {lat: parseFloat(that.info.latitude), lng:parseFloat(that.info.longitude)}
                         }
+                        console.log(that.ad1);
                     }else{
                         that.$dialog.alert({title:'错误信息',message:res.desc});
                     }
@@ -443,8 +470,8 @@ Vue.filter('empty', function (value) {
 .cateTitle{background: #fff; clear: both; overflow: hidden; margin-top: 3px; height: 40px; line-height: 40px; padding-right:5px; font-size: 14px;margin-bottom: 1px;}
 .cateTitle p{float: left; border-left: 2px #05c1af solid; padding-left: 5px; font-weight: bold}
 .cateTitle span{display: block; float: right; font-size: 12px; color: #999}
-.ad{margin-top: 3px; clear: both; overflow: hidden; padding: 0 5px}
-.ad img{border-radius: 5px; display: block}
+.ad{margin-top: 3px; clear: both; overflow: hidden; padding: 0 5px;}
+.ad img{border-radius: 5px; display: block;}
 
 .quick{background: #fff; clear: both;overflow: hidden; padding-top: 10px; padding-bottom: 10px}
 .quick li{float: left;width: 20%; text-align: center;font-size: 12px; margin-bottom: 10px}

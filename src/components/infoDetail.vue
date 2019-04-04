@@ -63,9 +63,11 @@ export default {
 };
 </script>
 <style scoped>
+.news{padding-right: 10px;}
 .news img{height: 200px; width: 100%;}
 
 .picInfo{position: relative; height: 180px; background-position: center; background-repeat: no-repeat;background-size: cover;}
+.picList{padding-right: 10px}
 .picList .slider-money{position: absolute; left: 0; bottom: 40px; z-index: 99; width: 100%}
 .picList .slider-money span{background: rgba(0,0,0,0.7); color: #05c1af;padding: 5px 10px; display:block; float: left; margin-right: 15px; margin-top: -5px}
 .picList .slider-money .tag4{background: #06c2b0; float: left;color: #fff; border-radius: 5px; padding: 3px 6px; font-size: 12px;}
@@ -79,7 +81,7 @@ export default {
 .picList .info .address{font-size: 14px}
 .picList .info .address i{color:#05c1af}
 
-.job{clear: both; overflow: hidden;}
+.job{clear: both; overflow: hidden; padding-right: 10px;}
 .job h1{font-size: 16px;}
 .job p{font-size: 14px; padding: 5px 0}
 .job p i{color:#05c1af; font-size: 14px;}

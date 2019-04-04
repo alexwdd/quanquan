@@ -26,7 +26,7 @@ export default new Router({
             component: Home
         },
         {
-            path: "/news",
+            path: "/news/:cid",
             name: "news",
             meta:{index:1},
             component: News

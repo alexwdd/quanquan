@@ -6,13 +6,13 @@
 
         <div class="indexMenu">
             <van-loading class="loadding" v-show="loadShow" size="20px"/>
-            <li v-for="item in cate" :key="item.type" @click="goto(item.type)"><img :src="item.icon"/><p>{{item.name}}</p></li>
+            <li v-for="item in cate" :key="item.type" @click="goto(item)"><img :src="item.icon"/><p>{{item.name}}</p></li>
         </div>
 
         <div class="indexList" v-for="item in cate" :key="item.type">
-            <div class="hd" @click="goto(item.type)">{{item.name}} <span>查看更多</span></div>
+            <div class="hd" @click="goto(item)">{{item.name}} <span>查看更多</span></div>
             <div class="db">
-                <van-swipe :show-indicators=false>
+                <van-swipe :show-indicators=false :width="width">
                     <van-swipe-item v-for="vo in item.child" :key="vo.name">
                     <infoDetail :info="vo" :type="item.type"></infoDetail>
                     </van-swipe-item>
@@ -27,6 +27,7 @@ import infoDetail from "../components/infoDetail";
 export default {
     data() {
         return {
+            width: document.body.clientWidth - 30,
             loadShow:true,
             ad :'',
             cate:'',
@@ -79,15 +80,16 @@ export default {
                 }
             }
         },
-        goto(type){
-            if(type=='news'){
-                this.$router.push({path:'/news'});
-            }else if(type=='zp'){
+        goto(value){
+            console.log(value);
+            if(value.type=='news'){
+                this.$router.push({name:'news',params:{cid:value.cid}});
+            }else if(value.type=='zp'){
                 this.$router.push({path:'/job'});
-            }else if(type=='zf'){
+            }else if(value.type=='zf'){
                 this.$router.push({path:'/house'});
             }else{
-                this.$router.push({path:'/list/'+type});
+                this.$router.push({path:'/list/'+value.type});
             }
         }
     }

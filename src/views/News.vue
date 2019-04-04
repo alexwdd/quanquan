@@ -1,6 +1,6 @@
 <template>
     <div class="wrap">
-        <van-nav-bar fixed title="时事热点" left-arrow @click-left="onClickLeft"/>
+        <van-nav-bar fixed :title="cateName" left-arrow @click-left="onClickLeft"/>
         <div style="height:46px"></div>
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div class="news" v-for="vo in info" :key="vo.id" @click="detail(vo.id)">
@@ -20,12 +20,20 @@
 export default {
     data() {
         return {
+            cateName:'',
             info:[],
             loading: false,
             finished: false,
             canPost:true,
             page:1
         };
+    },
+    watch: {
+        $route(to) {
+            if (to.name == "news") {
+                this.onLoad();
+            }
+        }
     },
     created() {},
     methods: {
@@ -44,6 +52,7 @@ export default {
             that.canPost = false;
             let data = {
                 cityID : that.config.CITYID,
+                cid:that.id = that.$route.params.cid,
                 page : that.page
             };
             that.$http.post("V3/weixin/news",data).then(result => {
@@ -52,7 +61,8 @@ export default {
                     // 加载状态结束
                     that.loading = false;
                     that.canPost = true;                 
-                    that.info = that.info.concat(res.body.data);                    
+                    that.info = that.info.concat(res.body.data);
+                    that.cateName = res.body.cateName;
                     that.page++;          
                     if(res.body.next==0){
                         that.finished = true;
