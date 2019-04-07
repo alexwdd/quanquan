@@ -41,8 +41,8 @@ export default {
             this.$router.go(-1);
         },
         detail(infoid){
-            //this.$router.push({name: 'view',params:{ id:infoid }})
-            window.location.href = '/view/'+infoid
+            this.$router.push({name: 'view',params:{ id:infoid }})
+            //window.location.href = '/view/'+infoid
         },
         onLoad() {
             var that = this;            
@@ -77,6 +77,7 @@ export default {
 </script>
 
 <style scoped>
+.wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
 .news{clear: both; background: #fff; overflow: hidden; display: flex; padding: 10px; border-bottom:1px #dbdbdb dashed}
 .news .img{width: 110px; margin-right: 10px}
 .news .img img{width: 100%; height:80px}

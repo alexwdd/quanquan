@@ -114,6 +114,7 @@ export default {
 };
 </script>
 <style scoped>
+.wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
 .cell-item{ padding:5px;}
 .cell-item>img{width: 100%; border-radius: 5px; display: block}
 .item-body{background: #fff}

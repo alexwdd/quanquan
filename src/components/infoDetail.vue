@@ -48,7 +48,7 @@
 import Vue from 'vue';
 import { Lazyload } from 'vant';
 Vue.use(Lazyload,{
-    loading:'../static/image/default_320.jpg'
+    loading:'/singapore/static/image/default_320.jpg'
 });
 import '../assets/fonts/iconfont.css';
 export default {

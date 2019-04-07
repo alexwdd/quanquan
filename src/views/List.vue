@@ -3,7 +3,7 @@
         <van-nav-bar fixed :title="cateName" left-arrow @click-left="onClickLeft"/>
 
         <div class="topCate">
-            <van-tabs color="#05c1af" v-model="cateActive">
+            <van-tabs color="#7507c2" v-model="cateActive">
                 <van-tab v-for="vo in cate" :title="vo.title" :key="vo.id">
                     <div class="tab-title" slot="title" @click="changeCate(vo.id)">{{vo.title}}</div>
                 </van-tab>
@@ -116,6 +116,8 @@ export default {
 };
 </script>
 <style scoped>
+.wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
+
 .topCate{position: fixed; top: 46px; width: 100%;}
 .news{clear: both; background:#fff; overflow: hidden; display: flex; padding: 10px; border-bottom:1px #dbdbdb dashed}
 .news .img{width: 110px; margin-right: 10px; float: left;}
@@ -124,7 +126,7 @@ export default {
 .news .info h1{font-size: 15px;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;}
 .news .info .title{height:40px; margin-bottom: 10px}
 .news .info .address{ overflow:hidden;  text-overflow:ellipsis; white-space:nowrap; width: 100%; font-size: 14px;color: #999}
-.news .info .bottom .price{float: left; font-size: 14px;color: #05c1af}
+.news .info .bottom .price{float: left; font-size: 14px;color: #7507c2}
 .news .info .bottom .date{font-size: 12px; text-align: right; color: #999; line-height: 20px; float: right;}
-.news .info i{color: #05c1af}
+.news .info i{color: #7507c2}
 </style>
