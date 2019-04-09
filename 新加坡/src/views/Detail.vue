@@ -54,7 +54,7 @@
                 <div class="bd" v-html="info.detail"></div>
             </div>
 
-            <infoCell :info="info" :type="type"></infoCell>
+            <infoCell :info="info" :type="type" :sheshi="sheshi"></infoCell>
 
             <van-cell title="联系人" icon="contact" :value="info.contact|empty"/>
             <van-cell title="联系电话" icon="phone-o" :value="info.phone|empty"/>
@@ -67,7 +67,7 @@
                 :zoom.sync="zoom">
                     <googlemaps-marker                        
                         :position="infoCenter"
-                        icon="/adelaide/static/image/map.png"
+                        icon="/singapore/static/image/map.png"
                     />
                 </googlemaps-map>
                 <div class="address" v-if="info.address!=''">{{info.address}}</div>
@@ -89,7 +89,6 @@
                             </div>
                             <div class="con">{{item.content}}</div>
                         </div>
-                        
                     </li>				
                 </div>			
                 <div class="fd">
@@ -207,7 +206,7 @@
         <div class="footer">
             <div class="logo"><img src="../assets/image/logo.jpg"></div>
             <div class="info">
-                <p>阿德莱德同城生活掌上宝</p>
+                <p>新加坡同城生活掌上宝</p>
                 <p>
                     <van-icon name="star" />
                     <van-icon name="star" />
@@ -267,6 +266,7 @@ export default {
 		return {
 			id:'',
             info:{},
+            sheshi:[],
             ad1:[],
             ad2:[],
             quick:{},
@@ -278,8 +278,8 @@ export default {
             show:false,
             downShow:false,
 
-            infoCenter : { lat: -34.8911, lng:138.6463},
-            center: { lat: -34.8911, lng:138.6463},
+            infoCenter : { lat:1.3437419, lng:103.8559584},
+            center: { lat:1.3437419, lng:103.8559584},
             zoom : 14,
 
             isHide: true,    //初始值为true，显示为折叠画面
@@ -427,12 +427,20 @@ export default {
                         that.ad2 = res.body.ad2;
                         that.quick = res.body.quick;
                         that.about = res.body.about;
+                        that.sheshi = res.body.sheshi;
                         document.title = res.body.data.title
                         if(that.info.latitude!='' && that.info.longitude!=''){
                             that.center = {lat: parseFloat(that.info.latitude), lng:parseFloat(that.info.longitude)}
                             that.infoCenter = {lat: parseFloat(that.info.latitude), lng:parseFloat(that.info.longitude)}
-                        }
+                        } 
                         that.share(that.info);
+                        if (that.info.facility!='' && that.info.facility!=null) {       
+							for (var i = 0; i < that.sheshi.length; i++) {
+		            			if(that.info.facility.indexOf(that.sheshi[i]['name']) != -1 ){
+		            				that.sheshi[i]['checked'] = true;
+		            			}            			
+		            		}
+	            		}
                     }else{
                         that.$dialog.alert({title:'错误信息',message:res.desc});
                     }
@@ -521,7 +529,7 @@ Vue.filter('empty', function (value) {
 .top img{display: block; height: 46px;}
 .top .left{float: left;}
 .top .right{float: right;}
-.top .right .btn{float:right; height: 30px; line-height: 30px; background: #05c1af; border-radius: 5px; color: #fff; margin-right: 10px; margin-top: 10px; font-size: 14px; padding: 0 10px}
+.top .right .btn{float:right; height: 30px; line-height: 30px; background: #7507c2; border-radius: 5px; color: #fff; margin-right: 10px; margin-top: 10px; font-size: 14px; padding: 0 10px}
 .banner{height:250px; background-size: cover; background-position: center}
 .map{background: #f1f1f1; width: 100%; height:220px; position: relative;}
 .map .address{position: absolute; background: rgba(0,0,0,0.6); color: #fff; font-size: 12px; left: 10%; top:52%;z-index: 999; width: 80%; text-align: center; padding: 5px; border-radius: 5px}
@@ -532,15 +540,15 @@ Vue.filter('empty', function (value) {
 .footer .info{float: left; font-size: 14px; color: #fff; padding-top: 5px}
 .footer .info p{line-height: 20px;}
 .footer .info p i{color:#f60 }
-.footer .download{float:right; height: 30px; line-height: 30px; background: #05c1af; border-radius: 5px; color: #fff; margin-right: 10px; margin-top: 10px; font-size: 14px; padding: 0 10px}
+.footer .download{float:right; height: 30px; line-height: 30px; background: #7507c2; border-radius: 5px; color: #fff; margin-right: 10px; margin-top: 10px; font-size: 14px; padding: 0 10px}
 
-.tag{font-size: 14px; line-height: 24px; padding: 0 10px; display: block;float: left; margin-right: 10px;background: #def7f4; color: #05c1af}
+.tag{font-size: 14px; line-height: 24px; padding: 0 10px; display: block;float: left; margin-right: 10px;background: #def7f4; color: #7507c2}
 
 
 .infoTitle{padding: 10px; background: #fff}
 .priceBox{background: #fff; padding: 0 10px; clear: both; overflow: hidden; font-size: 14px}
-.priceBox .price{float: left; color: #05c1af;}
-.priceBox .fav{float: right; color: #05c1af;}
+.priceBox .price{float: left; color: #7507c2;}
+.priceBox .fav{float: right; color: #7507c2;}
 .cate{background: #fff; clear: both; overflow:hidden; border-bottom: 1px #dbdbdb dashed; padding:5px 10px}
 .content{clear: both; overflow: hidden; padding: 10px; background: #fff}
 .content .hd{text-align: center; font-weight: bold; line-height: 40px}
@@ -549,8 +557,8 @@ Vue.filter('empty', function (value) {
 .comment{padding: 10px; padding-bottom: 0; clear: both; overflow: hidden; background: #fff}
 .comment .hd{clear: both; overflow: hidden; border-bottom:1px #ddd dashed; padding:10px 0}
 .comment .hd h4{float: left; margin: 0; color: #000}
-.comment .hd span{display: block; float: right;color: #05c1af}
-.comment .hd span a{color: #05c1af}
+.comment .hd span{display: block; float: right;color: #7507c2}
+.comment .hd span a{color: #7507c2}
 .comment .bd{clear: both; overflow: hidden;}
 .comment .bd li{ border-bottom: 1px #ddd dashed; clear: both; overflow: hidden; padding: 10px 0}
 .comment .bd li .face{float: left; width: 50px; height: 50px;}
@@ -561,10 +569,10 @@ Vue.filter('empty', function (value) {
 .comment .bd li .userInfo .date{float: right; font-size: 12px; color: #999}
 .comment .bd li .con{overflow: hidden; margin-top: 10px; font-size: 14px;color: #666}
 .comment .fd{padding: 20px 10px; clear: both; overflow: hidden; text-align: center}
-.comment .fd p{height: 30px; line-height:30px;display:inline-block; margin: auto; text-align: center; border:1px #05c1af solid; border-radius: 15px; color: #05c1af; font-size: 14px; padding: 0 20px}
+.comment .fd p{height: 30px; line-height:30px;display:inline-block; margin: auto; text-align: center; border:1px #7507c2 solid; border-radius: 15px; color: #7507c2; font-size: 14px; padding: 0 20px}
 
 .cateTitle{background: #fff; clear: both; overflow: hidden; margin-top: 3px; height: 40px; line-height: 40px; padding-right:5px; font-size: 14px;margin-bottom: 1px;}
-.cateTitle p{float: left; border-left: 2px #05c1af solid; padding-left: 5px; font-weight: bold}
+.cateTitle p{float: left; border-left: 2px #7507c2 solid; padding-left: 5px; font-weight: bold}
 .cateTitle span{display: block; float: right; font-size: 12px; color: #999}
 .ad{margin-top: 3px; clear: both; overflow: hidden; padding: 0 5px;}
 .ad img{border-radius: 5px; display: block;}
@@ -580,9 +588,9 @@ Vue.filter('empty', function (value) {
 .news .info h1{font-size: 15px;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;}
 .news .info .title{height:40px; margin-bottom: 10px}
 .news .info .address{ overflow:hidden;  text-overflow:ellipsis; white-space:nowrap; width: 100%; font-size: 14px;color: #999}
-.news .info .bottom .price{float: left; font-size: 14px;color: #05c1af}
+.news .info .bottom .price{float: left; font-size: 14px;color: #7507c2}
 .news .info .bottom .date{font-size: 12px; text-align: right; color: #999; line-height: 20px; float: right;}
-.news .info i{color: #05c1af}
+.news .info i{color: #7507c2}
 
 .cell-item{ padding:5px;}
 .cell-item>img{width: 100%; border-radius: 5px; display: block}
