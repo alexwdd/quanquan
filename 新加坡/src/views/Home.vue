@@ -60,14 +60,14 @@ export default {
                 this.loadShow = false;
                 if (res.code == 0) {              
                     that.ad = res.body.ads;
-                    for(var i in res.body.cate){                        
+                    /* for(var i in res.body.cate){                        
                         if(res.body.cate[i]['type']=='mall'){
                             res.body.cate[i]['icon'] = res.body.cate[i]['image'];
                         }else{
                             res.body.cate[i]['name'] = that.config.getModelName(res.body.cate[i]['type']);
                             res.body.cate[i]['icon'] = '/singapore/static/image/'+res.body.cate[i]['type']+'_icon@2x.png';
                         }
-                    }
+                    } */
                     that.cate = [];
                     let phone = {
                         name:'话费充值',
@@ -91,7 +91,7 @@ export default {
             }
         },
         goto(value){
-            if(value.type=='news' || value.type=='marriage'){
+            if(value.type=='article'){
                 this.$router.push({name:'news',params:{cid:value.cid}});
             }else if(value.type=='zp'){
                 this.$router.push({path:'/job'});

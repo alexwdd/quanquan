@@ -1,6 +1,6 @@
 <template>	
     <div>
-        <div class="news" v-if="type=='news'">
+        <div class="news" v-if="type=='article'">
             <router-link :to="'/view/'+info.id">
             <img v-lazy="info.thumb"/>                            
             <p>{{info.title}}</p>

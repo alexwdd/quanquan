@@ -58,14 +58,14 @@ export default {
                 this.loadShow = false;
                 if (res.code == 0) {              
                     that.ad = res.body.ads;
-                    for(var i in res.body.cate){                        
+                    /* for(var i in res.body.cate){                        
                         if(res.body.cate[i]['type']=='mall'){
                             res.body.cate[i]['icon'] = res.body.cate[i]['image'];
                         }else{
                             res.body.cate[i]['name'] = that.config.getModelName(res.body.cate[i]['type']);
                             res.body.cate[i]['icon'] = '/adelaide/static/image/'+res.body.cate[i]['type']+'_icon@2x.png';
                         }                        
-                    }
+                    } */
                     that.cate = res.body.cate;
                 }else{
                     that.$dialog.alert({title:'错误信息',message:res.desc});
@@ -82,7 +82,7 @@ export default {
             }
         },
         goto(value){
-            if(value.type=='news'){
+            if(value.type=='article'){
                 this.$router.push({name:'news',params:{cid:value.cid}});
             }else if(value.type=='zp'){
                 this.$router.push({path:'/job'});

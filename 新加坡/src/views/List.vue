@@ -3,11 +3,21 @@
         <van-nav-bar fixed :title="cateName" left-arrow @click-left="onClickLeft"/>
 
         <div class="topCate">
-            <van-tabs color="#7507c2" v-model="cateActive">
-                <van-tab v-for="vo in cate" :title="vo.title" :key="vo.id">
-                    <div class="tab-title" slot="title" @click="changeCate(vo.id)">{{vo.title}}</div>
-                </van-tab>
-            </van-tabs>
+            <div class="cateTab">
+                <van-tabs color="#7507c2" v-model="cateActive">
+                    <van-tab v-for="vo in cate" :title="vo.title" :key="vo.id">
+                        <div class="tab-title" slot="title" @click="changeCate(vo.id)">{{vo.title}}</div>
+                    </van-tab>
+                </van-tabs>
+            </div>
+            <div class="cateBar" @click="show"><van-icon name="bars"></van-icon></div>
+        </div>
+
+        <div class="cateList" v-show="cateShow">
+            <div class="hd">全部分类 <van-icon name="cross" @click="show"></van-icon></div>
+            <div class="bd">
+                <li v-for="(vo,index) in cate" :key="vo.id" @click="changeCate1(vo.id,index)">{{vo.title}}</li>
+            </div>
         </div>
 
         <div style="height:92px"></div>
@@ -42,6 +52,7 @@ Vue.use(Lazyload,{
 export default {
     data() {
         return {
+            cateShow:false,
             cateName:'',
             sort:0,
             cate:[{title:'全部',id:0,checked:true}],
@@ -69,6 +80,9 @@ export default {
         onClickLeft() {
             this.$router.go(-1);
         },
+        show(){
+            this.cateShow = !this.cateShow;
+        },
         detail(infoid){
             let type = this.$route.params.type;
             this.$router.push({name:'detail',params:{type: type,id:infoid}})
@@ -77,6 +91,14 @@ export default {
             this.sort = sort;
             this.info = [];
             //this.cate = [{title:'全部',id:0,checked:true}],
+            this.page = 1;
+            this.onLoad();
+        },
+        changeCate1(sort,index){
+            this.cateShow = false;
+            this.cateActive = index;
+            this.sort = sort;
+            this.info = [];
             this.page = 1;
             this.onLoad();
         },
@@ -118,7 +140,15 @@ export default {
 <style scoped>
 .wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
 
-.topCate{position: fixed; top: 46px; width: 100%;}
+.topCate{position: fixed; top: 46px; width: 100%; display: flex;background: #fff}
+.cateTab{flex: 1}
+.cateBar{width: 40px; height: 44px; text-align: center}
+.cateBar i{line-height: 44px;color: #7507c2;}
+.cateList{position: fixed; top:46px; width: 100%; z-index: 999; background: #fff}
+.cateList .hd{height: 44px; line-height: 44px; text-align: center; position: relative; background: #7507c2; color: #fff}
+.cateList i{position: absolute;right: 5px; top: 15px}
+.cateList .bd{background: #fff; clear: both; overflow: hidden;border-bottom:1px #f1f1f1 solid}
+.cateList .bd li{float: left; width: 25%; text-align: center;font-size: 12px; padding: 10px 0}
 .news{clear: both; background:#fff; overflow: hidden; display: flex; padding: 10px; border-bottom:1px #dbdbdb dashed}
 .news .img{width: 110px; margin-right: 10px; float: left;}
 .news .img img{width: 100%; height:80px}
