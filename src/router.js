@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import List from './views/List.vue'
 import Detail from './views/Detail.vue'
+import Cate from './views/Cate.vue'
 import News from './views/News.vue'
 import View from './views/View.vue'
 import Job from './views/Job.vue'
@@ -26,15 +27,21 @@ export default new Router({
             component: Home
         },
         {
+            path: "/cate/:cid",
+            name: "cate",
+            meta:{index:1},
+            component: Cate
+        },
+        {
             path: "/news/:cid",
             name: "news",
-            meta:{index:1},
+            meta:{index:2},
             component: News
         },
         {
             path: "/view/:id",
             name: "view",
-            meta:{index:2},
+            meta:{index:3},
             component: View
         },
         {
@@ -64,7 +71,7 @@ export default new Router({
         {
             path: "/commend",
             name: "commend",
-            meta:{index:1},
+            meta:{index:2},
             component: Commend
         },
         {

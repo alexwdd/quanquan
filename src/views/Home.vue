@@ -83,7 +83,11 @@ export default {
         },
         goto(value){
             if(value.type=='article'){
-                this.$router.push({name:'news',params:{cid:value.cid}});
+                if(value.flag==0){
+                    this.$router.push({name:'news',params:{cid:value.cid}});
+                }else{
+                    this.$router.push({name:'cate',params:{cid:value.cid}});
+                }                
             }else if(value.type=='zp'){
                 this.$router.push({path:'/job'});
             }else if(value.type=='zf'){

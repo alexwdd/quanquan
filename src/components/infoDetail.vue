@@ -82,7 +82,7 @@ export default {
 .picList .info .address i{color:#05c1af}
 
 .job{clear: both; overflow: hidden; padding-right: 10px;}
-.job h1{font-size: 16px;}
+.job h1{font-size: 16px;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical; margin-bottom: 10px; height: 42px;}
 .job p{font-size: 14px; padding: 5px 0}
 .job p i{color:#05c1af; font-size: 14px;}
 .job .jobInfo{clear: both; overflow:hidden;}
