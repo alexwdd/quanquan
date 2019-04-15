@@ -60,7 +60,7 @@
             <van-cell title="联系电话" icon="phone-o" :value="info.phone|empty"/>
             <van-cell title="微信" icon="chat-o" :value="info.wechat|empty"/>
 
-            <div class="map">
+            <div class="map" v-if="info.address !=''">
                 <googlemaps-map
                 style="height:220px"
                 :center.sync="center"

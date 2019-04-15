@@ -10,6 +10,10 @@ import Job from './views/Job.vue'
 import House from './views/House.vue'
 import Commend from './views/Commend.vue'
 
+import Chat from './views/chat/Index.vue'
+import Focus from './views/chat/Focus.vue'
+import Write from './views/chat/Write.vue'
+
 import Test from './views/Test.vue'
 
 
@@ -74,6 +78,27 @@ export default new Router({
             meta:{index:2},
             component: Commend
         },
+        {
+            path: "/chat",
+            name: "chat",
+            meta:{index:1},
+            component: Chat
+        },
+        {
+            path: "/focus",
+            name: "focus",
+            meta:{index:2},
+            component: Focus
+        },
+        {
+            path: "/write",
+            name: "write",
+            meta:{index:3},
+            component: Write
+        },
+
+
+
         {
             path: "/test",
             name: "test",

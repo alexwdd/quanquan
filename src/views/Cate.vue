@@ -63,6 +63,16 @@ export default {
             fallData:[]
         };
     },
+    computed: {
+        itemWidth() {
+            //return 138 * 0.5 * (document.documentElement.clientWidth / 375); //rem布局 计算宽度
+            return document.documentElement.clientWidth / 2;
+        },
+        gutterWidth() {
+            //return 9 * 0.5 * (document.documentElement.clientWidth / 375); //rem布局 计算x轴方向margin(y轴方向的margin自定义在css中即可)
+            return 10;
+        }
+    },
     watch: {
         $route(to) {
             if (to.name == "cate") {
