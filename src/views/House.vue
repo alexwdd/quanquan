@@ -1,8 +1,8 @@
 <template>
     <div class="wrap">
-        <van-nav-bar fixed :title="cateName" left-arrow @click-left="onClickLeft"/>
+        <van-nav-bar fixed :title="cateName" left-arrow @click-left="onClickLeft" v-show="barShow"/>
 
-        <div class="topCate">
+        <div class="topCate" :style="'top:'+top+'px'">
             <van-tabs color="#05c1af">
                 <van-tab v-for="vo in cate" :title="vo.title" :key="vo.id">
                     <div class="tab-title" slot="title" @click="changeCate(vo.id)">{{vo.title}}</div>
@@ -10,12 +10,13 @@
             </van-tabs>
         </div>
 
-        <div style="height:92px"></div>
+        <div :style="'height:'+height+'px'"></div>
+
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <van-row class="news" v-for="vo in info" :key="vo.articleid">
-                <van-col span="8"><div class="img" @click="detail(vo.articleid)"><img v-lazy="vo.thumb_s"></div></van-col>
+                <van-col span="8"><div class="img" @click="detail(vo)"><img v-lazy="vo.thumb_s"></div></van-col>
                 <van-col span="16">
-                    <div class="info" @click="detail(vo.articleid)">
+                    <div class="info" @click="detail(vo)">
                         <div class="title">
                         <h1>{{vo.title}}</h1>
                         </div>
@@ -42,6 +43,9 @@ Vue.use(Lazyload,{
 export default {
     data() {
         return {
+            top:46,
+            height:92,
+            barShow:true,
             cateName:'',
             sort:0,
             cate:[{title:'租房',id:0,checked:true},{title:'卖房',id:1,checked:true}],
@@ -69,9 +73,19 @@ export default {
         onClickLeft() {
             this.$router.go(-1);
         },
-        detail(infoid){
+        detail(info){
             let type = this.type;
-            this.$router.push({name:'detail',params:{type: type,id:infoid}})
+            if(this.config.isApp()){
+                let url = '';
+                if (info.html==''){
+                    url = 'app://articledetail?articleid='+info.articleid+'&type='+type;
+                }else{
+                    url = 'app://html?url='+info.html+'&type='+type+'&articleid='+info.articleid+'&title='+info.title;
+                }
+                window.location.href = url;
+            }else{
+                this.$router.push({name:'detail',params:{type: type,id:info.articleid}})
+            }
         },
         changeCate(sort){
             this.houseType = sort;
@@ -80,7 +94,12 @@ export default {
             this.onLoad();
         },
         onLoad() {
-            var that = this;            
+            var that = this;    
+            if(this.config.isApp()){
+                that.barShow = false;
+                that.top = 0;
+                that.height = 46;
+            }        
             if(!that.canPost){
                 return false;
             }

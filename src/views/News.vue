@@ -1,8 +1,8 @@
 <template>
     <div class="wrap">
-        <van-nav-bar fixed :title="cateName" left-arrow @click-left="onClickLeft"/>
+        <van-nav-bar fixed :title="cateName" left-arrow @click-left="onClickLeft" v-show="barShow"/>
 
-        <div style="height:46px"></div>
+        <div style="height:46px" v-show="barShow"></div>
 
         <div id="fallBox">
 			<vue-waterfall-easy ref="waterfall" :imgsArr="info" @scrollReachBottom="getData"  @click="detail">
@@ -28,6 +28,7 @@ import vueWaterfallEasy from 'vue-waterfall-easy'
 export default {
     data() {
         return {
+            barShow:true,
             cateName:'',
             info:[],
             finished: false,
@@ -55,10 +56,23 @@ export default {
             this.$router.go(-1);
         },
         detail(event, { index, value }) {
-			this.$router.push({name:'view',params:{ id:value.id }})		
+            if(this.config.isApp()){
+                let url = '';
+                if (value.url!=''){
+                    url = 'app://html?url='+value.url+'&type=article&articleid='+value.id+'&title='+value.title;
+                }else{
+                    url = 'app://html?url='+value.html+'&type=article&articleid='+value.id+'&title='+value.title;
+                }
+                window.location.href = url;
+            }else{
+                this.$router.push({name:'view',params:{ id:value.id }})
+            }
 		},
         getData() {
-            var that = this;            
+            var that = this;  
+            if(this.config.isApp()){
+                that.barShow = false;
+            }             
             if(that.finished){
                 this.$refs.waterfall.waterfallOver();
                 return false;

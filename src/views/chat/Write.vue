@@ -15,12 +15,23 @@
             </van-uploader>
         </div>
 
-        <van-cell title="版块" is-link arrow-direction="down" value="" />
-        <van-cell title="标签" is-link arrow-direction="down" value="" />
+        <van-cell title="版块" is-link arrow-direction="down" :value="cate.name" @click="clickShowCate"/>
+        <van-cell title="标签" is-link arrow-direction="down" :value="tag"  @click="clickShowTag"/>
         
         <div class="btn">
             <van-button size="large" round class="my-btn" @click="submit">确认发布</van-button>
         </div>
+
+        <van-popup v-model="cateShow" position="bottom">
+            <div class="quick">
+                <li v-for="vo in cateArr" :key="vo.cid" @click="onSelectCate(vo)"><img :src="vo.icon"><p>{{vo.name}}</p></li>
+            </div>
+        </van-popup>
+        <van-popup v-model="tagShow" position="bottom">
+            <div class="tag">
+                <li v-for="vo in tagArr" :key="vo.cid" @click="onSelectTag(vo.name)"><van-tag plain>{{vo.name}}</van-tag></li>
+            </div>
+        </van-popup>
     </div>
 </template>
 
@@ -29,9 +40,13 @@ import user from './auth' // permission control
 export default {
     data() {
         return {
+            cateShow:false,
+            tagShow:false,
             show:true,
             content:'',
+            cateArr:[],
             cate:[],
+            tagArr:[],
             tag:'',
             images:[]
         };
@@ -44,10 +59,14 @@ export default {
         }
     },
     watch: {
-
+        $route(to) {
+            if (to.name == "write") {
+                this.init();
+            }
+        }
     },
     created() {
-        //console.log(user);
+        this.init()
     },
     methods: {
         onClickLeft() {
@@ -70,28 +89,83 @@ export default {
                 this.show = true;
             }
         },
+        clickShowCate(){
+            this.cateShow = true;
+        },
+        onSelectCate(info){
+            this.cate = info;
+            this.cateShow = false;
+        },
+        clickShowTag(){
+            this.tagShow = true;
+        },
+        onSelectTag(value){
+            this.tag = value;
+            this.tagShow = false;
+        },
+        init(){
+            var that = this;
+            let data = {
+                cityID : that.config.CITYID
+            };
+            that.$http.post("V1/chat/cate",data).then(result => {
+                let res = result.data;
+                if (res.code == 0) {
+                    that.cateArr = res.body.cate;
+                    that.tagArr = res.body.tag;
+                 }else{
+                    that.$dialog.alert({title:'错误信息',message:res.desc});
+                }
+            });
+        },
         submit:function(){
             var that = this;
             if(that.content == ''){
                 that.$dialog.alert({title:'错误信息',message:'请输入内容'});
                 return false;
             }
+            if(that.cate.cid == '' || that.cate.cid == undefined){
+                that.$dialog.alert({title:'错误信息',message:'请选择版块'});
+                return false;
+            }
+            if(that.tag == ''){
+                that.$dialog.alert({title:'错误信息',message:'请选择标签'});
+                return false;
+            }
             if(that.images.length>9){
                 that.$dialog.alert({title:'错误信息',message:'最多上传9张图片'});
                 return false;
             }
+            let imageStr = '';
+            for(var i=0;i<that.images.length;i++){
+                if(i==0){
+                    imageStr = that.images[i].content;
+                }else{
+                    imageStr += "###" + that.images[i].content;
+                }
+            }
             var data = {
+                cityID:that.config.CITYID,
                 token:user.token,
                 content:that.content,
-                images:that.images,
-                cate:that.cate,
+                images:imageStr,
+                cid:that.cate.cid,
                 tag:that.tag
             };
+            this.$toast.loading({mask: true,duration:0});
             that.$http.post("/V1/chat/submit",data).then(result => {
                 let res = result.data;
+                this.$toast.clear();
                 if (res.code == 0) {
-                    // 加载状态结束
-                    this.fallData = res.body;
+                    that.content='';
+                    that.cate=[];
+                    that.tag='';
+                    that.images=[];
+                    this.$dialog.alert({title:'系统信息',message:res.desc}).then(() => {
+                        this.$router.push({path:'/chat'});
+                    });
+                }else if(res.code==999){
+                    window.location.href='app://login';  
                 }else{
                     that.$dialog.alert({title:'错误信息',message:res.desc});
                 }
@@ -111,4 +185,11 @@ export default {
 .photo img{display: block; width: 100%}
 .btn{padding: 10px; position: fixed; bottom: 20px; left: 0; width: 100%; box-sizing: border-box}
 .my-btn{background: #05c1af; color: #fff;}
+
+.quick{clear: both; overflow: hidden; margin-bottom: 30px;}
+.quick li{float: left; width:20%; text-align: center;font-size: 12px; padding: 10px 0}
+.quick li img{display: block; margin: auto; height: 40px}
+
+.tag{clear: both; margin-bottom: 30px; overflow: hidden; padding-left: 10px; padding-top: 20px}
+.tag li{float: left; margin-right: 10px; margin-bottom: 10px}
 </style>

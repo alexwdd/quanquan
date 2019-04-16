@@ -34,6 +34,10 @@
 
         <div style="height:92px"></div>
 
+        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+            
+        </van-list>
+
         <div class="chat">
             <div class="user">
                 <div class="face"><img src="https://img.52z.com/upload/news/image/20180213/20180213062638_50905.jpg"></div>
@@ -90,6 +94,13 @@ export default {
             cate:[{title:'全部',id:0,checked:true}],
             quick:[],
             cateActive:1,
+
+            info:[],
+            loading: false,
+            finished: false,
+            canPost:true,
+            cid:0,
+            page:1
         };
     },
     watch: {
@@ -109,6 +120,37 @@ export default {
         },
         focus(){
             this.$router.push({'path':'/focus',query:{token:this.token}});
+        },
+        onLoad() {
+            var that = this;
+            if(!that.canPost){
+                return false;
+            }
+            that.canPost = false;
+            let data = {
+                cid : that.cid,
+                cityID : that.config.CITYID,
+                page : that.page,
+            };
+            that.$http.post("V1/chat/getinfo",data).then(result => {
+                let res = result.data;
+                if (res.code == 0) {
+                    // 加载状态结束
+                    that.loading = false;
+                    that.canPost = true;                 
+                    that.info = that.info.concat(res.body.data);  
+                    if(that.cate.length==1){
+                        that.cate = that.cate.concat(res.body.cate);
+                    }
+                    that.quick = res.body.quick;
+                    that.page++;          
+                    if(res.body.next==0){
+                        that.finished = true;
+                    }
+                }else{
+                    that.$dialog.alert({title:'错误信息',message:res.desc});
+                }
+            });
         }
     },
     mounted:function(){

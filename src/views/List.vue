@@ -1,8 +1,8 @@
 <template>
     <div class="wrap">
-        <van-nav-bar fixed :title="cateName" left-arrow @click-left="onClickLeft"/>
+        <van-nav-bar fixed :title="cateName" left-arrow @click-left="onClickLeft" v-show="barShow"/>
 
-        <div class="topCate">
+        <div class="topCate" :style="'top:'+top+'px'">
             <div class="cateTab">
                 <van-tabs color="#05c1af" v-model="cateActive">
                     <van-tab v-for="vo in cate" :title="vo.title" :key="vo.id">
@@ -13,7 +13,7 @@
             <div class="cateBar" @click="show"><van-icon name="bars"></van-icon></div>
         </div>
 
-        <div class="cateList" v-show="cateShow">
+        <div class="cateList" :style="'top:'+top+'px'" v-show="cateShow">
             <div class="hd">全部分类 <van-icon name="cross" @click="show"></van-icon></div>
             <swipe class="my-swipe" :auto="0">
 				<swipe-item v-for="vo in quick">
@@ -24,13 +24,13 @@
 			</swipe>               
         </div>
 
-        <div style="height:92px"></div>
+        <div :style="'height:'+height+'px'"></div>
         
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <van-row class="news" v-for="vo in info" :key="vo.articleid">
-                <van-col span="8"><div class="img" @click="detail(vo.articleid)"><img v-lazy="vo.thumb_s"></div></van-col>
+                <van-col span="8"><div class="img" @click="detail(vo)"><img v-lazy="vo.thumb_s"></div></van-col>
                 <van-col span="16">
-                    <div class="info" @click="detail(vo.articleid)">
+                    <div class="info" @click="detail(vo)">
                         <div class="title">
                         <h1>{{vo.title}}</h1>
                         </div>
@@ -64,6 +64,9 @@ Vue.component('swipe-item', SwipeItem);
 export default {
     data() {
         return {
+            top:46,
+            height:92,
+            barShow:true,
             cateShow:true,
             cateName:'',
             sort:0,
@@ -99,9 +102,19 @@ export default {
         show(){
             this.cateShow = !this.cateShow;
         },
-        detail(infoid){
+        detail(info){
             let type = this.$route.params.type;
-            this.$router.push({name:'detail',params:{type: type,id:infoid}})
+            if(this.config.isApp()){
+                let url = '';
+                if (info.html==''){
+                    url = 'app://articledetail?articleid='+info.articleid+'&type='+type;
+                }else{
+                    url = 'app://html?url='+this.html+'&type='+type+'&articleid='+info.articleid+'&title='+info.title;
+                }
+                window.location.href = url;
+            }else{
+                this.$router.push({name:'detail',params:{type: type,id:info.articleid}})
+            }            
         },
         changeCate(sort){
             this.sort = sort;
@@ -120,7 +133,14 @@ export default {
             this.onLoad();
         },
         onLoad() {
-            var that = this;            
+            var that = this;
+
+            if(this.config.isApp()){
+                that.barShow = false;
+                that.top = 0;
+                that.height = 46;
+            }
+
             if(!that.canPost){
                 return false;
             }
@@ -161,7 +181,7 @@ export default {
 <style scoped>
 .wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
 
-.topCate{position: fixed; top: 46px; width: 100%; display: flex;background: #fff}
+.topCate{position: fixed; width: 100%; display: flex;background: #fff}
 .cateTab{flex: 1}
 .cateBar{width: 40px; height: 44px; text-align: center}
 .cateBar i{line-height: 44px;color: #05c1af;}

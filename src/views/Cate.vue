@@ -1,10 +1,10 @@
 <template>
     <div class="wrap">
-        <van-nav-bar fixed :title="cateName" left-arrow @click-left="onClickLeft">
+        <van-nav-bar fixed :title="cateName" left-arrow @click-left="onClickLeft" v-show="barShow">
             <van-icon name="search" slot="right" />
         </van-nav-bar>
 
-        <div style="height:44px;"></div>
+        <div style="height:44px;" v-show="barShow"></div>
 
         <div class="list">
             <li v-for="vo in info" :key="vo.id" @click="goto(vo)"><img :src="vo.picname"></li>
@@ -58,6 +58,7 @@ Vue.use(Lazyload,{
 export default {
     data() {
         return {
+            barShow:true,
             cateName:'',
             info:[],
             fallData:[]
@@ -91,6 +92,9 @@ export default {
         },
         init() {
             var that = this;
+            if(this.config.isApp()){
+                that.barShow = false;
+            }
             that.canPost = false;
             let data = {
                 cityID : that.config.CITYID,
@@ -107,14 +111,36 @@ export default {
             });
         },
         goto(value){
-            this.$router.push({name:'news',params:{cid:value.id}});
+            if(this.config.isApp()){
+                window.location.href = 'app://news?id='+value.id;
+            }else{
+                this.$router.push({name:'news',params:{cid:value.id}});
+            }
         },
         commInfo(info){
-            if(info.type=='article'){
-                this.$router.push({name:'view',params:{id:info.articleid}})
+            if(this.config.isApp()){
+                let url = '';
+                if(info.type=='article'){
+                    if (info.url!=''){
+                        url = 'app://html?url='+info.url+'&type=article&articleid='+info.articleid+'&title='+info.title;
+                    }else{
+                        url = 'app://html?url='+info.html+'&type=article&articleid='+info.articleid+'&title='+info.title;
+                    }
+                }else{
+                    if (info.html==''){
+                        url = 'app://articledetail?articleid='+info.articleid+'&type='+info.type;
+                    }else{
+                        url = 'app://html?url='+info.html+'&type='+info.type+'&articleid='+info.articleid+'&title='+info.title;
+                    }
+                }
+                window.location.href = url;
             }else{
-                this.$router.push({name:'detail',params:{type: info.type,id:info.articleid}})
-            }            
+                if(info.type=='article'){
+                    this.$router.push({name:'view',params:{id:info.articleid}})
+                }else{
+                    this.$router.push({name:'detail',params:{type: info.type,id:info.articleid}})
+                }
+            }         
         },
         getData() {
             var that = this;
