@@ -109,7 +109,7 @@ export default {
                 if (info.html==''){
                     url = 'app://articledetail?articleid='+info.articleid+'&type='+type;
                 }else{
-                    url = 'app://html?url='+this.html+'&type='+type+'&articleid='+info.articleid+'&title='+info.title;
+                    url = 'app://html?url='+info.html+'&type='+type+'&articleid='+info.articleid+'&title='+info.title;
                 }
                 window.location.href = url;
             }else{

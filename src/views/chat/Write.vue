@@ -78,10 +78,49 @@ export default {
                 that.$dialog.alert({title:'错误信息',message:'最多上传9张图片'});
                 return false;
             }
-            that.images = that.images.concat(file);
-            if(that.images.length>=9){
-                that.show = false;
-            }
+            if(Object.prototype.toString.call(file)==='[object Array]'){
+                for (let i = 0; i < file.length; i++) {
+                    that.compressImage(file[i],600,0,function(res){                    
+                        file[i]['content'] = res;
+                        that.images = that.images.concat(file[i]);
+                        if(that.images.length>=9){
+                            that.show = false;
+                        }          
+                    });
+                }
+            }else{
+                that.compressImage(file,600,0,function(res){                    
+                    file.content = res;
+                    that.images = that.images.concat(file);
+                    if(that.images.length>=9){
+                        that.show = false;
+                    }          
+                });
+            }           
+        },
+        compressImage(file,width,height=0,callback){
+            var img = new Image();
+            img.src = file.content
+            img.onload = function() {
+                var that = this;
+                if(height>0){
+                    var w = width,h = height;
+                }else{
+                    //生成比例
+                    var w = that.width,h = that.height,scale = w / h;
+                    w = width || w;
+                    h = w / scale;
+                }
+                //生成canvas
+                let canvas = document.createElement('canvas');
+                let ctx = canvas.getContext('2d');      
+                canvas.width = w;
+                canvas.height = h;
+                ctx.drawImage(that, 0, 0, w, h);
+                // 生成base64            
+                let base64 =  canvas.toDataURL(file.file.type, 0.8);
+                callback(base64)
+            };
         },
         delImg: function(idx) {
             this.images.splice(idx, 1);
@@ -105,6 +144,9 @@ export default {
         },
         init(){
             var that = this;
+            if(user.status==true){
+                that.token = user.token;
+            }
             let data = {
                 cityID : that.config.CITYID
             };
@@ -161,8 +203,9 @@ export default {
                     that.cate=[];
                     that.tag='';
                     that.images=[];
+                    that.show=true;
                     this.$dialog.alert({title:'系统信息',message:res.desc}).then(() => {
-                        this.$router.push({path:'/chat'});
+                        this.$router.push({path:'/chat',query:{token:this.token}});   
                     });
                 }else if(res.code==999){
                     window.location.href='app://login';  

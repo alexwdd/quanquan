@@ -35,65 +35,49 @@
         <div style="height:92px"></div>
 
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-            
-        </van-list>
+            <div class="chat" v-for="vo in info" :key="vo.id">
+                <div class="user">
+                    <div class="face"><img :src="vo.face"></div>
+                    <div class="name"><p>{{vo.nickname}}</p><span>{{vo.createTime}}</span></div>
+                    <div class="focus">关注</div>
+                </div>
+                <div class="say">{{vo.content}}</div>
+                <template v-if="vo.images!=''">
 
-        <div class="chat">
-            <div class="user">
-                <div class="face"><img src="https://img.52z.com/upload/news/image/20180213/20180213062638_50905.jpg"></div>
-                <div class="name"><p>小雨点</p><span>3分钟前</span></div>
-                <div class="focus">关注</div>
+                <div class="photo single" v-if="vo.num==1">
+                    <li v-for="(photo,index) in vo.images" :key="photo" @click="showImagePreview(index,vo)">
+                        <img :src="photo" @click="showImagePreview">
+                    </li>
+                </div>
+
+                <div class="photo" v-else="">
+                    <li v-for="(photo,index) in vo.thumb" :key="photo" @click="showImagePreview(index,vo)">
+                        <img :src="photo">
+                    </li>
+                </div>
+                </template>
+                <div class="action">
+                    <li><van-icon class-prefix="icon" name="dianzan" /> {{vo.like}}</li>
+                    <li><van-icon class-prefix="icon" name="pinglun1" /> 10</li>
+                    <li><van-icon class-prefix="icon" name="fenxiang" /></li>
+                </div>
             </div>
-            <div class="say">阿斯蒂芬阿萨德阿斯蒂芬阿斯蒂芬阿斯蒂芬阿斯蒂芬阿萨德阿斯蒂芬阿斯蒂芬阿斯蒂芬阿斯蒂芬阿萨德阿斯蒂芬阿斯蒂芬阿斯蒂芬阿斯蒂芬阿萨德阿斯蒂芬阿斯蒂芬阿斯蒂芬阿斯蒂芬阿萨德阿斯蒂芬阿斯蒂芬阿斯蒂芬</div>
-            <div class="photo single">
-                <li><img src="https://img.52z.com/upload/news/image/20180213/20180213062639_34859.jpg"></li>
-            </div>
-            <div class="action">
-                <li><van-icon class-prefix="icon" name="dianzan" /> 10</li>
-                <li><van-icon class-prefix="icon" name="pinglun1" /> 10</li>
-                <li><van-icon class-prefix="icon" name="fenxiang" /></li>
-            </div>
-        </div>
-        <div class="chat">
-            <div class="user">
-                <div class="face"><img src="https://img.52z.com/upload/news/image/20180213/20180213062640_13061.jpg"></div>
-                <div class="name"><p>小雨点</p><span>3分钟前</span></div>
-                <div class="focus focused">已关注</div>
-            </div>
-            <div class="say">阿斯蒂芬阿萨德阿斯蒂芬阿斯蒂芬阿斯蒂芬阿斯蒂芬阿萨德阿斯蒂芬阿斯蒂芬阿斯蒂芬阿斯蒂芬阿萨德阿斯蒂芬阿斯蒂芬阿斯蒂芬阿斯蒂芬阿萨德阿斯蒂芬阿斯蒂芬阿斯蒂芬阿斯蒂芬阿萨德阿斯蒂芬阿斯蒂芬阿斯蒂芬</div>
-            <div class="photo">
-                <li><img src="https://img.52z.com/upload/news/image/20180213/20180213062639_34859.jpg"></li>
-                <li><img src="https://img.52z.com/upload/news/image/20180213/20180213062639_34859.jpg"></li>
-                <li><img src="https://img.52z.com/upload/news/image/20180213/20180213062639_34859.jpg"></li>
-                <li><img src="https://img.52z.com/upload/news/image/20180213/20180213062639_34859.jpg"></li>
-                <li><img src="https://img.52z.com/upload/news/image/20180213/20180213062639_34859.jpg"></li>
-                <li><img src="https://img.52z.com/upload/news/image/20180213/20180213062639_34859.jpg"></li>
-            </div>
-        </div>
-        <div class="chat">
-            <div class="user">
-                <div class="face"><img src="https://img.52z.com/upload/news/image/20180213/20180213062640_13061.jpg"></div>
-                <div class="name"><p>小雨点</p><span>3分钟前</span></div>
-                <div class="focus">关注</div>
-            </div>
-            <div class="say">阿斯蒂芬阿萨德阿斯蒂芬阿斯蒂芬阿斯蒂芬阿斯蒂芬阿萨德阿斯蒂芬阿斯蒂芬阿斯蒂芬阿斯蒂芬阿萨德阿斯蒂芬阿斯蒂芬阿斯蒂芬阿斯蒂芬阿萨德阿斯蒂芬阿斯蒂芬阿斯蒂芬阿斯蒂芬阿萨德阿斯蒂芬阿斯蒂芬阿斯蒂芬</div>
-            <div class="photo"></div>
-        </div>
-        
+        </van-list>        
     </div>
 </template>
 
 <script>
 import user from './auth'
+import { ImagePreview } from 'vant';
 export default {
     data() {
         return {
             token:'',
 
             cateShow:true,
-            cate:[{title:'全部',id:0,checked:true}],
+            cate:'',
             quick:[],
-            cateActive:1,
+            cateActive:0,
 
             info:[],
             loading: false,
@@ -104,7 +88,17 @@ export default {
         };
     },
     watch: {
-
+        $route(to) {
+            if (to.name == "chat") {
+                this.info = [];
+                this.cate = '',
+                this.quick = [];
+                this.cateShow=false;
+                this.page = 1;
+                this.cid = 0;
+                this.onLoad();
+            }
+        }
     },
     created() {        
         if(user.status==true){
@@ -120,6 +114,27 @@ export default {
         },
         focus(){
             this.$router.push({'path':'/focus',query:{token:this.token}});
+        },
+        changeCate(sort){
+            this.cid = sort;
+            this.info = [];
+            this.page = 1;
+            this.onLoad();
+        },
+        changeCate1(value){
+            this.cateShow = false;
+            this.cateActive = value.index;
+            this.cid = value.id;
+            this.info = [];
+            this.page = 1;
+            this.onLoad();
+        },
+        showImagePreview(index, info) {
+            var images = info.images;
+            const instance = ImagePreview({
+                images,
+                startPosition: index
+            })
         },
         onLoad() {
             var that = this;
@@ -139,7 +154,8 @@ export default {
                     that.loading = false;
                     that.canPost = true;                 
                     that.info = that.info.concat(res.body.data);  
-                    if(that.cate.length==1){
+                    if(that.cate==''){
+                        that.cate = [{title:'全部',id:0,checked:true}];
                         that.cate = that.cate.concat(res.body.cate);
                     }
                     that.quick = res.body.quick;
@@ -164,11 +180,11 @@ export default {
 .tab li{display: inline-block; font-size: 14px; padding:0 10px;}
 .tab li.active{color: #05c1af;}
 
-.topCate{position: fixed; top: 46px; width: 100%; display: flex;background: #fff}
+.topCate{position: fixed; top: 45px; width: 100%; display: flex;background: #fff}
 .cateTab{flex: 1}
 .cateBar{width: 40px; height: 44px; text-align: center}
 .cateBar i{line-height: 44px;color: #05c1af;}
-.cateList{position: fixed; top:46px; width: 100%; z-index: 999; background: #fff}
+.cateList{position: fixed; top:45px; width: 100%; z-index: 999; background: #fff}
 .cateList .hd{height: 44px; line-height: 44px; text-align: center; position: relative; background: #05c1af; color: #fff}
 .cateList i{position: absolute;right: 5px; top: 15px}
 .my-swipe{height: 250px;width: 100vw; border-bottom: 1px #f1f1f1 solid}
@@ -193,7 +209,7 @@ export default {
 .chat .say{clear: both; font-size: 14px; margin-bottom: 10px; padding: 0 10px}
 .chat .photo{clear: both; padding-left: 10px}
 .chat .photo li{float: left; width: 33.333%; padding-right: 10px; box-sizing: border-box; padding-bottom: 10px}
-.chat .photo li img{display: block}
+.chat .photo li img{display: block; width: 100%}
 .chat .single li{width: 60%}
 .chat .action{clear: both;}
 .chat .action li{float: left; width: 33.333%; text-align: center; font-size: 12px; line-height: 20px; color: #999}
