@@ -35,11 +35,12 @@
         <div style="height:92px"></div>
 
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-            <div class="chat" v-for="vo in info" :key="vo.id">
+            <div class="chat" v-for="(vo,idx) in info" :key="vo.id">
                 <div class="user">
                     <div class="face"><img :src="vo.face"></div>
                     <div class="name"><p>{{vo.nickname}}</p><span>{{vo.createTime}}</span></div>
-                    <div class="focus">关注</div>
+                    <div class="focus focused" v-if="vo.focus" @click=doFocus(idx,vo)>已关注</div>
+                    <div class="focus" v-else="" @click=doFocus(idx,vo)>关注</div>
                 </div>
                 <div class="say">{{vo.content}}</div>
                 <template v-if="vo.images!=''">
@@ -57,8 +58,8 @@
                 </div>
                 </template>
                 <div class="action">
-                    <li><van-icon class-prefix="icon" name="dianzan" /> {{vo.like}}</li>
-                    <li><van-icon class-prefix="icon" name="pinglun1" /> 10</li>
+                    <li><van-icon class-prefix="icon" name="dianzan" @click="doLike(idx,vo)" /> {{vo.like}}</li>
+                    <li><van-icon class-prefix="icon" name="pinglun1" @click="gotoComment(vo)"/> {{vo.comment}}</li>
                     <li><van-icon class-prefix="icon" name="fenxiang" /></li>
                 </div>
             </div>
@@ -136,6 +137,59 @@ export default {
                 startPosition: index
             })
         },
+        doLike(index,info){//点赞
+            var that = this;
+            if(user.status){
+                var data = {
+                    cityID:that.config.CITYID,
+                    token:user.token,
+                    chatID:info.id
+                };                
+                that.$http.post("/V1/chat/like",data).then(result => {
+                    let res = result.data;
+                    if (res.code == 0) {
+                        this.$toast(res.desc);
+                        if(res.desc=='已点赞'){
+                            that.info[index].like++;
+                        }else{
+                            that.info[index].like--;
+                        }
+                    }else if(res.code==999){
+                        window.location.href='app://login';  
+                    }else{
+                        that.$dialog.alert({title:'错误信息',message:res.desc});
+                    }
+                });
+            }
+        },
+        doFocus(index,info){//关注
+            var that = this;
+            if(user.status){
+                var data = {
+                    cityID:that.config.CITYID,
+                    token:user.token,
+                    userID:info.memberID
+                };                
+                that.$http.post("/V1/chat/focus",data).then(result => {
+                    let res = result.data;
+                    if (res.code == 0) {
+                        this.$toast(res.desc);
+                        if(res.desc=='已关注'){
+                            that.info[index].focus = true;
+                        }else{
+                            that.info[index].focus = false;
+                        }
+                    }else if(res.code==999){
+                        window.location.href='app://login';  
+                    }else{
+                        that.$dialog.alert({title:'错误信息',message:res.desc});
+                    }
+                });
+            }
+        },
+        gotoComment(info){
+            this.$router.push({'path':'/comment',query:{id:info.id,token:this.token}});
+        },
         onLoad() {
             var that = this;
             if(!that.canPost){
@@ -147,7 +201,10 @@ export default {
                 cityID : that.config.CITYID,
                 page : that.page,
             };
-            that.$http.post("V1/chat/getinfo",data).then(result => {
+            if(user.status){
+                data.token = user.token
+            }
+            that.$http.post("V1/chat/getmain",data).then(result => {
                 let res = result.data;
                 if (res.code == 0) {
                     // 加载状态结束

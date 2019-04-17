@@ -13,6 +13,7 @@ import Commend from './views/Commend.vue'
 import Chat from './views/chat/Index.vue'
 import Focus from './views/chat/Focus.vue'
 import Write from './views/chat/Write.vue'
+import Comment from './views/chat/Comment.vue'
 
 import Test from './views/Test.vue'
 
@@ -95,6 +96,12 @@ export default new Router({
             name: "write",
             meta:{index:3},
             component: Write
+        },
+        {
+            path: "/comment",
+            name: "comment",
+            meta:{index:3},
+            component: Comment
         },
 
 
