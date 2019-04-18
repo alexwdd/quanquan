@@ -1,47 +1,13 @@
 <template>
     <div class="wrap">
-        <van-nav-bar fixed>
-            <div class="topLeftIcon" slot="left">
-                <span><van-icon name="arrow-left" @click="onClickLeft"/></span>
-                <span><van-icon name="search" @click="onClickSearch"/></span>
+        <div class="search">
+            <div class="ipt">
+                <input type="text" v-model="keyword" placeholder="请输入关键词">
             </div>
-
-            <div slot="title">
-                <div class="tab">
-                    <li class="active">话题</li>
-                    <li @click="focus" v-show="token!=''">关注</li>
-                </div>
-            </div>
-            <div class="topRightIcon" slot="right" v-show="token!=''">
-                <span><van-icon name="contact" @click="onClickMy"/></span>
-                <span><van-icon name="photograph" @click="onClickRight"/></span>
-            </div>
-        </van-nav-bar>
-
-        <div class="topCate">
-            <div class="cateTab">
-                <van-tabs color="#05c1af" v-model="cateActive">
-                    <van-tab v-for="vo in cate" :title="vo.title" :key="vo.id">
-                        <div class="tab-title" slot="title" @click="changeCate(vo.id)">{{vo.title}}</div>
-                    </van-tab>
-                </van-tabs>
-            </div>
-            <div class="cateBar" @click="show"><van-icon name="bars"></van-icon></div>
+            <div class="cancel" @click="onClickLeft">取消</div>
         </div>
 
-        <div class="cateList" v-show="cateShow">
-            <div class="hd">全部分类 <van-icon name="cross" @click="show"></van-icon></div>
-            <swipe class="my-swipe" :auto="0">
-				<swipe-item v-for="vo in quick">
-                    <div class="quick">
-                        <li v-for="f in vo" :key="f.id" @click="changeCate1(f)"><img :src="f.icon"><p>{{f.title}}</p></li>
-                    </div>
-                </swipe-item>
-			</swipe>               
-        </div>
-
-        <div style="height:92px"></div>
-
+        <div style="height:46px"></div>
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div class="chat" v-for="(vo,idx) in info" :key="vo.id">
                 <div class="user">
@@ -67,7 +33,7 @@
                 </div>
                 </template>
                 <div class="action">
-                    <li><van-icon class-prefix="icon" name="dianzan" @click="doLike(idx,vo)" /> {{vo.like}}</li>
+                    <li><van-icon class-prefix="icon" name="dianzan"/> {{vo.like}}</li>
                     <li><van-icon class-prefix="icon" name="pinglun1" @click="gotoComment(vo)"/> {{vo.comment}}</li>
                     <li><van-icon class-prefix="icon" name="fenxiang" /></li>
                 </div>
@@ -82,30 +48,29 @@ import { ImagePreview } from 'vant';
 export default {
     data() {
         return {
-            token:'',
-
-            cateShow:true,
-            cate:'',
-            quick:[],
-            cateActive:0,
-
+            token:'',  
+            keyword:'',          
             info:[],
             loading: false,
             finished: false,
             canPost:true,
-            cid:0,
             page:1
         };
     },
     watch: {
         $route(to) {
-            if (to.name == "chat") {
+            /* if (to.name == "chatSearch") {
                 this.info = [];
-                this.cate = '',
-                this.quick = [];
-                this.cateShow=false;
+                this.keyword = '';
                 this.page = 1;
-                this.cid = 0;
+                this.onLoad();
+            } */
+        },
+        keyword(newVal, oldVal) {
+            //普通的watch监听
+            if (newVal != "") {
+                this.info = [];
+                this.page = 1;
                 this.onLoad();
             }
         }
@@ -118,35 +83,6 @@ export default {
     methods: {
         onClickLeft() {
             this.$router.go(-1);
-        },
-        onClickSearch() {
-            this.$router.push({'path':'/chat/search',query:{token:this.token}});
-        },
-        onClickRight(){
-            this.$router.push({'path':'/write',query:{token:this.token}});
-        },
-        onClickMy(){
-            this.$router.push({'path':'/mychat',query:{token:this.token}});
-        },
-        show(){
-            this.cateShow = !this.cateShow;
-        },
-        focus(){
-            this.$router.push({'path':'/focus',query:{token:this.token}});
-        },
-        changeCate(sort){
-            this.cid = sort;
-            this.info = [];
-            this.page = 1;
-            this.onLoad();
-        },
-        changeCate1(value){
-            this.cateShow = false;
-            this.cateActive = value.index;
-            this.cid = value.id;
-            this.info = [];
-            this.page = 1;
-            this.onLoad();
         },
         showImagePreview(index, info) {
             var images = info.images;
@@ -219,30 +155,24 @@ export default {
         },
         onLoad() {
             var that = this;
-            if(!that.canPost){
+            if(!that.canPost || that.keyword==''){
+                that.loading = false;
                 return false;
             }
             that.canPost = false;
             let data = {
-                cid : that.cid,
+                token : user.token,
+                keyword : that.keyword,
                 cityID : that.config.CITYID,
                 page : that.page,
             };
-            if(user.status){
-                data.token = user.token
-            }
-            that.$http.post("V1/chat/getmain",data).then(result => {
+            that.$http.post("V1/chat/search",data).then(result => {
                 let res = result.data;
                 if (res.code == 0) {
                     // 加载状态结束
                     that.loading = false;
                     that.canPost = true;                 
-                    that.info = that.info.concat(res.body.data);  
-                    if(that.cate==''){
-                        that.cate = [{title:'全部',id:0,checked:true}];
-                        that.cate = that.cate.concat(res.body.cate);
-                    }
-                    that.quick = res.body.quick;
+                    that.info = that.info.concat(res.body.data); 
                     that.page++;          
                     if(res.body.next==0){
                         that.finished = true;
@@ -252,39 +182,16 @@ export default {
                 }
             });
         }
-    },
-    mounted:function(){
-        this.show();
-    },
+    }
 };
 </script>
 <style scoped>
 .wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
-.tab{clear: both;overflow: hidden;}
-.tab li{display: inline-block; font-size: 14px; padding:0 10px;}
-.tab li.active{color: #05c1af;}
-
-.topLeftIcon span{ padding-right: 10px; font-size: 20px}
-.topRightIcon span{ padding-left: 10px; font-size: 20px}
-
-.topCate{position: fixed; top: 45px; width: 100%; display: flex;background: #fff}
-.cateTab{flex: 1}
-.cateBar{width: 40px; height: 44px; text-align: center}
-.cateBar i{line-height: 44px;color: #05c1af;}
-.cateList{position: fixed; top:45px; width: 100%; z-index: 999; background: #fff}
-.cateList .hd{height: 44px; line-height: 44px; text-align: center; position: relative; background: #05c1af; color: #fff}
-.cateList i{position: absolute;right: 5px; top: 15px}
-.my-swipe{height: 250px;width: 100vw; border-bottom: 1px #f1f1f1 solid}
-.wrap >>> .mint-swipe-indicator.is-active {background: #f00;}
-.quick{clear: both; overflow: hidden;}
-.quick li{float: left; width:20%; text-align: center;font-size: 12px; padding: 10px 0}
-.quick li img{display: block; margin: auto; height: 40px}
-.custom-indicator {position: absolute;left: 0px;bottom:10px;width: 100%;height: 20px;text-align: center}
-.custom-indicator li{display: inline-block; padding: 0 3px}
-.custom-indicator li span{display: block; width: 6px; height: 6px; border-radius:3px; background: #ccc}
-.custom-indicator li span.active{background: #f60; width: 14px}
-
-.chat{background: #fff; clear: both; overflow: hidden; border-bottom: 1px #f1f1f1 solid; padding: 10px 0}
+.search{height: 46px; background: #fff; position: fixed; width: 100%;left: 0; top: 0; display: flex}
+.search .ipt{flex: 1; padding:0 10px}
+.search .ipt input{height: 30px; border-radius: 15px; padding: 0 10px; margin: 0; border: 0; background: #f1f1f1; width: 100%; box-sizing: border-box; margin-top: 8px; font-size: 14px}
+.search .cancel{width: 40px; text-align: center; line-height: 46px; font-size: 14px}
+.chat{background: #fff; clear: both; overflow: hidden; border-bottom: 1px #f1f1f1 solid; padding: 10px 0;}
 .chat .user{clear: both; margin-bottom: 10px; overflow: hidden; padding: 0 10px}
 .chat .user .face{float: left; margin-right: 10px}
 .chat .user .face img{display: block; width: 50px; height: 50px; border-radius: 50%;}
@@ -293,6 +200,7 @@ export default {
 .chat .user .name span{color: #999}
 .chat .user .focus{float: right; font-size: 12px; height: 24px; line-height: 24px; border-radius: 12px; background-color: #c00; width: 60px; text-align: center; color: #fff; margin-top: 10px}
 .chat .user .focused{background-color: #ccc; color: #fff;}
+
 .chat .say{clear: both; font-size: 14px; margin-bottom: 10px; padding: 0 10px;overflow: hidden;max-height: 58px}
 .chat .photo{clear: both; padding-left: 10px}
 .chat .photo li{float: left; width: 33.333%; padding-right: 10px; box-sizing: border-box; padding-bottom: 10px}
@@ -301,5 +209,6 @@ export default {
 .chat .action{clear: both;}
 .chat .action li{float: left; width: 33.333%; text-align: center; font-size: 12px; line-height: 20px; color: #999}
 .chat .action li i{font-size: 16px; display: inline;}
+
 .btn{text-align: right; font-size: 14px; padding-right: 10px; color: #586a9c; margin-top: -10px; margin-bottom: 10px}
 </style>

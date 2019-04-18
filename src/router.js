@@ -14,6 +14,8 @@ import Chat from './views/chat/Index.vue'
 import Focus from './views/chat/Focus.vue'
 import Write from './views/chat/Write.vue'
 import Comment from './views/chat/Comment.vue'
+import MyChat from './views/chat/MyChat.vue'
+import ChatSearch from './views/chat/Search.vue'
 
 import Test from './views/Test.vue'
 
@@ -102,6 +104,18 @@ export default new Router({
             name: "comment",
             meta:{index:3},
             component: Comment
+        },
+        {
+            path: "/mychat",
+            name: "mychat",
+            meta:{index:2},
+            component: MyChat
+        },
+        {
+            path: "/chat/search",
+            name: "chatSearch",
+            meta:{index:3},
+            component: ChatSearch
         },
 
 

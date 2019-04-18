@@ -30,17 +30,19 @@
 
         <div class="feedback">
 			<div class="hd">
-				<p>留言</p>
+				<p>大家怎么说</p>
 			</div>
 			<div class="empty" v-show="empty" @click="showWrite"><p>抢占沙发~</p></div>
 			<div class="bd">
                 <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="getData">
-                    <li v-for="vo in comment">
+                    <li v-for="(vo,index) in comment" :key="index">
                         <div class="face"><img :src="vo.headimg"></div>
                         <div class="desc">
                             <div class="name">{{vo.nickname}}</div>
+                            <div class="date">{{vo.createTime}}</div>
                             <div class="say">{{vo.content}}</div>
-                        </div>					
+                        </div>
+                        <div class="like"><van-icon class-prefix="icon" name="dianzan" @click="doDigg(index,vo)"/>{{vo.digg}}</div>
                     </li>
                 </van-list>	
 			</div>
@@ -48,11 +50,11 @@
 
         <div style="height:46px"></div>
 
-        <div class="footer">
+        <div class="footer" v-show="token!=''">
             <div class="writeBox" @click="showWrite">
-                <van-icon name="edit" /> 写留言...
+                <van-icon name="edit" /> 我来说两句...
             </div>
-            <div class="like"><van-icon class-prefix="icon" name="dianzan" />1</div>
+            <div class="like"><van-icon class-prefix="icon" name="dianzan" @click="doLike"/>{{info.like}}</div>
             <div class="share"><van-icon class-prefix="icon" name="fenxiang" /></div>
         </div>
 
@@ -102,6 +104,7 @@ export default {
             if (to.name == "comment") {  
                 this.page = 1;
                 this.comment = [];
+                this.empty = false;
                 this.init();
                 this.getData();
             }
@@ -131,7 +134,73 @@ export default {
             this.$router.go(-1);
         },
         doFocus(){
-
+            var that = this;
+            if(user.status){
+                var data = {
+                    cityID:that.config.CITYID,
+                    token:user.token,
+                    userID:that.info.memberID
+                };                
+                that.$http.post("/V1/chat/focus",data).then(result => {
+                    let res = result.data;
+                    if (res.code == 0) {
+                        this.$toast(res.desc);
+                        if(res.desc=='已关注'){
+                            that.info.focus = true;
+                        }else{
+                            that.info.focus = false;
+                        }
+                    }else if(res.code==999){
+                        window.location.href='app://login';  
+                    }else{
+                        that.$dialog.alert({title:'错误信息',message:res.desc});
+                    }
+                });
+            }
+        },
+        doLike(){//点赞
+            var that = this;
+            if(user.status){
+                var data = {
+                    cityID:that.config.CITYID,
+                    token:user.token,
+                    chatID:that.info.id
+                };                
+                that.$http.post("/V1/chat/like",data).then(result => {
+                    let res = result.data;
+                    if (res.code == 0) {
+                        this.$toast(res.desc);
+                        if(res.desc=='已点赞'){
+                            that.info.like++;
+                        }else{
+                            that.info.like--;
+                        }
+                    }else if(res.code==999){
+                        window.location.href='app://login';  
+                    }else{
+                        that.$dialog.alert({title:'错误信息',message:res.desc});
+                    }
+                });
+            }
+        },
+        doDigg(index,info){
+            var that = this;
+            if(user.status){
+                var data = {
+                    token:user.token,
+                    commentID:info.id
+                };                
+                that.$http.post("/V1/chat/digg",data).then(result => {
+                    let res = result.data;
+                    if (res.code == 0) {
+                        that.comment[index].digg++;
+                    }else if(res.code==999){
+                        window.location.href='app://login';  
+                    }else{
+                        //that.$dialog.alert({title:'错误信息',message:res.desc});
+                    }
+                });
+            }
         },
         showWrite(){
             this.boxShow = true;
@@ -159,6 +228,7 @@ export default {
             that.id = that.$route.query.id;
             let data = {
                 id : that.id,
+                token:user.token,
                 page : that.page
             };                
             that.$http.post("/V1/chat/getComment",data).then(result => {
@@ -202,8 +272,10 @@ export default {
                 let res = result.data;
                 this.$toast.clear();
                 if (res.code == 0) {
-                    that.content='';                  
-                    this.$dialog.alert({title:'系统信息',message:res.desc});
+                    that.content = '';
+                    that.boxShow = false;
+                    that.empty = false;
+                    that.comment = res.body.concat(that.comment);
                 }else if(res.code==999){
                     window.location.href='app://login';  
                 }else{
@@ -245,15 +317,16 @@ export default {
 
 .feedback{clear: both; overflow: hidden; padding: 10px; background: #fff}
 .feedback .hd{clear: both; overflow: hidden; margin-bottom: 15px}
-.feedback .hd p{float: left;}
+.feedback .hd p{float: left; font-size: 14px; color: #999}
 .feedback .hd span{float: right; cursor: pointer; font-size: 14px;color:#586a9c}
 .feedback .bd{clear: both; overflow: hidden;}
 .feedback .bd li{clear: both; overflow: hidden; display: flex; margin-bottom: 15px}
 .feedback .bd li .face{width: 50px;}
 .feedback .bd li .face img{border-radius: 50%}
 .feedback .bd li .desc{flex: 1; padding: 0 10px}
-.feedback .bd li .desc .name{font-size: 14px; color: #999}
-.feedback .bd li .desc .say{font-size: 14px;}
+.feedback .bd li .desc .name{font-size: 12px; color: #999; margin-top:5px}
+.feedback .bd li .desc .date{font-size: 12px; color: #999}
+.feedback .bd li .desc .say{font-size: 14px; margin-top: 10px}
 .feedback .bd li .like{ width:60px; text-align: right; color: #586a9c}
 .feedback .bd li .like img{height:20px;display: block; float: right}
 .feedback .bd li .like span{display: block; float: right; line-height: 20px; font-size: 12px; margin-top:2px}

@@ -6,19 +6,23 @@
 
         <div class="indexMenu">
             <van-loading class="loadding" v-show="loadShow" size="20px"/>
-            <li v-for="item in cate" :key="item.type" @click="goto(item)"><img :src="item.icon"/><p>{{item.name}}</p></li>
+            <template v-for="item in cate">
+            <li v-if="item.type!='chat'" :key="item.type" @click="goto(item)"><img :src="item.icon"/><p>{{item.name}}</p></li>
+            </template> 
         </div>
 
-        <div class="indexList" v-for="item in cate" :key="item.type">
-            <div class="hd" @click="goto(item)">{{item.name}} <span>查看更多</span></div>
-            <div class="db">
-                <van-swipe :show-indicators=false :width="width">
-                    <van-swipe-item v-for="vo in item.child" :key="vo.name">
-                    <infoDetail :info="vo" :type="item.type"></infoDetail>
-                    </van-swipe-item>
-                </van-swipe>
+        <template v-for="item in cate">
+            <div class="indexList" :key="item.type" v-if="item.type!='chat'">
+                <div class="hd" @click="goto(item)">{{item.name}} <span>查看更多</span></div>
+                <div class="db">
+                    <van-swipe :show-indicators=false :width="width">
+                        <van-swipe-item v-for="vo in item.child" :key="vo.name">
+                        <infoDetail :info="vo" :type="item.type"></infoDetail>
+                        </van-swipe-item>
+                    </van-swipe>
+                </div>
             </div>
-        </div>
+        </template>        
     </div>
 </template>
 
@@ -87,7 +91,9 @@ export default {
                     this.$router.push({name:'news',params:{cid:value.cid}});
                 }else{
                     this.$router.push({name:'cate',params:{cid:value.cid}});
-                }                
+                }
+            }else if(value.type=='chat'){
+                this.$router.push({path:'/chat'});
             }else if(value.type=='zp'){
                 this.$router.push({path:'/job'});
             }else if(value.type=='zf'){

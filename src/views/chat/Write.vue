@@ -29,7 +29,7 @@
         </van-popup>
         <van-popup v-model="tagShow" position="bottom">
             <div class="tag">
-                <li v-for="vo in tagArr" :key="vo.cid" @click="onSelectTag(vo.name)"><van-tag plain>{{vo.name}}</van-tag></li>
+                <li v-for="vo in tagArr" :key="vo.cid" @click="onSelectTag(vo.name)"><van-tag plain size="medium">{{vo.name}}</van-tag></li>
             </div>
         </van-popup>
     </div>

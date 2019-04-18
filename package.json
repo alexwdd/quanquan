@@ -9,6 +9,7 @@
 	},
 	"dependencies": {
 		"axios": "^0.18.0",
+		"less-loader": "^4.1.0",
 		"mint-ui": "^2.2.13",
 		"sass-loader": "^7.1.0",
 		"vant": "^1.6.9",
