@@ -1,13 +1,23 @@
 <template>
     <div class="wrap">
-        <van-nav-bar fixed left-arrow @click-right="onClickRight">
+        <van-nav-bar fixed left-arrow>
             <div slot="title">
                 <div class="tab">
                     <li @click="chat">话题</li>
                     <li class="active">关注</li>
                 </div>
             </div>
-            <van-icon name="photograph" slot="right"/>
+            
+            <div class="topRightIcon" slot="right" v-show="token!=''">
+                <span>
+                    <van-icon name="photograph" @click="showType"/>
+                    <div class="selectType" v-show="typeShow">
+                        <div class="arrow"></div>
+                        <li @click="onClickRight">发图文</li>
+                        <li>发小视频</li>
+                    </div>
+                </span>
+            </div>
         </van-nav-bar>
 
         <div style="height:46px"></div>
@@ -52,6 +62,7 @@ import { ImagePreview } from 'vant';
 export default {
     data() {
         return {
+            typeShow:false,
             token:'',            
             info:[],
             loading: false,
@@ -63,6 +74,7 @@ export default {
     watch: {
         $route(to) {
             if (to.name == "focus") {
+                this.typeShow=false;
                 this.info = [];
                 this.page = 1;
                 this.onLoad();
@@ -75,6 +87,9 @@ export default {
         }
     },
     methods: {
+        showType(){
+            this.typeShow = !this.typeShow;
+        },
         onClickRight(){
             this.$router.push({'path':'/write',query:{token:this.token}});
         },
@@ -158,7 +173,6 @@ export default {
             that.canPost = false;
             let data = {
                 token : user.token,
-                cid : that.cid,
                 cityID : that.config.CITYID,
                 page : that.page,
             };
@@ -173,6 +187,8 @@ export default {
                     if(res.body.next==0){
                         that.finished = true;
                     }
+                }else if(res.code==999){
+                    window.location.href='app://login';  
                 }else{
                     that.$dialog.alert({title:'错误信息',message:res.desc});
                 }
@@ -186,6 +202,13 @@ export default {
 .tab{clear: both;overflow: hidden;}
 .tab li{display: inline-block; font-size: 14px; padding:0 10px;}
 .tab li.active{color: #05c1af;}
+
+.topRightIcon span{ padding-left: 10px; font-size: 20px; position: relative;}
+.topRightIcon span .dot{position: absolute; width:8px; height:8px; border-radius:50%; background: #c00;top:0px; right: 0px;}
+.selectType{position: absolute; top:25px; right: -6px; width: 100px; font-size: 14px; z-index: 999;}
+.selectType li{background: #111; color: #fff; border-bottom: 1px #666 solid}
+.selectType li:last-child{border: 0}
+.selectType .arrow{width:0;height:0;border-width:0 6px 6px;border-style:solid;border-color:transparent transparent #111;; margin-right:10px; margin-left: auto}
 
 .chat{background: #fff; clear: both; overflow: hidden; border-bottom: 1px #f1f1f1 solid; padding: 10px 0}
 .chat .user{clear: both; margin-bottom: 10px; overflow: hidden; padding: 0 10px}

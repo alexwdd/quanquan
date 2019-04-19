@@ -13,8 +13,15 @@
                 </div>
             </div>
             <div class="topRightIcon" slot="right" v-show="token!=''">
-                <span><van-icon name="contact" @click="onClickMy"/></span>
-                <span><van-icon name="photograph" @click="onClickRight"/></span>
+                <span><van-icon name="contact" @click="onClickMy"/><div class="dot"></div></span>
+                <span>
+                    <van-icon name="photograph" @click="showType"/>
+                    <div class="selectType" v-show="typeShow">
+                        <div class="arrow"></div>
+                        <li @click="onClickRight">发图文</li>
+                        <li>发小视频</li>
+                    </div>
+                </span>
             </div>
         </van-nav-bar>
 
@@ -84,6 +91,8 @@ export default {
         return {
             token:'',
 
+            typeShow:false,
+
             cateShow:true,
             cate:'',
             quick:[],
@@ -104,6 +113,7 @@ export default {
                 this.cate = '',
                 this.quick = [];
                 this.cateShow=false;
+                this.typeShow=false;
                 this.page = 1;
                 this.cid = 0;
                 this.onLoad();
@@ -116,6 +126,9 @@ export default {
         }
     },
     methods: {
+        showType(){
+            this.typeShow = !this.typeShow;
+        },
         onClickLeft() {
             this.$router.go(-1);
         },
@@ -265,7 +278,12 @@ export default {
 .tab li.active{color: #05c1af;}
 
 .topLeftIcon span{ padding-right: 10px; font-size: 20px}
-.topRightIcon span{ padding-left: 10px; font-size: 20px}
+.topRightIcon span{ padding-left: 10px; font-size: 20px; position: relative;}
+.topRightIcon span .dot{position: absolute; width:8px; height:8px; border-radius:50%; background: #c00;top:0px; right: 0px;}
+.selectType{position: absolute; top:25px; right: -6px; width: 100px; font-size: 14px; z-index: 999;}
+.selectType li{background: #111; color: #fff; border-bottom: 1px #666 solid}
+.selectType li:last-child{border: 0}
+.selectType .arrow{width:0;height:0;border-width:0 6px 6px;border-style:solid;border-color:transparent transparent #111;; margin-right:10px; margin-left: auto}
 
 .topCate{position: fixed; top: 45px; width: 100%; display: flex;background: #fff}
 .cateTab{flex: 1}

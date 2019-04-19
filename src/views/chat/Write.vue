@@ -17,6 +17,9 @@
 
         <van-cell title="版块" is-link arrow-direction="down" :value="cate.name" @click="clickShowCate"/>
         <van-cell title="标签" is-link arrow-direction="down" :value="tag"  @click="clickShowTag"/>
+        <van-cell-group>
+            <van-switch-cell v-model="checked" title="公开" active-color="#05c1af"/>
+        </van-cell-group>
         
         <div class="btn">
             <van-button size="large" round class="my-btn" @click="submit">确认发布</van-button>
@@ -48,7 +51,8 @@ export default {
             cate:[],
             tagArr:[],
             tag:'',
-            images:[]
+            images:[],
+            checked:true,
         };
     },
     beforeRouteEnter:(to,from,next)=>{
@@ -194,6 +198,11 @@ export default {
                 cid:that.cate.cid,
                 tag:that.tag
             };
+            if(that.checked){
+                data.open=1;
+            }else{
+                data.open=0;
+            }
             this.$toast.loading({mask: true,duration:0});
             that.$http.post("/V1/chat/submit",data).then(result => {
                 let res = result.data;

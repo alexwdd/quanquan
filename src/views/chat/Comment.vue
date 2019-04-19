@@ -66,13 +66,10 @@
                 placeholder="请输入留言"
                 rows="1"
                 autosize
-            />
-            <van-cell-group>
-                <van-switch-cell v-model="checked" title="公开" active-color="#05c1af"/>
-            </van-cell-group>
+            />            
             </div>
             <div style="padding: 10px;">
-                <van-button class="my-btn" size="large" @click="saveComment">提交</van-button>
+                <van-button class="my-btn" @click="saveComment">提交</van-button>
             </div>
         </van-popup>
     </div>
@@ -91,7 +88,7 @@ export default {
             content:'',
             boxShow:false,
             empty:false,
-            checked:true,
+            
 
             loading: false,
             finished: false,
@@ -205,8 +202,11 @@ export default {
         showWrite(){
             this.boxShow = true;
         },
-        init(){
+        init(){            
             var that = this;
+            if(user.status==true){
+                that.token = user.token;
+            }
             that.id = that.$route.query.id;
 			if (that.id>0 && that.id!=''){
                 let data = {
@@ -261,12 +261,7 @@ export default {
                 token:user.token,
                 content:that.content,
                 id:that.id
-            };
-            if(that.checked){
-                data.open=1;
-            }else{
-                data.open=0;
-            }
+            };            
             this.$toast.loading({mask: true,duration:0});
             that.$http.post("/V1/chat/comment",data).then(result => {
                 let res = result.data;
