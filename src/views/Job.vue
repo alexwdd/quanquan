@@ -55,7 +55,8 @@ export default {
     },
     watch: {
         $route(to) {
-            if (to.name == "list") {
+            if (to.name == "job") {
+                this.loading = true;
                 this.info = [];
                 this.page = 1;
                 this.sort = 0;
@@ -83,6 +84,7 @@ export default {
             }
         },
         changeCate(sort){
+            this.loading = true;
             this.jobType = sort;
             this.info = [];
             this.page = 1;

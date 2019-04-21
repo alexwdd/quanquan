@@ -51,7 +51,8 @@ export default {
     },
     watch: {
         $route(to) {
-            if (to.name == "list") {
+            if (to.name == "job") {
+                this.loading = true;
                 this.info = [];
                 this.page = 1;
                 this.sort = 0;
@@ -69,6 +70,7 @@ export default {
             this.$router.push({name:'detail',params:{type: type,id:infoid}})
         },
         changeCate(sort){
+            this.loading = true;
             this.jobType = sort;
             this.info = [];
             this.page = 1;

@@ -60,7 +60,8 @@ export default {
     },
     watch: {
         $route(to) {
-            if (to.name == "list") {
+            if (to.name == "house") {
+                this.loading = true;
                 this.info = [];
                 this.page = 1;
                 this.sort = 0;
@@ -88,6 +89,7 @@ export default {
             }
         },
         changeCate(sort){
+            this.loading = true;
             this.houseType = sort;
             this.info = [];
             this.page = 1;
