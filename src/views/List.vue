@@ -94,7 +94,18 @@ export default {
             }
         }
     },
-    created() {},
+    created() {
+        if(this.config.isApp()){
+            this.info = [];
+            this.cate = [{title:'全部',id:0,checked:true}],
+            this.quick = [];
+            this.cateShow=false;
+            this.page = 1;
+            this.sort = 0;
+            this.show();
+            this.onLoad();
+        }
+    },
     methods: {
         onClickLeft() {
             this.$router.go(-1);
