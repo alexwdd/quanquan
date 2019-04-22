@@ -112,7 +112,7 @@ export default {
         },
         goto(value){
             if(this.config.isApp()){
-                window.location.href = 'app://news?id='+value.id;
+                window.location.href = 'app://news?id='+value.id+"&title="+value.name;
             }else{
                 this.$router.push({name:'news',params:{cid:value.id}});
             }

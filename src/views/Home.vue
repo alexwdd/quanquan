@@ -17,7 +17,7 @@
                 <div class="db">
                     <van-swipe :show-indicators=false :width="width">
                         <van-swipe-item v-for="vo in item.child" :key="vo.name">
-                        <infoDetail :info="vo" :type="item.type"></infoDetail>
+                        <infoDetail :info="vo" :type="item.type" :padding="false"></infoDetail>
                         </van-swipe-item>
                     </van-swipe>
                 </div>

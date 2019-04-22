@@ -1,6 +1,6 @@
 <template>
     <div class="wrap">
-        <van-nav-bar fixed :title="cateName" left-arrow @click-left="onClickLeft" v-show="barShow"/>
+        <van-nav-bar class="myTop" fixed z-index="999" :title="cateName" left-arrow @click-left="onClickLeft" v-show="barShow"/>
 
         <div class="topCate" :style="'top:'+top+'px'">
             <div class="cateTab">
@@ -27,6 +27,11 @@
         <div :style="'height:'+height+'px'"></div>
         
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+            <template v-if="showType=='big'">
+            <infoDetail v-for="vo in info" :info="vo" :type="type" :padding="true" :key="vo.id"></infoDetail>
+            </template>
+
+            <template v-if="showType=='small'">
             <van-row class="news" v-for="vo in info" :key="vo.articleid">
                 <van-col span="8"><div class="img" @click="detail(vo)"><img v-lazy="vo.thumb_s"></div></van-col>
                 <van-col span="16">
@@ -44,6 +49,7 @@
                     </div>
                 </van-col>
             </van-row>
+            </template>
         </van-list>
     </div>
 </template>
@@ -60,6 +66,8 @@ import 'vue-swipe/dist/vue-swipe.css';
 //注册轮播图
 Vue.component('swipe', Swipe);
 Vue.component('swipe-item', SwipeItem);
+
+import infoDetail from "../components/infoDetail";
 
 export default {
     data() {
@@ -78,6 +86,8 @@ export default {
             loading: false,
             finished: false,
             canPost:true,
+            showType:'small',//展示模式small小图,big大图模式
+            type:'',
             page:1
         };
     },
@@ -94,8 +104,13 @@ export default {
             }
         }
     },
+    components:{infoDetail},
     created() {
         if(this.config.isApp()){
+            if(this.$route.query.showType=='big'){
+                this.showType = "big";
+            }
+            this.type = this.$route.params.type;
             this.info = [];
             this.cate = [{title:'全部',id:0,checked:true}],
             this.quick = [];
@@ -145,7 +160,7 @@ export default {
         },
         onLoad() {
             var that = this;
-
+            this.type = that.$route.params.type;
             if(this.config.isApp()){
                 that.barShow = false;
                 that.top = 0;
@@ -191,8 +206,7 @@ export default {
 </script>
 <style scoped>
 .wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
-
-.topCate{position: fixed; width: 100%; display: flex;background: #fff}
+.topCate{position: fixed; width: 100%; display: flex;background: #fff; z-index: 999;}
 .cateTab{flex: 1}
 .cateBar{width: 40px; height: 44px; text-align: center}
 .cateBar i{line-height: 44px;color: #05c1af;}

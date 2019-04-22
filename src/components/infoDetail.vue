@@ -23,7 +23,7 @@
             </router-link>
         </div>
 
-        <div class="picList" v-else="">
+        <div class="picList" :class="{padd: padding }" v-else="">
             <router-link :to="'/detail/'+type+'/'+info.articleid">
             <div class="picInfo" v-lazy:background-image="info.thumb_b">
                 <div class="slider-money">
@@ -54,6 +54,7 @@ import '../assets/fonts/iconfont.css';
 export default {
     props: {
         type:String,
+        padding:Boolean,
         info:{}
     },
     created(){
@@ -67,11 +68,13 @@ export default {
 .news img{height: 200px; width: 100%;}
 
 .picInfo{position: relative; height: 180px; background-position: center; background-repeat: no-repeat;background-size: cover;}
-.picList{padding-right: 10px}
+
+.picList{background: #fff; padding-right: 10px}
+.padd{padding:10px 0px; width: 100%; box-sizing: border-box; border-bottom:1px #dbdbdb dashed;}
 .picList .slider-money{position: absolute; left: 0; bottom: 40px; z-index: 99; width: 100%}
 .picList .slider-money span{background: rgba(0,0,0,0.7); color: #05c1af;padding: 5px 10px; display:block; float: left; margin-right: 15px; margin-top: -5px}
 .picList .slider-money .tag4{background: #06c2b0; float: left;color: #fff; border-radius: 5px; padding: 3px 6px; font-size: 12px;}
-.picList .slider-tag{position: absolute; left: 5px; bottom: 5px; width: 100%; z-index: 99}
+.picList .slider-tag{position: absolute; left: 5px; bottom: 5px; width: 100%; z-index: 0}
 .picList .slider-tag span{display: inline-block; color: #fff; border-radius: 5px; padding: 3px 6px; font-size: 12px;}
 .picList .slider-tag span.tag1{background: #2bc3fa}
 .picList .slider-tag span.tag2{background: #f54d8f}

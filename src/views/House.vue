@@ -1,6 +1,6 @@
 <template>
     <div class="wrap">
-        <van-nav-bar fixed :title="cateName" left-arrow @click-left="onClickLeft" v-show="barShow"/>
+        <van-nav-bar fixed z-index="999" :title="cateName" left-arrow @click-left="onClickLeft" v-show="barShow"/>
 
         <div class="topCate" :style="'top:'+top+'px'">
             <van-tabs color="#05c1af">
@@ -13,6 +13,12 @@
         <div :style="'height:'+height+'px'"></div>
 
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+
+            <template v-if="showType=='big'">
+            <infoDetail v-for="vo in info" :info="vo" :type="type" :padding="true" :key="vo.id"></infoDetail>
+            </template>
+
+            <template v-if="showType=='small'">
             <van-row class="news" v-for="vo in info" :key="vo.articleid">
                 <van-col span="8"><div class="img" @click="detail(vo)"><img v-lazy="vo.thumb_s"></div></van-col>
                 <van-col span="16">
@@ -30,6 +36,7 @@
                     </div>
                 </van-col>
             </van-row>
+            </template>
         </van-list>
     </div>
 </template>
@@ -40,6 +47,7 @@ import { Lazyload } from 'vant';
 Vue.use(Lazyload,{
     loading:'../static/image/default_320.jpg'
 });
+import infoDetail from "../components/infoDetail";
 export default {
     data() {
         return {
@@ -54,10 +62,12 @@ export default {
             finished: false,
             canPost:true,
             houseType:0,
+            showType:'small',//展示模式small小图,big大图模式
             type:'zf',
             page:1
         };
     },
+    components:{infoDetail},
     watch: {
         $route(to) {
             if (to.name == "house") {
@@ -69,7 +79,18 @@ export default {
             }
         }
     },
-    created() {},
+    created() {
+        if(this.config.isApp()){
+            if(this.$route.query.showType=='big'){
+                this.showType = "big";
+            }
+            this.loading = true;
+            this.info = [];
+            this.page = 1;
+            this.sort = 0;
+            this.onLoad();
+        }
+    },
     methods: {
         onClickLeft() {
             this.$router.go(-1);
@@ -135,7 +156,7 @@ export default {
 </script>
 <style scoped>
 .wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
-.topCate{position: fixed; top: 46px; width: 100%;}
+.topCate{position: fixed; top: 46px; width: 100%; z-index: 999;}
 .news{clear: both; overflow: hidden; display: flex; padding: 10px; border-bottom:1px #dbdbdb dashed;background:#fff}
 .news .info{padding-left:5px}
 .news .info h1{font-size: 15px;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;}
