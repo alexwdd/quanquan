@@ -196,7 +196,8 @@ export default {
                 content:that.content,
                 images:imageStr,
                 cid:that.cate.cid,
-                tag:that.tag
+                tag:that.tag,
+                type:1
             };
             if(that.checked){
                 data.open=1;
