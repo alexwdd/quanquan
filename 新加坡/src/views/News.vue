@@ -1,55 +1,82 @@
 <template>
     <div class="wrap">
-        <van-nav-bar fixed :title="cateName" left-arrow @click-left="onClickLeft"/>
-        <div style="height:46px"></div>
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-            <div class="news" v-for="vo in info" :key="vo.id" @click="detail(vo.id)">
-                <div class="img"><img :src="vo.picname|emptyImg"></div>
-                <div class="info">
-                    <div class="title">
-                    <h1>{{vo.title}}</h1>
-                    </div>
-                    <div class="date">{{vo.createTime}}</div>
-                </div>
-            </div>
-        </van-list>
+        <van-nav-bar fixed :title="cateName" left-arrow @click-left="onClickLeft" v-show="barShow"/>
+
+        <div style="height:46px" v-show="barShow"></div>
+
+        <div id="fallBox">
+			<vue-waterfall-easy ref="waterfall" :imgsArr="info" @scrollReachBottom="getData"  @click="detail">
+				<template slot-scope="props">
+					<div class="fall">
+						<div class="title">{{props.value.title}}</div>
+						<div class="footer">
+							<div class="date">{{props.value.createTime}}</div>
+							<div class="like">
+								<van-icon name="like-o" />
+								<div class="like-total">{{props.value.hit}}</div>
+							</div>
+						</div>	
+					</div>
+				</template>
+			</vue-waterfall-easy>
+		</div>
     </div>
 </template>
 
 <script>
+import vueWaterfallEasy from 'vue-waterfall-easy'
 export default {
     data() {
         return {
+            barShow:true,
             cateName:'',
             info:[],
-            loading: false,
             finished: false,
-            canPost:true,
             page:1
         };
     },
+    components: {
+		vueWaterfallEasy
+	},
     watch: {
         $route(to) {
             if (to.name == "news") {
-                this.onLoad();
+                this.info = [];
+                this.page = 1;
+                this.finished = false;
+                this.getData();
             }
         }
     },
-    created() {},
+    created() {
+        this.getData();
+    },
     methods: {
         onClickLeft() {
             this.$router.go(-1);
         },
-        detail(infoid){
-            this.$router.push({name: 'view',params:{ id:infoid }})
-            //window.location.href = '/view/'+infoid
-        },
-        onLoad() {
-            var that = this;            
-            if(!that.canPost){
+        detail(event, { index, value }) {
+            if(this.config.isApp()){
+                let url = '';
+                if (value.url!=''){
+                    url = 'app://html?url='+value.url+'&type=article&articleid='+value.id+'&title='+value.title;
+                }else{
+                    url = 'app://html?url='+value.html+'&type=article&articleid='+value.id+'&title='+value.title;
+                }
+                window.location.href = url;
+            }else{
+                this.$router.push({name:'view',params:{ id:value.id }})
+            }
+		},
+        getData() {
+            var that = this;  
+            if(this.config.isApp()){
+                that.barShow = false;
+            }             
+            if(that.finished){
+                this.$refs.waterfall.waterfallOver();
                 return false;
             }
-            that.canPost = false;
             let data = {
                 cityID : that.config.CITYID,
                 cid:that.id = that.$route.params.cid,
@@ -59,14 +86,15 @@ export default {
                 let res = result.data;
                 if (res.code == 0) {
                     // 加载状态结束
-                    that.loading = false;
-                    that.canPost = true;                 
+                    for (let i = 0; i < res.body.data.length; i++) {
+						res.body.data[i]['src'] = res.body.data[i]['picname'];
+					}
+					if(res.body.next==0){
+                        that.finished = true;
+                    }              
                     that.info = that.info.concat(res.body.data);
                     that.cateName = res.body.cateName;
-                    that.page++;          
-                    if(res.body.next==0){
-                        that.finished = true;
-                    }
+                    that.page++; 
                 }else{
                     that.$dialog.alert({title:'错误信息',message:res.desc});
                 }
@@ -78,11 +106,12 @@ export default {
 
 <style scoped>
 .wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
-.news{clear: both; background: #fff; overflow: hidden; display: flex; padding: 10px; border-bottom:1px #dbdbdb dashed}
-.news .img{width: 110px; margin-right: 10px}
-.news .img img{width: 100%; height:80px}
-.news .info{flex: 1}
-.news .info h1{font-size: 16px;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical; margin-bottom: 10px}
-.news .info .title{height: 60px;}
-.news .info .date{font-size: 12px; text-align: right; color: #999; line-height: 20px;}
+#fallBox{width: 100%; height:100vh;}
+.fall{clear: both;background: #fff; overflow: hidden; padding: 5px;}
+.fall .title{font-size: 14px;clear: both;color:#000}
+.fall .footer{clear: both;}
+.fall .date{line-height: 30px;float: left;font-size: 12px}
+.fall .like{float: right; line-height: 30px; color: #999}
+.fall .like i{float: left; margin-top: 7px; margin-right: 3px}
+.fall .like .like-total{float: left; font-size: 12px}
 </style>

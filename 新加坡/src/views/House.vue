@@ -1,13 +1,13 @@
 <template>
     <div class="wrap" id="wrap">
-        <van-nav-bar fixed :title="cateName" left-arrow @click-left="onClickLeft"/>
+        <van-nav-bar fixed :title="cateName" left-arrow @click-left="onClickLeft" v-show="barShow"/>
 
-        <div class="paramMenu">
+        <div class="paramMenu" :style="'top:'+top+'px'">
             <li @click="showSubway">地铁站 <van-icon name="arrow-down" /></li>
             <li @click="showTypes">出租类型 <van-icon name="arrow-down" /></li>
         </div>
 
-        <div class="paramBox" v-show="param1">
+        <div class="paramBox" v-show="param1" :style="'top:'+top+'px'">
             <div class="subwayList">
                 <div class="left">				
                     <li :class="{active:vo.checked}" v-for="vo in subwayList" @click="changeSubway(vo)">{{vo.text}}<van-icon name="arrow" /></li>
@@ -22,7 +22,7 @@
             </div>
         </div>
 
-        <div class="paramBox" v-show="param2">
+        <div class="paramBox" v-show="param2" :style="'top:'+top+'px'">
             <div class="typeList">
                 <li :class="{active:vo.checked}" v-for="vo in typeList" @click="changeType(vo)">{{vo.name}}</li>
             </div>
@@ -33,13 +33,13 @@
         </div>
         <div class="masker" v-show="masker" @click="closeAll"></div>
 
-        <div style="height:92px"></div>
+        <div :style="'height:'+height+'px'"></div>
 
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <van-row class="news" v-for="vo in info" :key="vo.articleid">
-                <van-col span="8"><div class="img" @click="detail(vo.articleid)"><img v-lazy="vo.thumb_s"></div></van-col>
+                <van-col span="8"><div class="img" @click="detail(vo)"><img v-lazy="vo.thumb_s"></div></van-col>
                 <van-col span="16">
-                    <div class="info" @click="detail(vo.articleid)">
+                    <div class="info" @click="detail(vo)">
                         <div class="title">
                         <h1>{{vo.title}}</h1>
                         </div>
@@ -66,6 +66,9 @@ Vue.use(Lazyload,{
 export default {
     data() {
         return {
+            top:46,
+            height:92,
+            barShow:true,
             cateName:'租房',
             sort:0,
             info:[],
@@ -115,6 +118,11 @@ export default {
     },
     created() {
         var that = this;
+        if(this.config.isApp()){
+            that.barShow = false;
+            that.top = 0;
+            that.height = 46;
+        }
         let data = {cityID:this.config.CITYID};
         that.$http.post("V1/Category/subway",data).then(result => {
             let res = result.data;
@@ -230,12 +238,27 @@ export default {
         onClickLeft() {
             this.$router.go(-1);
         },
-        detail(infoid){
+        detail(info){
             let type = this.type;
-            this.$router.push({name:'detail',params:{type: type,id:infoid}})
+            if(this.config.isApp()){
+                let url = '';
+                if (info.html==''){
+                    url = 'app://articledetail?articleid='+info.articleid+'&type='+type;
+                }else{
+                    url = 'app://html?url='+info.html+'&type='+type+'&articleid='+info.articleid+'&title='+info.title;
+                }
+                window.location.href = url;
+            }else{
+                this.$router.push({name:'detail',params:{type: type,id:info.articleid}})
+            }
         },
         onLoad() {
-            var that = this;            
+            var that = this;   
+            if(this.config.isApp()){
+                that.barShow = false;
+                that.top = 0;
+                that.height = 46;
+            }         
             if(!that.canPost){
                 return false;
             }

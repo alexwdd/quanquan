@@ -45,11 +45,11 @@ const global = {
             case 'tc':
                 return '同城活动';
             case 'zf':
-                return '租房';
+                return '租房/卖房';
             case 'sp':
                 return '二手商品';
             case 'zp':
-                return '招聘';
+                return '招聘/求职';
             case 'esc':
                 return '二手车';
             case 'ms':

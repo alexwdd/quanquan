@@ -123,7 +123,7 @@
         <div class="footer">
             <div class="logo"><img src="../assets/image/logo.jpg"></div>
             <div class="info">
-                <p>新加坡同城生活掌上宝</p>
+                <p>阿德莱德同城生活掌上宝</p>
                 <p>
                     <van-icon name="star" />
                     <van-icon name="star" />
@@ -155,8 +155,8 @@
 
 <script>
 import Vue from 'vue';
-import wx from 'weixin-js-sdk';
 import waterfall from "vue-waterfall2";
+import wx from 'weixin-js-sdk';
 Vue.use(waterfall);
 
 export default {
@@ -195,9 +195,9 @@ export default {
             return 10;
         }
     },
-	created(){        
+	created(){
         this.init();
-        this.getData();   
+        this.getData();
 	},
     methods: {
         onClickLeft() {
@@ -299,13 +299,13 @@ export default {
                         that.ad2 = res.body.ad2;
                         that.quick = res.body.quick;
                         that.about = res.body.about;
-                        document.title = res.body.data.title;
+                        document.title = res.body.data.title
                         that.share(that.info);
                     }else{
                         that.$dialog.alert({title:'错误信息',message:res.desc});
                     }
                 });
-			}
+            }          
         },
         share(info){
             var that = this;

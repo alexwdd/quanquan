@@ -1,26 +1,28 @@
 <template>
-    <div class="wrap" v-cloak>        
+    <div class="wrap">        
         <van-swipe :autoplay="3000" indicator-color="white">
 			<van-swipe-item v-for="vo in ad" :key="vo.name"><div class="banner"><img :src="vo.image" @click="goLink(vo)"/></div></van-swipe-item>
 		</van-swipe>
 
         <div class="indexMenu">
             <van-loading class="loadding" v-show="loadShow" size="20px"/>
-            <li v-for="item in cate" :key="item.type" @click="goto(item)"><img :src="item.icon"/><p>{{item.name}}</p></li>
+            <template v-for="item in cate">
+            <li :key="item.type" @click="goto(item)"><img :src="item.icon"/><p>{{item.name}}</p></li>
+            </template> 
         </div>
-        
+
         <template v-for="item in cate">
-        <div class="indexList" v-if="item.type!='phone'" :key="item.type">            
-            <div class="hd" @click="goto(item)">{{item.name}} <span>查看更多</span></div>
-            <div class="db">
-                <van-swipe :show-indicators=false :width="width">
-                    <van-swipe-item v-for="vo in item.child" :key="vo.name">
-                    <infoDetail :info="vo" :type="item.type"></infoDetail>
-                    </van-swipe-item>
-                </van-swipe>
-            </div>            
-        </div>
-        </template>
+            <div class="indexList" :key="item.type" v-if="item.type!='chat'">
+                <div class="hd" @click="goto(item)">{{item.name}} <span>查看更多</span></div>
+                <div class="db">
+                    <van-swipe :show-indicators=false :width="width">
+                        <van-swipe-item v-for="vo in item.child" :key="vo.name">
+                        <infoDetail :info="vo" :type="item.type" :padding="false"></infoDetail>
+                        </van-swipe-item>
+                    </van-swipe>
+                </div>
+            </div>
+        </template>        
     </div>
 </template>
 
@@ -65,17 +67,10 @@ export default {
                             res.body.cate[i]['icon'] = res.body.cate[i]['image'];
                         }else{
                             res.body.cate[i]['name'] = that.config.getModelName(res.body.cate[i]['type']);
-                            res.body.cate[i]['icon'] = '/singapore/static/image/'+res.body.cate[i]['type']+'_icon@2x.png';
-                        }
+                            res.body.cate[i]['icon'] = '/adelaide/static/image/'+res.body.cate[i]['type']+'_icon@2x.png';
+                        }                        
                     } */
-                    that.cate = [];
-                    let phone = {
-                        name:'话费充值',
-                        type:'phone',
-                        icon:'/singapore/static/image/phone_icon@2x.png'
-                    }
-                    that.cate = that.cate.concat(phone); 
-                    that.cate = that.cate.concat(res.body.cate);                     
+                    that.cate = res.body.cate;
                 }else{
                     that.$dialog.alert({title:'错误信息',message:res.desc});
                 }
@@ -92,15 +87,19 @@ export default {
         },
         goto(value){
             if(value.type=='article'){
-                this.$router.push({name:'news',params:{cid:value.cid}});
+                if(value.flag==0){
+                    this.$router.push({name:'news',params:{cid:value.cid}});
+                }else{
+                    this.$router.push({name:'cate',params:{cid:value.cid}});
+                }
+            }else if(value.type=='chat'){
+                this.$router.push({path:'/chat'});
             }else if(value.type=='zp'){
                 this.$router.push({path:'/job'});
             }else if(value.type=='zf'){
                 this.$router.push({path:'/house'});
             }else if(value.type=='mall'){
                 window.location.href=value.url;
-            }else if(value.type=='phone'){
-                window.location.href='http://chongzhi.worldmedia.top/';
             }else{
                 this.$router.push({path:'/list/'+value.type});
             }

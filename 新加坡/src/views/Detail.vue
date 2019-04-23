@@ -54,7 +54,7 @@
                 <div class="bd" v-html="info.detail"></div>
             </div>
 
-            <infoCell :info="info" :type="type" :sheshi="sheshi"></infoCell>
+            <infoCell :info="info" :type="type"></infoCell>
 
             <van-cell title="联系人" icon="contact" :value="info.contact|empty"/>
             <van-cell title="联系电话" icon="phone-o" :value="info.phone|empty"/>
@@ -67,7 +67,7 @@
                 :zoom.sync="zoom">
                     <googlemaps-marker                        
                         :position="infoCenter"
-                        icon="/singapore/static/image/map.png"
+                        icon="/adelaide/static/image/map.png"
                     />
                 </googlemaps-map>
                 <div class="address" v-if="info.address!=''">{{info.address}}</div>
@@ -89,6 +89,7 @@
                             </div>
                             <div class="con">{{item.content}}</div>
                         </div>
+                        
                     </li>				
                 </div>			
                 <div class="fd">
@@ -206,7 +207,7 @@
         <div class="footer">
             <div class="logo"><img src="../assets/image/logo.jpg"></div>
             <div class="info">
-                <p>新加坡同城生活掌上宝</p>
+                <p>阿德莱德同城生活掌上宝</p>
                 <p>
                     <van-icon name="star" />
                     <van-icon name="star" />
@@ -266,7 +267,6 @@ export default {
 		return {
 			id:'',
             info:{},
-            sheshi:[],
             ad1:[],
             ad2:[],
             quick:{},
@@ -278,8 +278,8 @@ export default {
             show:false,
             downShow:false,
 
-            infoCenter : { lat:1.3437419, lng:103.8559584},
-            center: { lat:1.3437419, lng:103.8559584},
+            infoCenter : { lat: -34.8911, lng:138.6463},
+            center: { lat: -34.8911, lng:138.6463},
             zoom : 14,
 
             isHide: true,    //初始值为true，显示为折叠画面
@@ -427,20 +427,12 @@ export default {
                         that.ad2 = res.body.ad2;
                         that.quick = res.body.quick;
                         that.about = res.body.about;
-                        that.sheshi = res.body.sheshi;
                         document.title = res.body.data.title
                         if(that.info.latitude!='' && that.info.longitude!=''){
                             that.center = {lat: parseFloat(that.info.latitude), lng:parseFloat(that.info.longitude)}
                             that.infoCenter = {lat: parseFloat(that.info.latitude), lng:parseFloat(that.info.longitude)}
-                        } 
+                        }
                         that.share(that.info);
-                        if (that.info.facility!='' && that.info.facility!=null) {       
-							for (var i = 0; i < that.sheshi.length; i++) {
-		            			if(that.info.facility.indexOf(that.sheshi[i]['name']) != -1 ){
-		            				that.sheshi[i]['checked'] = true;
-		            			}            			
-		            		}
-	            		}
                     }else{
                         that.$dialog.alert({title:'错误信息',message:res.desc});
                     }

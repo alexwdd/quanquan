@@ -2,94 +2,70 @@
     <div class="wrap">
         <van-nav-bar fixed :title="title" left-arrow @click-left="onClickLeft"/>
         <div style="height:46px"></div>
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-        <div class="container-water-fall">
-            <waterfall
-                :col=2
-                :width="itemWidth"
-                :gutterWidth=0
-                :data="info"
-            >
-                <template>
-                    <div class="cell-item" v-for="item in info" @click="commInfo(item)" :key="item.id">
-                        <img :src="item.image">
-                        <div class="item-body">
-                            <div class="item-desc">{{item.title}}</div>
-                            <div class="item-footer">
-                                <div class="avatar" v-if="item.user.headimg==''"><img src="../assets/image/logo.jpg"></div>
-                                <div class="avatar" v-else=""><img :src="item.user.headimg"></div>
-                                <div class="name" v-if="item.user.nickname==''">{{config.APP_NAME}}</div>
-                                <div class="name" v-else="">{{item.user.nickname}}</div>
-                                <div class="like">
-                                    <van-icon name="like-o" />
-                                    <div class="like-total">{{item.hit}}</div>
-                                </div>
+		<div id="fallBox">
+			<vue-waterfall-easy ref="waterfall" :imgsArr="info" @scrollReachBottom="getData"  @click="detail">
+				<template slot-scope="props">
+                    <div class="item-body">
+                        <div class="item-desc">{{props.value.title}}</div>
+                        <div class="item-footer">
+                            <div class="avatar" v-if="props.value.user.headimg==''"><img src="../assets/image/logo.jpg"></div>
+                            <div class="avatar" v-else=""><img :src="props.value.user.headimg"></div>
+                            <div class="name" v-if="props.value.user.nickname==''">{{config.APP_NAME}}</div>
+                            <div class="name" v-else="">{{props.value.user.nickname}}</div>
+                            <div class="like">
+                                <van-icon name="like-o" />
+                                <div class="like-total">{{props.value.hit}}</div>
                             </div>
                         </div>
                     </div>
-                </template>
-            </waterfall>
-        </div> 
-        </van-list>
+				</template>
+			</vue-waterfall-easy>
+		</div>
     </div>
 </template>
 
 <script>
-import Vue from 'vue';
-import { Lazyload } from 'vant';
-import infoCell from "../components/infoCell";
-import waterfall from "vue-waterfall2";
-Vue.use(Lazyload,{
-    loading:'/static/image/default_320.jpg'
-});
-Vue.use(waterfall);
+import vueWaterfallEasy from 'vue-waterfall-easy'
 export default {
     data(){
 		return {
             title:this.config.APP_NAME+'推荐',
             info:[],
-            loading: false,
+            page:1,
             finished: false,
-            canPost:true,
-            page:1
 		}
     },
-    components:{infoCell},
+    components:{vueWaterfallEasy},
 	watch: {
         $route(to) {
             if (to.name == "commend") {
                 this.info = [];
                 this.page = 1;
-                this.onLoad();
+                this.finished = false;
+                this.getData();
             }
         }
     },
-    computed: {
-        itemWidth() {
-            return document.documentElement.clientWidth / 2;
-        },
-        gutterWidth() {
-            return 10;
-        }
+	created(){
+        this.getData()
     },
-	created(){},
     methods: {
-        commInfo(info){
-            if(info.type=='article'){
-                this.$router.push({name:'view',params:{id:info.articleid}})
+        detail(event, { index, value }) {
+            if(value.type=='article'){
+                this.$router.push({name:'view',params:{id:value.articleid}})
             }else{
-                this.$router.push({name:'detail',params:{type: info.type,id:info.articleid}})
-            }            
-        },
+                this.$router.push({name:'detail',params:{type: value.type,id:value.articleid}})
+            }	
+		},
         onClickLeft() {
             this.$router.go(-1);
         },
-        onLoad() {
-            var that = this;            
-            if(!that.canPost){
+        getData() {
+            var that = this;  
+            if(that.finished){
+                this.$refs.waterfall.waterfallOver();
                 return false;
             }
-            that.canPost = false;
             let data = {
                 cityID : that.config.CITYID,
                 page : that.page,
@@ -97,14 +73,14 @@ export default {
             that.$http.post("V3/weixin/getcomm",data).then(result => {
                 let res = result.data;
                 if (res.code == 0) {
-                    // 加载状态结束
-                    that.loading = false;
-                    that.canPost = true;                 
-                    that.info = that.info.concat(res.body.data);      
-                    that.page++;          
+                    for (let i = 0; i < res.body.data.length; i++) {
+						res.body.data[i]['src'] = res.body.data[i]['image'];
+					}
+                    that.info = that.info.concat(res.body.data); 
                     if(res.body.next==0){
                         that.finished = true;
-                    }
+                    }     
+                    that.page++;          
                 }else{
                     that.$dialog.alert({title:'错误信息',message:res.desc});
                 }
@@ -115,8 +91,8 @@ export default {
 </script>
 <style scoped>
 .wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
-.cell-item{ padding:5px;}
-.cell-item>img{width: 100%; border-radius: 5px; display: block}
+#fallBox{width: 100%; height:100vh;}
+
 .item-body{background: #fff}
 .item-desc{font-size: 14px; padding: 5px;clear: both}
 .item-footer{clear: both;background: #fff; overflow: hidden; padding: 5px;}
