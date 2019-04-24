@@ -33,19 +33,28 @@
 				<p>大家怎么说</p>
 			</div>
 			<div class="empty" v-show="empty" @click="showWrite"><p>抢占沙发~</p></div>
-			<div class="bd">
-                <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="getData">
-                    <li v-for="(vo,index) in comment" :key="index">
-                        <div class="face"><img :src="vo.headimg"></div>
-                        <div class="desc">
-                            <div class="name">{{vo.nickname}}</div>
-                            <div class="date">{{vo.createTime}}</div>
-                            <div class="say">{{vo.content}}</div>
-                        </div>
-                        <div class="like"><van-icon class-prefix="icon" name="dianzan" @click="doDigg(index,vo)"/>{{vo.digg}}</div>
-                    </li>
-                </van-list>	
+            <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="getData">
+			<div class="bd" v-for="(vo,index) in comment" :key="index">                
+                <li>
+                    <div class="ico"><van-icon class-prefix="icon" name="pinglun1"/></div>
+                    <div class="face"><img :src="vo.headimg"></div>
+                    <div class="desc">
+                        <div class="name">{{vo.nickname}}</div>
+                        <div class="date">{{vo.createTime}}</div>
+                        <div class="say" @click="reply(vo,vo.id)">{{vo.content}}</div>
+                    </div>
+                    <div class="like"><van-icon class-prefix="icon" name="dianzan" @click="doDigg(index,vo)"/>{{vo.digg}}</div>                    
+                </li>  
+                <div class="reply" v-for="item in vo.reply" :key="item.id">
+                    <div class="face"><img :src="item.headimg"></div>
+                    <div class="desc">
+                        <div class="name">{{item.nickname}}</div>
+                        <div class="date">{{item.createTime}}</div>
+                        <div class="say" @click="reply(item,vo.id)">回复<span>{{item.toNickname}}</span>：{{item.content}}</div>
+                    </div>
+                </div>              
 			</div>
+            </van-list>	
 		</div>
 
         <div style="height:46px"></div>
@@ -60,17 +69,17 @@
 
         <van-popup v-model="boxShow" position="bottom">
             <div class="write">
-            <van-field
-                v-model="content"
-                type="textarea"
-                placeholder="请输入留言"
-                rows="1"
-                autosize
-            />            
-            </div>
-            <div style="padding: 10px;">
-                <van-button class="my-btn" @click="saveComment">提交</van-button>
-            </div>
+                <div class="ipt">
+                    <van-field
+                        v-model="formData.content"
+                        type="textarea"
+                        :placeholder="formData.placeholder"
+                        rows="1"
+                        autosize
+                    />
+                </div>
+                <div class="sendBtn" @click="saveComment"><span>提交</span></div>       
+            </div>            
         </van-popup>
     </div>
 </template>
@@ -86,6 +95,14 @@ export default {
             info:{},
             comment:[],
             content:'',
+            formData: {
+                placeholder: "评论",
+                chatID:0,
+                toID:0,
+                toUserId:0,
+                toNickname:'',
+                content: ''
+            },
             boxShow:false,
             empty:false,
             
@@ -200,6 +217,11 @@ export default {
             }
         },
         showWrite(){
+            this.formData.placeholder = '评论';
+            this.formData.toID = 0;
+            this.formData.toUserId = 0;
+            this.formData.toNickname = '';
+            //that.formData.content = '';
             this.boxShow = true;
         },
         init(){            
@@ -217,6 +239,7 @@ export default {
                     if (res.code == 0) {
                         // 加载状态结束
                         that.info = res.body.data;
+                        that.formData.chatID = that.info.id;
                     }else{
                         that.$dialog.alert({title:'错误信息',message:res.desc});
                     }
@@ -252,31 +275,56 @@ export default {
         },
         saveComment:function(){
             var that = this;
-            if(that.content == ''){
+            if(that.formData.content == ''){
                 that.$dialog.alert({title:'错误信息',message:'请输入评论内容'});
                 return false;
             }           
-            var data = {
-                cityID:that.config.CITYID,
-                token:user.token,
-                content:that.content,
-                id:that.id
-            };            
+            var formData = that.formData; 
+            var toID = that.formData.toID;  
+            formData.cityID = that.config.CITYID;         
+            formData.token = user.token;         
             this.$toast.loading({mask: true,duration:0});
-            that.$http.post("/V1/chat/comment",data).then(result => {
+            that.$http.post("/V1/chat/comment",formData).then(result => {
                 let res = result.data;
                 this.$toast.clear();
                 if (res.code == 0) {
-                    that.content = '';
+
+                    that.formData.placeholder = '评论';
+                    that.formData.toID = 0;
+                    that.formData.toUserId = 0;
+                    that.formData.toNickname = '';
+                    that.formData.content = '';
+
                     that.boxShow = false;
                     that.empty = false;
-                    that.comment = res.body.concat(that.comment);
+                    if(toID==0){
+                        that.comment = res.body.concat(that.comment);
+                    }else{
+                        for (let i = 0; i<that.comment.length; i++) {
+                            console.log(toID,that.comment[i]['id']);
+                            if(toID==that.comment[i]['id']){
+                                that.comment[i].reply = that.comment[i].reply.concat(res.body);
+                            }                            
+                        }                        
+                    }                    
                 }else if(res.code==999){
                     window.location.href='app://login';  
                 }else{
                     that.$dialog.alert({title:'错误信息',message:res.desc});
                 }
             });
+        },
+        reply:function(info,toID){
+            if(this.info.open==0){
+                return false;
+            }
+            var that = this;
+            that.formData.placeholder = '回复'+info.nickname;
+            that.formData.toID = toID;
+            that.formData.toUserId = info.memberID;
+            that.formData.toNickname = info.nickname;
+            that.formData.content = '';
+            that.boxShow = true;
         }
     }
 };
@@ -308,22 +356,33 @@ export default {
 .like{font-size: 14px}
 .like i{margin-right: 5px}
 
-.my-btn{color: #fff;background-color: #05c1af;border: 1px solid #05c1af;}
-
-.feedback{clear: both; overflow: hidden; padding: 10px; background: #fff}
-.feedback .hd{clear: both; overflow: hidden; margin-bottom: 15px}
+.write{display: flex}
+.write .ipt{flex: 1}
+.write .sendBtn{width: 40px; line-height: 46px; text-align: center; font-size: 14px; color: #586a9c; position: relative;}
+.write .sendBtn span{position: absolute; left: 0; bottom: 0}
+.feedback{clear: both; overflow: hidden; background: #fff}
+.feedback .hd{clear: both; overflow: hidden; margin-bottom: 15px; padding: 10px; padding-bottom: 0}
 .feedback .hd p{float: left; font-size: 14px; color: #999}
 .feedback .hd span{float: right; cursor: pointer; font-size: 14px;color:#586a9c}
-.feedback .bd{clear: both; overflow: hidden;}
-.feedback .bd li{clear: both; overflow: hidden; display: flex; margin-bottom: 15px}
-.feedback .bd li .face{width: 50px;}
-.feedback .bd li .face img{border-radius: 50%}
-.feedback .bd li .desc{flex: 1; padding: 0 10px}
-.feedback .bd li .desc .name{font-size: 12px; color: #999; margin-top:5px}
-.feedback .bd li .desc .date{font-size: 12px; color: #999}
-.feedback .bd li .desc .say{font-size: 14px; margin-top: 10px}
-.feedback .bd li .like{ width:60px; text-align: right; color: #586a9c}
-.feedback .bd li .like img{height:20px;display: block; float: right}
-.feedback .bd li .like span{display: block; float: right; line-height: 20px; font-size: 12px; margin-top:2px}
+.feedback .bd{clear: both; overflow: hidden;margin-bottom: 15px;background: #f7f7f7; padding: 10px}
+.feedback .bd li{clear: both; overflow: hidden; display: flex;}
+.feedback .bd li>.ico{width: 20px; color: #586a9c}
+.feedback .bd li>.face{width: 50px;}
+.feedback .bd li>.face img{border-radius: 50%}
+.feedback .bd li>.desc{flex: 1; padding: 0 10px}
+.feedback .bd li>.desc .name{font-size: 12px; color: #999; margin-top:5px}
+.feedback .bd li>.desc .date{font-size: 12px; color: #999}
+.feedback .bd li>.desc .say{font-size: 14px; margin-top: 10px}
+.feedback .bd li>.like{ width:60px; text-align: right; color: #586a9c}
+.feedback .bd li>.like img{height:20px;display: block; float: right}
+.feedback .bd li>.like span{display: block; float: right; line-height: 20px; font-size: 12px; margin-top:2px}
+.reply{clear: both; overflow: hidden; display: flex; padding-left: 20px}
+.reply>.face{width: 50px;}
+.reply>.face img{border-radius: 50%}
+.reply>.desc{flex: 1; padding: 0 10px}
+.reply>.desc .name{font-size: 12px; color: #999; margin-top:5px}
+.reply>.desc .date{font-size: 12px; color: #999}
+.reply>.desc .say{font-size: 14px;}
+.reply>.desc .say span{color:#586a9c}
 .empty{text-align: center; padding: 30px 0; color: #999}
 </style>
