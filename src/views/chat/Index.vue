@@ -13,8 +13,8 @@
                 </div>
             </div>
             <div class="topRightIcon" slot="right" v-show="token!=''">
-                <span><van-icon name="contact" @click="onClickMy"/><div class="dot"></div></span>
-                <span><van-icon name="comment-o" @click="onClickMy"/><div class="dot"></div></span>
+                <span><van-icon name="contact" @click="onClickMy"/><div class="dot" v-if="commentNumber>0">{{commentNumber}}</div></span>
+                <span><van-icon name="comment-o" @click="onClickMy"/><div class="dot" v-if="replyNumber>0">{{replyNumber}}</div></span>
                 <span>
                     <van-icon name="photograph" @click="showType"/>
                     <div class="selectType" v-show="typeShow">
@@ -91,6 +91,8 @@ export default {
     data() {
         return {
             token:'',
+            commentNumber:0,//最新留言数
+            replyNumber:0,//最新回复数
 
             typeShow:false,
 
@@ -257,6 +259,8 @@ export default {
                         that.cate = that.cate.concat(res.body.cate);
                     }
                     that.quick = res.body.quick;
+                    that.commentNumber = res.body.commentNumber;
+                    that.replyNumber = res.body.replyNumber;
                     that.page++;          
                     if(res.body.next==0){
                         that.finished = true;
@@ -279,8 +283,8 @@ export default {
 .tab li.active{color: #05c1af;}
 
 .topLeftIcon span{ padding-right: 10px; font-size: 20px}
-.topRightIcon span{ padding-left: 10px; font-size: 20px; position: relative;}
-.topRightIcon span .dot{position: absolute; width:8px; height:8px; border-radius:50%; background: #c00;top:0px; right: 0px;}
+.topRightIcon span{ padding:0 10px; font-size: 20px; position: relative;}
+.topRightIcon span .dot{position: absolute;min-width:14px; height:14px; line-height:14px; border-radius:50%; background: #c00;top:0px; right: 0px; font-size:12px; color:#fff;}
 .selectType{position: absolute; top:25px; right: -6px; width: 100px; font-size: 14px; z-index: 999;}
 .selectType li{background: #111; color: #fff; border-bottom: 1px #666 solid}
 .selectType li:last-child{border: 0}
