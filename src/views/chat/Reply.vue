@@ -1,6 +1,6 @@
 <template>
     <div class="wrap">
-        <van-nav-bar fixed title="我发布的话题" left-arrow @click-left="onClickLeft"/>
+        <van-nav-bar fixed title="我的评论/回复" left-arrow @click-left="onClickLeft"/>
         <div style="height:46px"></div>
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div class="chat" v-for="(vo,idx) in info" :key="vo.id">
@@ -51,7 +51,7 @@ export default {
     },
     watch: {
         $route(to) {
-            if (to.name == "mychat") {
+            if (to.name == "reply") {
                 this.info = [];
                 this.page = 1;
                 this.onLoad();
@@ -120,7 +120,7 @@ export default {
                 cityID : that.config.CITYID,
                 page : that.page,
             };
-            that.$http.post("V1/chat/myChat",data).then(result => {
+            that.$http.post("V1/chat/reply",data).then(result => {
                 let res = result.data;
                 if (res.code == 0) {
                     // 加载状态结束

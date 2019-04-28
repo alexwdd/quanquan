@@ -14,7 +14,7 @@
             </div>
             <div class="topRightIcon" slot="right" v-show="token!=''">
                 <span><van-icon name="contact" @click="onClickMy"/><div class="dot" v-if="commentNumber>0">{{commentNumber}}</div></span>
-                <span><van-icon name="comment-o" @click="onClickMy"/><div class="dot" v-if="replyNumber>0">{{replyNumber}}</div></span>
+                <span><van-icon name="comment-o" @click="onClickReply"/><div class="dot" v-if="replyNumber>0">{{replyNumber}}</div></span>
                 <span>
                     <van-icon name="photograph" @click="showType"/>
                     <div class="selectType" v-show="typeShow">
@@ -143,6 +143,9 @@ export default {
         },
         onClickMy(){
             this.$router.push({'path':'/mychat',query:{token:this.token}});
+        },
+        onClickReply(){
+            this.$router.push({'path':'/reply',query:{token:this.token}});
         },
         show(){
             this.cateShow = !this.cateShow;

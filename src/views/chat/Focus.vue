@@ -19,8 +19,46 @@
                 </span>
             </div>
         </van-nav-bar>
-
+        
         <div style="height:46px"></div>
+
+        <div class="comm">
+            <div class="hd">寻找同样有趣的灵魂<span @click="more">搜索更多</span></div>
+            <div class="bd">
+                <li>
+                    <div class="item">
+                        <van-icon name="success" class="active"/>
+                        <img src="http://www.worldmedia.top/uploads/2018-10-30/5bd7333970480.png">                        
+                    </div>
+                    <p>jack</p>
+                    <span>45人关注</span>
+                </li>
+                <li>
+                    <div class="item">
+                        <van-icon name="success" />
+                        <img src="http://www.worldmedia.top/uploads/2018-10-30/5bd7333970480.png">                        
+                    </div>
+                    <p>jack</p>
+                    <span>45人关注</span>
+                </li>
+                <li>
+                    <div class="item">
+                        <van-icon name="success" />
+                        <img src="http://www.worldmedia.top/uploads/2018-10-30/5bd7333970480.png">                        
+                    </div>
+                    <p>jack</p>
+                    <span>45人关注</span>
+                </li>
+                <li>
+                    <div class="item">
+                        <van-icon name="success" />
+                        <img src="http://www.worldmedia.top/uploads/2018-10-30/5bd7333970480.png">                        
+                    </div>
+                    <p>jack</p>
+                    <span>45人关注</span>
+                </li>
+            </div>
+        </div>
 
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div class="chat" v-for="(vo,idx) in info" :key="vo.id">
@@ -95,6 +133,9 @@ export default {
         },
         chat(){
             this.$router.push({'path':'/chat',query:{token:this.token}});
+        },
+        more(){
+            this.$router.push({'path':'/more',query:{token:this.token}});
         },
         showImagePreview(index, info) {
             var images = info.images;
@@ -210,7 +251,19 @@ export default {
 .selectType li:last-child{border: 0}
 .selectType .arrow{width:0;height:0;border-width:0 6px 6px;border-style:solid;border-color:transparent transparent #111;; margin-right:10px; margin-left: auto}
 
-.chat{background: #fff; clear: both; overflow: hidden; border-bottom: 1px #f1f1f1 solid; padding: 10px 0}
+.comm{background: #fff; clear: both; border-bottom:1px #f1f1f1 solid}
+.comm .hd{color: #999; font-size: 14px; padding: 0 10px; line-height: 40px}
+.comm .hd span{float: right;}
+.comm .bd{clear: both; overflow: hidden; padding-bottom: 10px}
+.comm .bd li{float: left; width: 25%; text-align: center}
+.comm .bd li .item{width: 50px; height: 50px; position: relative; margin: auto}
+.comm .bd li .item img{width: 50px; height: 50px; border-radius: 50%; display: block;}
+.comm .bd li .item i{position: absolute; right: 0; top: 0; width: 14px; height: 14px; background: #999; font-size: 12px; color: #fff; line-height: 14px; border-radius: 4px}
+.comm .bd li .item i.active{background:#c00; color: #fff}
+.comm .bd li p{font-size: 12px}
+.comm .bd li span{font-size: 12px; color: #999; text-align: center}
+
+.chat{background:#fff; clear: both; overflow: hidden; border-bottom: 1px #f1f1f1 solid; padding: 10px 0}
 .chat .user{clear: both; margin-bottom: 10px; overflow: hidden; padding: 0 10px}
 .chat .user .face{float: left; margin-right: 10px}
 .chat .user .face img{display: block; width: 50px; height: 50px; border-radius: 50%;}

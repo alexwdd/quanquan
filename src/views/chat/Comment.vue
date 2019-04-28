@@ -232,7 +232,8 @@ export default {
             that.id = that.$route.query.id;
 			if (that.id>0 && that.id!=''){
                 let data = {
-                    id : that.id
+                    id : that.id,
+                    token:user.token
                 };
 				that.$http.post("/V1/chat/getinfo",data).then(result => {   
                     let res = result.data;
