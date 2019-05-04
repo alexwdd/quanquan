@@ -5,37 +5,14 @@
 
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div class="comm">  
-                <li>
-                    <div class="item">
-                        <van-icon name="success" class="active"/>
-                        <img src="http://www.worldmedia.top/uploads/2018-10-30/5bd7333970480.png">                        
+                <li v-for="(vo,idx) in info" :key="vo.id">
+                    <div class="item" @click=doFocus(idx,vo)>
+                        <van-icon name="success" class="active" v-if="vo.focus==true"/>
+                        <van-icon name="success" v-else=""/>
+                        <img :src="vo.headimg">                        
                     </div>
-                    <p>jack</p>
-                    <span>45人关注</span>
-                </li>
-                <li>
-                    <div class="item">
-                        <van-icon name="success" />
-                        <img src="http://www.worldmedia.top/uploads/2018-10-30/5bd7333970480.png">                        
-                    </div>
-                    <p>jack</p>
-                    <span>45人关注</span>
-                </li>
-                <li>
-                    <div class="item">
-                        <van-icon name="success" />
-                        <img src="http://www.worldmedia.top/uploads/2018-10-30/5bd7333970480.png">                        
-                    </div>
-                    <p>jack</p>
-                    <span>45人关注</span>
-                </li>
-                <li>
-                    <div class="item">
-                        <van-icon name="success" />
-                        <img src="http://www.worldmedia.top/uploads/2018-10-30/5bd7333970480.png">                        
-                    </div>
-                    <p>jack</p>
-                    <span>45人关注</span>
+                    <p>{{vo.nickname}}</p>
+                    <span>{{vo.follow}}人关注</span>
                 </li>
              </div>
         </van-list>        
@@ -72,7 +49,37 @@ export default {
             this.token = user.token;
         }
     },
-    methods: {       
+    methods: {    
+        onClickLeft() {
+            this.$router.go(-1);
+        },
+        doFocus(index,info){//关注
+            var that = this;
+            if(user.status){
+                var data = {
+                    cityID:that.config.CITYID,
+                    token:user.token,
+                    userID:info.id
+                };                
+                that.$http.post("/V1/chat/focus",data).then(result => {
+                    let res = result.data;
+                    if (res.code == 0) {
+                        this.$toast(res.desc);
+                        if(res.desc=='已关注'){
+                            that.info[index].focus = true;
+                            that.info[index].follow++;
+                        }else{
+                            that.info[index].focus = false;
+                            that.info[index].follow--;
+                        }
+                    }else if(res.code==999){
+                        window.location.href='app://login';  
+                    }else{
+                        that.$dialog.alert({title:'错误信息',message:res.desc});
+                    }
+                });
+            }
+        },
         onLoad() {
             var that = this;
             if(!that.canPost){
@@ -84,7 +91,7 @@ export default {
                 cityID : that.config.CITYID,
                 page : that.page,
             };
-            that.$http.post("V1/chat/getFocus",data).then(result => {
+            that.$http.post("V1/chat/getUserList",data).then(result => {
                 let res = result.data;
                 if (res.code == 0) {
                     // 加载状态结束
@@ -111,11 +118,11 @@ export default {
 .comm{background: #fff; clear: both; border-bottom:1px #f1f1f1 solid}
 
 .comm{clear: both; overflow: hidden; padding:10px 0}
-.comm li{float: left; width: 25%; text-align: center}
+.comm li{float: left; width: 25%; text-align: center; margin-bottom: 1em}
 .comm li .item{width: 50px; height: 50px; position: relative; margin: auto}
 .comm li .item img{width: 50px; height: 50px; border-radius: 50%; display: block;}
 .comm li .item i{position: absolute; right: 0; top: 0; width: 14px; height: 14px; background: #999; font-size: 12px; color: #fff; line-height: 14px; border-radius: 4px}
 .comm li .item i.active{background:#c00; color: #fff}
-.comm li p{font-size: 12px}
+.comm li p{font-size: 12px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;text-overflow: ellipsis;-ms-text-overflow: ellipsis;-o-text-overflow: ellipsis;}
 .comm li span{font-size: 12px; color: #999; text-align: center}
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div class="wrap">
-        <van-nav-bar fixed left-arrow>
+        <van-nav-bar fixed left-arrow @click-left="onClickLeft">
             <div slot="title">
                 <div class="tab">
                     <li @click="chat">话题</li>
@@ -25,37 +25,14 @@
         <div class="comm">
             <div class="hd">寻找同样有趣的灵魂<span @click="more">搜索更多</span></div>
             <div class="bd">
-                <li>
-                    <div class="item">
-                        <van-icon name="success" class="active"/>
-                        <img src="http://www.worldmedia.top/uploads/2018-10-30/5bd7333970480.png">                        
+                <li v-for="(vo,idx) in commend" :key="vo.id">
+                    <div class="item" @click=doFocus(idx,vo,1)>
+                        <van-icon name="success" class="active" v-if="vo.focus==true"/>
+                        <van-icon name="success" v-else=""/>
+                        <img :src="vo.headimg">                        
                     </div>
-                    <p>jack</p>
-                    <span>45人关注</span>
-                </li>
-                <li>
-                    <div class="item">
-                        <van-icon name="success" />
-                        <img src="http://www.worldmedia.top/uploads/2018-10-30/5bd7333970480.png">                        
-                    </div>
-                    <p>jack</p>
-                    <span>45人关注</span>
-                </li>
-                <li>
-                    <div class="item">
-                        <van-icon name="success" />
-                        <img src="http://www.worldmedia.top/uploads/2018-10-30/5bd7333970480.png">                        
-                    </div>
-                    <p>jack</p>
-                    <span>45人关注</span>
-                </li>
-                <li>
-                    <div class="item">
-                        <van-icon name="success" />
-                        <img src="http://www.worldmedia.top/uploads/2018-10-30/5bd7333970480.png">                        
-                    </div>
-                    <p>jack</p>
-                    <span>45人关注</span>
+                    <p>{{vo.nickname}}</p>
+                    <span>{{vo.follow}}人关注</span>
                 </li>
             </div>
         </div>
@@ -100,6 +77,7 @@ import { ImagePreview } from 'vant';
 export default {
     data() {
         return {
+            commend:[],
             typeShow:false,
             token:'',            
             info:[],
@@ -116,17 +94,22 @@ export default {
                 this.info = [];
                 this.page = 1;
                 this.onLoad();
+                this.commendUser();
             }
         }
     },
     created() {        
         if(user.status==true){
             this.token = user.token;
+            this.commendUser();
         }
     },
     methods: {
         showType(){
             this.typeShow = !this.typeShow;
+        },
+        onClickLeft() {
+            this.$router.go(-1);
         },
         onClickRight(){
             this.$router.push({'path':'/write',query:{token:this.token}});
@@ -169,7 +152,26 @@ export default {
                 });
             }
         },
-        doFocus(index,info){//关注
+        commendUser(index,info){//点赞
+            var that = this;
+            if(user.status){
+                var data = {
+                    cityID:that.config.CITYID,
+                    token:user.token
+                };                
+                that.$http.post("/V1/chat/getCommendUser",data).then(result => {
+                    let res = result.data;
+                    if (res.code == 0) {
+                        that.commend = res.body;
+                    }else if(res.code==999){
+                        window.location.href='app://login';  
+                    }else{
+                        that.$dialog.alert({title:'错误信息',message:res.desc});
+                    }
+                });
+            }
+        },
+        doFocus(index,info,type){//关注
             var that = this;
             if(user.status){
                 var data = {
@@ -182,9 +184,19 @@ export default {
                     if (res.code == 0) {
                         this.$toast(res.desc);
                         if(res.desc=='已关注'){
-                            that.info[index].focus = true;
+                            if(type==1){
+                                that.commend[index].focus = true;
+                                that.commend[index].follow++;
+                            }else{
+                                that.info[index].focus = true;
+                            }                            
                         }else{
-                            that.info[index].focus = false;
+                            if(type==1){
+                                that.commend[index].focus = false;
+                                that.commend[index].follow--;
+                            }else{
+                                that.info[index].focus = false;
+                            }                            
                         }
                     }else if(res.code==999){
                         window.location.href='app://login';  
@@ -260,7 +272,7 @@ export default {
 .comm .bd li .item img{width: 50px; height: 50px; border-radius: 50%; display: block;}
 .comm .bd li .item i{position: absolute; right: 0; top: 0; width: 14px; height: 14px; background: #999; font-size: 12px; color: #fff; line-height: 14px; border-radius: 4px}
 .comm .bd li .item i.active{background:#c00; color: #fff}
-.comm .bd li p{font-size: 12px}
+.comm .bd li p{font-size: 12px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;text-overflow: ellipsis;-ms-text-overflow: ellipsis;-o-text-overflow: ellipsis;}
 .comm .bd li span{font-size: 12px; color: #999; text-align: center}
 
 .chat{background:#fff; clear: both; overflow: hidden; border-bottom: 1px #f1f1f1 solid; padding: 10px 0}
