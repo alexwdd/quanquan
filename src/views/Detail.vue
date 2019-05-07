@@ -307,6 +307,10 @@ export default {
         }
     },
 	created(){
+        var urlArr = location.href.split('?');//url不能写死
+        if(urlArr.length>1){
+            window.location.href = urlArr[0];
+        }
         this.init();
         this.getData();
 	},
