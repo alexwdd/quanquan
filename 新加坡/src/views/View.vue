@@ -123,7 +123,7 @@
         <div class="footer">
             <div class="logo"><img src="../assets/image/logo.jpg"></div>
             <div class="info">
-                <p>阿德莱德同城生活掌上宝</p>
+                <p>新加坡同城生活掌上宝</p>
                 <p>
                     <van-icon name="star" />
                     <van-icon name="star" />

@@ -6,7 +6,6 @@
 
         <div class="indexMenu">
             <van-loading class="loadding" v-show="loadShow" size="20px"/>
-            <li @click="chongzhi"><img src="../assets/image/phone.jpg"/><p>话费充值</p></li>
             <template v-for="item in cate">
             <li :key="item.type" @click="goto(item)"><img :src="item.icon"/><p>{{item.name}}</p></li>
             </template> 
@@ -29,6 +28,7 @@
 
 <script>
 import infoDetail from "../components/infoDetail";
+import phoneIcon from '@/assets/image/phone.jpg'
 export default {
     data() {
         return {
@@ -71,7 +71,14 @@ export default {
                             res.body.cate[i]['icon'] = '/adelaide/static/image/'+res.body.cate[i]['type']+'_icon@2x.png';
                         }                        
                     } */
-                    that.cate = res.body.cate;
+                    that.cate = [{
+                        type:'phone',
+                        icon:phoneIcon,
+                        name:'话费充值',
+                        id:0
+                    }];
+                    //that.cate = res.body.cate;
+                    that.cate = that.cate.concat(res.body.cate);
                 }else{
                     that.$dialog.alert({title:'错误信息',message:res.desc});
                 }
@@ -104,6 +111,8 @@ export default {
                 this.$router.push({path:'/house'});
             }else if(value.type=='mall'){
                 window.location.href=value.url;
+            }else if(value.type=='phone'){
+                window.location.href="http://chongzhi.worldmedia.top";
             }else{
                 this.$router.push({path:'/list/'+value.type});
             }
