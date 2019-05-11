@@ -58,7 +58,7 @@
                     <div class="focus focused" v-if="vo.focus" @click=doFocus(idx,vo)>已关注</div>
                     <div class="focus" v-else="" @click=doFocus(idx,vo)>关注</div>
                 </div>
-                <div class="say" :id="'say'+vo.id">#{{vo.tag}}#{{vo.content}}</div>
+                <div class="say" :id="'say'+vo.id"><span class="tag" v-for="tag in vo.tag" :key="tag.name" :style="'color:'+tag.color">#{{tag.name}}#</span>{{vo.content}}</div>
                 <div class="btn" :id="'btn'+vo.id" v-if="vo.content.length>100" @click="openSay(vo.id)">展开</div>
                 <template v-if="vo.images!=''">
 
