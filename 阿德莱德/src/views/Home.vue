@@ -6,7 +6,6 @@
 
         <div class="indexMenu">
             <van-loading class="loadding" v-show="loadShow" size="20px"/>
-            <li @click="chongzhi"><img src="../assets/image/phone.jpg"/><p>话费充值</p></li>
             <template v-for="item in cate">
             <li :key="item.type" @click="goto(item)"><img :src="item.icon"/><p>{{item.name}}</p></li>
             </template> 
@@ -77,9 +76,6 @@ export default {
                 }
             });
         },
-        chongzhi(){
-            window.location.href="http://chongzhi.worldmedia.top"
-        },
         goLink(value){
             if(value.url!=''){
                 window.location.href = value.url;
@@ -121,5 +117,5 @@ export default {
 
 .indexList{clear: both; border-top: 1px #dbdbdb dashed; padding: 0 10px; padding-bottom: 10px;background: #fff}
 .indexList .hd{height: 40px; line-height: 40px;}
-.indexList .hd span{float: right; font-size: 12px; color: #7507c2}
+.indexList .hd span{float: right; font-size: 12px; color: #05c1af}
 </style>
