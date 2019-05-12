@@ -1,30 +1,17 @@
 <template>
     <div class="wrap">
-        <van-nav-bar fixed>
-            <div class="topLeftIcon" slot="left">
-                <span><van-icon name="arrow-left" @click="onClickLeft"/></span>
+        <div class="header">
+            <div class="tab">
+                <li class="active">话题</li>
+                <li @click="focus" v-show="token!=''">关注</li>
+                <li>CP配</li>
+            </div>
+            <div class="right">
+                <span><van-icon name="photo-o" @click="onClickMy"/><div class="dot" v-if="commentNumber>0">{{commentNumber}}</div></span>
+                <span><van-icon name="chat-o" @click="onClickReply"/><div class="dot" v-if="replyNumber>0">{{replyNumber}}</div></span>
                 <span><van-icon name="search" @click="onClickSearch"/></span>
             </div>
-
-            <div slot="title">
-                <div class="tab">
-                    <li class="active">话题</li>
-                    <li @click="focus" v-show="token!=''">关注</li>
-                </div>
-            </div>
-            <div class="topRightIcon" slot="right" v-show="token!=''">
-                <span><van-icon name="contact" @click="onClickMy"/><div class="dot" v-if="commentNumber>0">{{commentNumber}}</div></span>
-                <span><van-icon name="comment-o" @click="onClickReply"/><div class="dot" v-if="replyNumber>0">{{replyNumber}}</div></span>
-                <span>
-                    <van-icon name="photograph" @click="showType"/>
-                    <div class="selectType" v-show="typeShow">
-                        <div class="arrow"></div>
-                        <li @click="onClickRight">发图文</li>
-                        <li>发小视频</li>
-                    </div>
-                </span>
-            </div>
-        </van-nav-bar>
+        </div>
 
         <div class="topCate">
             <div class="cateTab">
@@ -74,13 +61,23 @@
                     </li>
                 </div>
                 </template>
-                <div class="action">
-                    <li><van-icon class-prefix="icon" name="dianzan" @click="doLike(idx,vo)" /> {{vo.like}}</li>
-                    <li><van-icon class-prefix="icon" name="pinglun1" @click="gotoComment(vo)"/> {{vo.comment}}</li>
-                    <li><van-icon class-prefix="icon" name="fenxiang" /></li>
-                </div>
+
+                <div class="bottom">
+                    <div class="read">0阅读</div>
+                    <div class="action">
+                        <li @click="doLike(idx,vo)"><i class="icon icon-like"></i> {{vo.like}}</li>
+                        <li @click="gotoComment(vo)"><i class="icon icon-wechat"></i> {{vo.comment}}</li>
+                        <li><i class="icon icon-share"></i> 分享</li>
+                    </div>
+                </div>                
             </div>
-        </van-list>        
+        </van-list>
+
+        <div class="selectType" v-show="typeShow">
+            <li @click="onClickRight">图文</li>
+            <li>视频</li>
+        </div>
+        <div class="ball" @click="showType"><van-icon name="plus" /></div>
     </div>
 </template>
 
@@ -281,17 +278,20 @@ export default {
 </script>
 <style scoped>
 .wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
-.tab{clear: both;overflow: hidden;}
+.header{height: 46px; width: 100%; position: fixed;top: 0; left: 0; background: #fff}
+.tab{float: left; line-height: 46px;}
 .tab li{display: inline-block; font-size: 14px; padding:0 10px;}
 .tab li.active{color: #05c1af;}
 
-.topLeftIcon span{ padding-right: 10px; font-size: 20px}
-.topRightIcon span{ padding:0 10px; font-size: 20px; position: relative;}
-.topRightIcon span .dot{position: absolute;min-width:14px; height:14px; line-height:14px; border-radius:50%; background: #c00;top:0px; right: 0px; font-size:12px; color:#fff;}
-.selectType{position: absolute; top:25px; right: -6px; width: 100px; font-size: 14px; z-index: 999;}
-.selectType li{background: #111; color: #fff; border-bottom: 1px #666 solid}
-.selectType li:last-child{border: 0}
-.selectType .arrow{width:0;height:0;border-width:0 6px 6px;border-style:solid;border-color:transparent transparent #111;; margin-right:10px; margin-left: auto}
+.right{float: right; padding-top: 12px}
+.right span{ padding:0 10px; font-size: 20px; position: relative;}
+.right span .dot{position: absolute;min-width:14px; height:14px; line-height:14px; border-radius:50%; background: #c00;top:0px; right: 0px; font-size:12px; color:#fff; text-align: center}
+
+.ball{background:#191919; color: #fff; width: 50px; height: 50px; text-align: center; position: fixed; right: 5px; bottom: 100px; border-radius: 50%;}
+.ball i{font-size:24px;line-height: 50px}
+.selectType{width: 50px; position:fixed; right: 5px; bottom: 150px}
+.selectType li{width: 50px; height: 50px;line-height: 50px;font-size: 14px; text-align: center; border-radius: 50px; margin-bottom: 10px; background: #191919; color: #fff}
+
 
 .topCate{position: fixed; top: 45px; width: 100%; display: flex;background: #fff}
 .cateTab{flex: 1}
@@ -324,8 +324,10 @@ export default {
 .chat .photo li{float: left; width: 33.333%; padding-right: 10px; box-sizing: border-box; padding-bottom: 10px}
 .chat .photo li img{display: block; width: 100%}
 .chat .single li{width: 60%}
-.chat .action{clear: both;}
-.chat .action li{float: left; width: 33.333%; text-align: center; font-size: 12px; line-height: 20px; color: #999}
+.chat .bottom{clear: both; overflow: hidden; line-height: 30px;}
+.chat .bottom .read{float: left; font-size: 12px; color: #999;padding-left:10px}
+.chat .bottom .action{float: right;}
+.chat .action li{float: left; text-align: center; font-size: 13px; line-height: 30px; color: #999; padding:0 10px}
 .chat .action li i{font-size: 16px; display: inline;}
 .btn{text-align: right; font-size: 14px; padding-right: 10px; color: #586a9c; margin-top: -10px; margin-bottom: 10px}
 </style>
