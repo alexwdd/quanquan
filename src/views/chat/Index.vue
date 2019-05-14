@@ -27,7 +27,7 @@
         <div class="cateList" v-show="cateShow">
             <div class="hd">全部分类 <van-icon name="cross" @click="show"></van-icon></div>
             <swipe class="my-swipe" :auto="0">
-				<swipe-item v-for="vo in quick">
+				<swipe-item v-for="vo in quick" :key="vo">
                     <div class="quick">
                         <li v-for="f in vo" :key="f.id" @click="changeCate1(f)"><img :src="f.icon"><p>{{f.title}}</p></li>
                     </div>
@@ -50,13 +50,13 @@
                 <template v-if="vo.images!=''">
 
                 <div class="photo single" v-if="vo.num==1">
-                    <li v-for="(photo,index) in vo.images" :key="photo" @click="showImagePreview(index,vo)">
-                        <img :src="photo" @click="showImagePreview">
+                    <li v-for="(photo,index) in vo.images" :key="photo.url" @click="showImagePreview(index,vo)">
+                        <img :src="photo.url">
                     </li>
                 </div>
 
                 <div class="photo" v-else="">
-                    <li v-for="(photo,index) in vo.thumb" :key="photo" @click="showImagePreview(index,vo)">
+                    <li v-for="(photo,index) in vo.thumb" :key="index" @click="showImagePreview(index,vo)">
                         <img :src="photo">
                     </li>
                 </div>
@@ -165,7 +165,10 @@ export default {
             this.onLoad();
         },
         showImagePreview(index, info) {
-            var images = info.images;
+            var images = [];
+            for(var i=0; i<info.images.length; i++){
+                images.push(info.images[i]['url']);
+            }
             const instance = ImagePreview({
                 images,
                 startPosition: index

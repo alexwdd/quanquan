@@ -15,8 +15,8 @@
             </van-uploader>
         </div>
 
-        <van-cell title="版块" is-link arrow-direction="down" :value="cate.name" @click="clickShowCate"/>
-        <van-cell title="标签" is-link arrow-direction="down" @click="clickShowTag">
+        <van-cell title="版块(选填)" is-link arrow-direction="down" :value="cate.name" @click="clickShowCate"/>
+        <van-cell title="标签(选填)" is-link arrow-direction="down" @click="clickShowTag">
             <template>
                 <span class="custom-text" v-for="(vo,index) in tag" :key="vo.id">{{vo.name}}</span>
             </template>
@@ -204,14 +204,14 @@ export default {
                 that.$dialog.alert({title:'错误信息',message:'请输入内容'});
                 return false;
             }
-            if(that.cate.cid == '' || that.cate.cid == undefined){
+            /* if(that.cate.cid == '' || that.cate.cid == undefined){
                 that.$dialog.alert({title:'错误信息',message:'请选择版块'});
                 return false;
             }
             if(that.tag.length==0){
                 that.$dialog.alert({title:'错误信息',message:'请选择标签'});
                 return false;
-            }
+            } */
             if(that.images.length>9){
                 that.$dialog.alert({title:'错误信息',message:'最多上传9张图片'});
                 return false;
