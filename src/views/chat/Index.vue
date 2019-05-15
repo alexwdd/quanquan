@@ -27,7 +27,7 @@
         <div class="cateList" v-show="cateShow">
             <div class="hd">全部分类 <van-icon name="cross" @click="show"></van-icon></div>
             <swipe class="my-swipe" :auto="0">
-				<swipe-item v-for="vo in quick" :key="vo">
+				<swipe-item v-for="vo in quick" :key="vo.id">
                     <div class="quick">
                         <li v-for="f in vo" :key="f.id" @click="changeCate1(f)"><img :src="f.icon"><p>{{f.title}}</p></li>
                     </div>
