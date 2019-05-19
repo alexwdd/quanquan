@@ -7,8 +7,8 @@
                 <li>CP配</li>
             </div>
             <div class="right">
-                <span><van-icon name="photo-o" @click="onClickMy"/><div class="dot" v-if="commentNumber>0">{{commentNumber}}</div></span>
-                <span><van-icon name="chat-o" @click="onClickReply"/><div class="dot" v-if="replyNumber>0">{{replyNumber}}</div></span>
+                <span v-show="token!=''"><van-icon name="photo-o" @click="onClickMy"/><div class="dot" v-if="commentNumber>0">{{commentNumber}}</div></span>
+                <span v-show="token!=''"><van-icon name="chat-o" @click="onClickReply"/><div class="dot" v-if="replyNumber>0">{{replyNumber}}</div></span>
                 <span><van-icon name="search" @click="onClickSearch"/></span>
             </div>
         </div>
@@ -63,7 +63,7 @@
                 </template>
 
                 <div class="bottom">
-                    <div class="read">0阅读</div>
+                    <div class="read">{{vo.hit}}阅读</div>
                     <div class="action">
                         <li @click="doLike(idx,vo)"><i class="icon icon-like"></i> {{vo.like}}</li>
                         <li @click="gotoComment(vo)"><i class="icon icon-wechat"></i> {{vo.comment}}</li>

@@ -11,7 +11,7 @@
                 <div class="focus focused" v-if="info.focus" @click=doFocus>已关注</div>
                 <div class="focus" v-else="" @click=doFocus>关注</div>
             </div>
-            <div class="say">{{info.content}}</div>
+            <div class="say"><span class="tag" v-for="tag in info.tag" :key="tag.name" :style="'color:'+tag.color">#{{tag.name}}#</span>{{info.content}}</div>
             <template v-if="info.images!=''">
 
             <div class="photo single" v-if="info.num==1">
@@ -36,22 +36,15 @@
             <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="getData">
 			<div class="bd" v-for="(vo,index) in comment" :key="index">                
                 <li>
-                    <div class="ico"><van-icon class-prefix="icon" name="pinglun1"/></div>
                     <div class="face"><img :src="vo.headimg"></div>
                     <div class="desc">
                         <div class="name">{{vo.nickname}}</div>
                         <div class="date">{{vo.createTime}}</div>
                         <div class="say" @click="reply(vo,vo.id)">{{vo.content}}</div>
                     </div>
-                    <div class="like"><van-icon class-prefix="icon" name="dianzan" @click="doDigg(index,vo)"/>{{vo.digg}}</div>                    
                 </li>  
-                <div class="reply" v-for="item in vo.reply" :key="item.id">
-                    <div class="face"><img :src="item.headimg"></div>
-                    <div class="desc">
-                        <div class="name">{{item.nickname}}</div>
-                        <div class="date">{{item.createTime}}</div>
-                        <div class="say" @click="reply(item,vo.id)">回复<span>{{item.toNickname}}</span>：{{item.content}}</div>
-                    </div>
+                <div class="reply" v-for="item in vo.reply" :key="item.id" @click="reply(item,vo.id)">
+                    <span>{{item.nickname}}</span> 回复 <span>{{item.toNickname}}</span>：{{item.content}}
                 </div>              
 			</div>
             </van-list>	
@@ -197,7 +190,7 @@ export default {
                 });
             }
         },
-        doDigg(index,info){
+        /* doDigg(index,info){
             var that = this;
             if(user.status){
                 var data = {
@@ -215,7 +208,7 @@ export default {
                     }
                 });
             }
-        },
+        }, */
         showWrite(){
             this.formData.placeholder = '评论';
             this.formData.toID = 0;
@@ -357,7 +350,7 @@ export default {
 .like{font-size: 14px}
 .like i{margin-right: 5px}
 
-.write{display: flex}
+.write{display: flex;padding: 10px 0}
 .write .ipt{flex: 1}
 .write .sendBtn{width: 40px; line-height: 46px; text-align: center; font-size: 14px; color: #586a9c; position: relative;}
 .write .sendBtn span{position: absolute; left: 0; bottom: 0}
@@ -365,9 +358,8 @@ export default {
 .feedback .hd{clear: both; overflow: hidden; margin-bottom: 15px; padding: 10px; padding-bottom: 0}
 .feedback .hd p{float: left; font-size: 14px; color: #999}
 .feedback .hd span{float: right; cursor: pointer; font-size: 14px;color:#586a9c}
-.feedback .bd{clear: both; overflow: hidden;margin-bottom: 15px;background: #f7f7f7; padding: 10px}
+.feedback .bd{clear: both; overflow: hidden;margin-bottom: 15px;padding: 10px}
 .feedback .bd li{clear: both; overflow: hidden; display: flex;}
-.feedback .bd li>.ico{width: 20px; color: #586a9c}
 .feedback .bd li>.face{width: 50px;}
 .feedback .bd li>.face img{border-radius: 50%}
 .feedback .bd li>.desc{flex: 1; padding: 0 10px}
@@ -377,13 +369,10 @@ export default {
 .feedback .bd li>.like{ width:60px; text-align: right; color: #586a9c}
 .feedback .bd li>.like img{height:20px;display: block; float: right}
 .feedback .bd li>.like span{display: block; float: right; line-height: 20px; font-size: 12px; margin-top:2px}
-.reply{clear: both; overflow: hidden; display: flex; padding-left: 20px}
-.reply>.face{width: 50px;}
-.reply>.face img{border-radius: 50%}
-.reply>.desc{flex: 1; padding: 0 10px}
-.reply>.desc .name{font-size: 12px; color: #999; margin-top:5px}
-.reply>.desc .date{font-size: 12px; color: #999}
-.reply>.desc .say{font-size: 14px;}
-.reply>.desc .say span{color:#586a9c}
+
+.reply{clear: both; overflow: hidden; display: flex; padding-left: 20px; background: #f7f7f7; margin-left: 50px; padding: 5px;}
+.reply{font-size: 14px; line-height: 100%}
+.reply span{color:#05c1af; padding:0 3px}
+
 .empty{text-align: center; padding: 30px 0; color: #999}
 </style>

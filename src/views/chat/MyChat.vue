@@ -1,15 +1,15 @@
 <template>
     <div class="wrap">
-        <van-nav-bar fixed title="我发布的话题" left-arrow @click-left="onClickLeft"/>
+        <van-nav-bar fixed title="话题相册" left-arrow @click-left="onClickLeft"/>
         <div style="height:46px"></div>
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div class="chat" v-for="(vo,idx) in info" :key="vo.id">
                 <div class="user">
                     <div class="face"><img :src="vo.face"></div>
-                    <div class="name"><p>{{vo.nickname}}<i v-if="vo.noread > 0">{{vo.noread}}</i></p><span>{{vo.createTime}}</span></div>
+                    <div class="name"><p>{{vo.nickname}}<i v-if="vo.noread > 0" @click="gotoComment(vo)">{{vo.noread}}条动态</i></p><span>{{vo.createTime}}</span></div>
                     <div class="del" @click=doDel(idx,vo)>删除</div>
                 </div>
-                <div class="say" :id="'say'+vo.id">[{{vo.tag}}]{{vo.content}}</div>
+                <div class="say" :id="'say'+vo.id"><span class="tag" v-for="tag in vo.tag" :key="tag.name" :style="'color:'+tag.color">#{{tag.name}}#</span>{{vo.content}}</div>
                 <div class="btn" :id="'btn'+vo.id" v-if="vo.content.length>100" @click="openSay(vo.id)">展开</div>
                 <template v-if="vo.images!=''">
 
@@ -25,10 +25,14 @@
                     </li>
                 </div>
                 </template>
-                <div class="action">
-                    <li><van-icon class-prefix="icon" name="dianzan"/> {{vo.like}}</li>
-                    <li><van-icon class-prefix="icon" name="pinglun1" @click="gotoComment(vo)"/> {{vo.comment}}</li>
-                    <li><van-icon class-prefix="icon" name="fenxiang" /></li>
+
+                <div class="bottom">
+                    <div class="read">{{vo.hit}}阅读</div>
+                    <div class="action">
+                        <li @click="doLike(idx,vo)"><i class="icon icon-like"></i> {{vo.like}}</li>
+                        <li @click="gotoComment(vo)"><i class="icon icon-wechat"></i> {{vo.comment}}</li>
+                        <li><i class="icon icon-share"></i> 分享</li>
+                    </div>
                 </div>
             </div>
         </van-list>        
@@ -151,7 +155,7 @@ export default {
 .chat .user .face img{display: block; width: 50px; height: 50px; border-radius: 50%;}
 .chat .user .name{float: left;font-size: 12px; line-height:20px; padding: 5px 0}
 .chat .user .name p{ margin: 0;}
-.chat .user .name p i{display:inline-block;min-width:14px; height:14px; line-height:14px; border-radius:50%; background: #c00;top:0px; right: 0px; font-size:12px; color:#fff; font-style: normal; margin-left: 5px; text-align: center}
+.chat .user .name p i{display:inline-block;min-width:14px; height:14px; line-height:14px; border-radius:7px; background: #111;top:0px; right: 0px; font-size:12px; color:#fff; font-style: normal; margin-left: 5px; text-align: center; padding: 0 5px}
 .chat .user .name span{color: #999}
 .chat .user .del{float: right; font-size: 14px; height: 24px; line-height: 24px;color: #586a9c; margin-top: 10px}
 
@@ -160,8 +164,10 @@ export default {
 .chat .photo li{float: left; width: 33.333%; padding-right: 10px; box-sizing: border-box; padding-bottom: 10px}
 .chat .photo li img{display: block; width: 100%}
 .chat .single li{width: 60%}
-.chat .action{clear: both;}
-.chat .action li{float: left; width: 33.333%; text-align: center; font-size: 12px; line-height: 20px; color: #999}
+.chat .bottom{clear: both; overflow: hidden; line-height: 30px;}
+.chat .bottom .read{float: left; font-size: 12px; color: #999;padding-left:10px}
+.chat .bottom .action{float: right;}
+.chat .action li{float: left; text-align: center; font-size: 13px; line-height: 30px; color: #999; padding:0 10px}
 .chat .action li i{font-size: 16px; display: inline;}
 .btn{text-align: right; font-size: 14px; padding-right: 10px; color: #586a9c; margin-top: -10px; margin-bottom: 10px}
 </style>

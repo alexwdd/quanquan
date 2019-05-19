@@ -1,29 +1,21 @@
 <template>
     <div class="wrap">
-        <van-nav-bar fixed left-arrow @click-left="onClickLeft">
-            <div slot="title">
-                <div class="tab">
-                    <li @click="chat">话题</li>
-                    <li class="active">关注</li>
-                </div>
+        <div class="header">
+            <div class="tab">
+                <li @click="chat">话题</li>
+                <li class="active" v-show="token!=''">关注</li>
+                <li>CP配</li>
             </div>
-            
-            <div class="topRightIcon" slot="right" v-show="token!=''">
-                <span>
-                    <van-icon name="photograph" @click="showType"/>
-                    <div class="selectType" v-show="typeShow">
-                        <div class="arrow"></div>
-                        <li @click="onClickRight">发图文</li>
-                        <li>发小视频</li>
-                    </div>
-                </span>
+            <div class="right">
+                <span v-show="token!=''"><van-icon name="photo-o" @click="onClickMy"/><div class="dot" v-if="commentNumber>0">{{commentNumber}}</div></span>
+                <span v-show="token!=''"><van-icon name="chat-o" @click="onClickReply"/><div class="dot" v-if="replyNumber>0">{{replyNumber}}</div></span>
+                <span><van-icon name="search" @click="onClickSearch"/></span>
             </div>
-        </van-nav-bar>
+        </div>
         
         <div style="height:46px"></div>
 
         <div class="comm">
-            <div class="hd">寻找同样有趣的灵魂<span @click="more">搜索更多</span></div>
             <div class="bd">
                 <li v-for="(vo,idx) in commend" :key="vo.id">
                     <div class="item" @click=doFocus(idx,vo,1)>
@@ -31,10 +23,17 @@
                         <van-icon name="success" v-else=""/>
                         <img :src="vo.headimg">                        
                     </div>
-                    <p>{{vo.nickname}}</p>
-                    <span>{{vo.follow}}人关注</span>
                 </li>
             </div>
+            <div class="more" @click="more">
+                <div class="text">
+                    <p>排行榜</p>
+                    <span>每日更新</span>
+                </div>
+                <div class="arrow">
+                    <van-icon name="arrow" />
+                </div>
+            </div>            
         </div>
 
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
@@ -45,7 +44,7 @@
                     <div class="focus focused" v-if="vo.focus" @click=doFocus(idx,vo)>已关注</div>
                     <div class="focus" v-else="" @click=doFocus(idx,vo)>关注</div>
                 </div>
-                <div class="say" :id="'say'+vo.id">#{{vo.tag}}#{{vo.content}}</div>
+                <div class="say" :id="'say'+vo.id"><span class="tag" v-for="tag in vo.tag" :key="tag.name" :style="'color:'+tag.color">#{{tag.name}}#</span>{{vo.content}}</div>
                 <div class="btn" :id="'btn'+vo.id" v-if="vo.content.length>100" @click="openSay(vo.id)">展开</div>
                 <template v-if="vo.images!=''">
 
@@ -61,13 +60,23 @@
                     </li>
                 </div>
                 </template>
-                <div class="action">
-                    <li><van-icon class-prefix="icon" name="dianzan" @click="doLike(idx,vo)" /> {{vo.like}}</li>
-                    <li><van-icon class-prefix="icon" name="pinglun1" @click="gotoComment(vo)"/> {{vo.comment}}</li>
-                    <li><van-icon class-prefix="icon" name="fenxiang" /></li>
+
+                <div class="bottom">
+                    <div class="read">{{vo.hit}}阅读</div>
+                    <div class="action">
+                        <li @click="doLike(idx,vo)"><i class="icon icon-like"></i> {{vo.like}}</li>
+                        <li @click="gotoComment(vo)"><i class="icon icon-wechat"></i> {{vo.comment}}</li>
+                        <li><i class="icon icon-share"></i> 分享</li>
+                    </div>
                 </div>
             </div>
-        </van-list>        
+        </van-list>   
+
+        <div class="selectType" v-show="typeShow">
+            <li @click="onClickRight">图文</li>
+            <li>视频</li>
+        </div>
+        <div class="ball" @click="showType"><van-icon name="plus" /></div>     
     </div>
 </template>
 
@@ -77,8 +86,13 @@ import { ImagePreview } from 'vant';
 export default {
     data() {
         return {
-            commend:[],
+            commentNumber:0,//最新留言数
+            replyNumber:0,//最新回复数
+
             typeShow:false,
+
+            commend:[],
+
             token:'',            
             info:[],
             loading: false,
@@ -108,11 +122,17 @@ export default {
         showType(){
             this.typeShow = !this.typeShow;
         },
-        onClickLeft() {
-            this.$router.go(-1);
-        },
         onClickRight(){
             this.$router.push({'path':'/write',query:{token:this.token}});
+        },
+        onClickSearch() {
+            this.$router.push({'path':'/chat/search',query:{token:this.token}});
+        },
+        onClickMy(){
+            this.$router.push({'path':'/mychat',query:{token:this.token}});
+        },
+        onClickReply(){
+            this.$router.push({'path':'/reply',query:{token:this.token}});
         },
         chat(){
             this.$router.push({'path':'/chat',query:{token:this.token}});
@@ -235,7 +255,9 @@ export default {
                     // 加载状态结束
                     that.loading = false;
                     that.canPost = true;                 
-                    that.info = that.info.concat(res.body.data);  
+                    that.info = that.info.concat(res.body.data);
+                    that.commentNumber = res.body.commentNumber;
+                    that.replyNumber = res.body.replyNumber;
                     that.page++;          
                     if(res.body.next==0){
                         that.finished = true;
@@ -252,21 +274,22 @@ export default {
 </script>
 <style scoped>
 .wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
-.tab{clear: both;overflow: hidden;}
+.header{height: 46px; width: 100%; position: fixed;top: 0; left: 0; background: #fff}
+.tab{float: left; line-height: 46px;}
 .tab li{display: inline-block; font-size: 14px; padding:0 10px;}
 .tab li.active{color: #05c1af;}
 
-.topRightIcon span{ padding-left: 10px; font-size: 20px; position: relative;}
-.topRightIcon span .dot{position: absolute; width:8px; height:8px; border-radius:50%; background: #c00;top:0px; right: 0px;}
-.selectType{position: absolute; top:25px; right: -6px; width: 100px; font-size: 14px; z-index: 999;}
-.selectType li{background: #111; color: #fff; border-bottom: 1px #666 solid}
-.selectType li:last-child{border: 0}
-.selectType .arrow{width:0;height:0;border-width:0 6px 6px;border-style:solid;border-color:transparent transparent #111;; margin-right:10px; margin-left: auto}
+.right{float: right; padding-top: 12px}
+.right span{ padding:0 10px; font-size: 20px; position: relative;}
+.right span .dot{position: absolute;min-width:14px; height:14px; line-height:14px; border-radius:50%; background: #c00;top:0px; right: 0px; font-size:12px; color:#fff; text-align: center}
 
-.comm{background: #fff; clear: both; border-bottom:1px #f1f1f1 solid}
-.comm .hd{color: #999; font-size: 14px; padding: 0 10px; line-height: 40px}
-.comm .hd span{float: right;}
-.comm .bd{clear: both; overflow: hidden; padding-bottom: 10px}
+.ball{background:#191919; color: #fff; width: 50px; height: 50px; text-align: center; position: fixed; right: 5px; bottom: 100px; border-radius: 50%;}
+.ball i{font-size:24px;line-height: 50px}
+.selectType{width: 50px; position:fixed; right: 5px; bottom: 150px}
+.selectType li{width: 50px; height: 50px;line-height: 50px;font-size: 14px; text-align: center; border-radius: 50px; margin-bottom: 10px; background: #191919; color: #fff}
+
+.comm{background: #fff; clear: both; border-bottom:1px #f1f1f1 solid; display: flex}
+.comm .bd{clear: both; overflow: hidden; padding: 10px 0; flex: 1}
 .comm .bd li{float: left; width: 25%; text-align: center}
 .comm .bd li .item{width: 50px; height: 50px; position: relative; margin: auto}
 .comm .bd li .item img{width: 50px; height: 50px; border-radius: 50%; display: block;}
@@ -274,6 +297,10 @@ export default {
 .comm .bd li .item i.active{background:#c00; color: #fff}
 .comm .bd li p{font-size: 12px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;text-overflow: ellipsis;-ms-text-overflow: ellipsis;-o-text-overflow: ellipsis;}
 .comm .bd li span{font-size: 12px; color: #999; text-align: center}
+.comm .more{width: 70px; font-size: 14px; margin-top: 10px}
+.comm .more .text{float: left; text-align: center}
+.comm .more .text span{font-size: 12px; color: #999}
+.comm .more .arrow{font-size: 14px; margin-top: 12px; color: #999}
 
 .chat{background:#fff; clear: both; overflow: hidden; border-bottom: 1px #f1f1f1 solid; padding: 10px 0}
 .chat .user{clear: both; margin-bottom: 10px; overflow: hidden; padding: 0 10px}
@@ -289,8 +316,10 @@ export default {
 .chat .photo li{float: left; width: 33.333%; padding-right: 10px; box-sizing: border-box; padding-bottom: 10px}
 .chat .photo li img{display: block; width: 100%}
 .chat .single li{width: 60%}
-.chat .action{clear: both;}
-.chat .action li{float: left; width: 33.333%; text-align: center; font-size: 12px; line-height: 20px; color: #999}
+.chat .bottom{clear: both; overflow: hidden; line-height: 30px;}
+.chat .bottom .read{float: left; font-size: 12px; color: #999;padding-left:10px}
+.chat .bottom .action{float: right;}
+.chat .action li{float: left; text-align: center; font-size: 13px; line-height: 30px; color: #999; padding:0 10px}
 .chat .action li i{font-size: 16px; display: inline;}
 .btn{text-align: right; font-size: 14px; padding-right: 10px; color: #586a9c; margin-top: -10px; margin-bottom: 10px}
 </style>

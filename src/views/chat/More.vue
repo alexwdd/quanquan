@@ -1,18 +1,18 @@
 <template>
     <div class="wrap">
-        <van-nav-bar fixed title="发现更多" left-arrow @click-left="onClickLeft"/>
+        <van-nav-bar fixed title="排行榜" left-arrow @click-left="onClickLeft"/>
         <div style="height:46px"></div>        
 
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-            <div class="comm">  
+            <div class="userList">  
                 <li v-for="(vo,idx) in info" :key="vo.id">
-                    <div class="item" @click=doFocus(idx,vo)>
-                        <van-icon name="success" class="active" v-if="vo.focus==true"/>
-                        <van-icon name="success" v-else=""/>
+                    <div class="num" :class="'n'+idx">{{idx+1}}</div>
+                    <div class="face">                        
                         <img :src="vo.headimg">                        
                     </div>
-                    <p>{{vo.nickname}}</p>
-                    <span>{{vo.follow}}人关注</span>
+                    <div class="name">{{vo.nickname}}</div>
+                    <div class="focus focused" v-if="vo.focus==true" @click=doFocus(idx,vo)>已关注</div>
+                    <div class="focus" v-else="" @click=doFocus(idx,vo)>关注</div>
                 </li>
              </div>
         </van-list>        
@@ -115,14 +115,15 @@ export default {
 <style scoped>
 .wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
 
-.comm{background: #fff; clear: both; border-bottom:1px #f1f1f1 solid}
-
-.comm{clear: both; overflow: hidden; padding:10px 0}
-.comm li{float: left; width: 25%; text-align: center; margin-bottom: 1em}
-.comm li .item{width: 50px; height: 50px; position: relative; margin: auto}
-.comm li .item img{width: 50px; height: 50px; border-radius: 50%; display: block;}
-.comm li .item i{position: absolute; right: 0; top: 0; width: 14px; height: 14px; background: #999; font-size: 12px; color: #fff; line-height: 14px; border-radius: 4px}
-.comm li .item i.active{background:#c00; color: #fff}
-.comm li p{font-size: 12px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;text-overflow: ellipsis;-ms-text-overflow: ellipsis;-o-text-overflow: ellipsis;}
-.comm li span{font-size: 12px; color: #999; text-align: center}
+.userList{background: #fff; clear: both; border-bottom:1px #f1f1f1 solid}
+.userList li{clear: both; overflow: hidden; padding: 10px}
+.userList li .num{float: left; width: 24px; line-height: 50px; font-size: 14px; text-align: center}
+.n0{color: #f30}
+.n1{color:rgb(231, 75, 210)}
+.n2{color: rgb(0, 153, 255)}
+.userList li .face{float: left; margin-right: 10px}
+.userList li .face img{width: 50px; height: 50px; border-radius: 50%; display: block;}
+.userList li .name{float: left; line-height: 50px; font-size: 14px; max-width: 40%; overflow: hidden; white-space: nowrap}
+.userList li .focus{float: right; font-size: 12px; height: 24px; line-height: 24px; border-radius: 12px; background-color: #c00; width: 60px; text-align: center; color: #fff; margin-top: 10px}
+.userList li .focused{background-color: #ccc; color: #fff;}
 </style>
