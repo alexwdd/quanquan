@@ -39,7 +39,7 @@
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div class="chat" v-for="(vo,idx) in info" :key="vo.id">
                 <div class="user">
-                    <div class="face"><img :src="vo.face"></div>
+                    <div class="face" @click="gotoUser(vo.memberID)"><img :src="vo.face"></div>
                     <div class="name"><p>{{vo.nickname}}</p><span>{{vo.createTime}}</span></div>
                                  
                     <div class="arrowBtn" @click="onClickAction(vo)" v-show="token!=''"><van-icon name="arrow-down" /></div> 
@@ -133,6 +133,9 @@ export default {
         }
     },
     methods: {
+        gotoUser(id){
+            this.$router.push({'path':'/chat/user',query:{userid:id,token:this.token}});
+        },
         onClickAction(info){
             if(info.focus){
                 this.actions[0]['name'] = '取消关注';

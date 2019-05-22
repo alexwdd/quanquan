@@ -137,7 +137,7 @@ export default new Router({
         {
             path: "/chat/jubao/:id",
             name: "jubao",
-            meta:{index:3},
+            meta:{index:9},
             component: Jubao
         },
         {

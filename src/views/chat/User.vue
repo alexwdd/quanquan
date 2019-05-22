@@ -18,7 +18,7 @@
                 <div class="focus focused" @click="doFocus" v-else="">已关注</div>
             </div>
             <div class="tab">
-                <van-tabs v-model="active">
+                <van-tabs v-model="active" color="#05c1af" @click="onClickTab">
                 <van-tab title="资料"></van-tab>
                 <van-tab title="相册"></van-tab>
                 </van-tabs>
@@ -58,14 +58,32 @@
         </div>
 
         <div class="photo" v-show="ablumShow">
-
+            <div class="container-water-fall">
+                <waterfall
+                    :col=2
+                    :width="itemWidth"
+                    :gutterWidth=0
+                    :data="ablum"
+                >
+                    <template>
+                        <div class="cell-item" v-for="item in ablum"  @click="gotoComment(item)" :key="item.image">
+                            <img :src="item.image">
+                        </div>
+                    </template>
+                </waterfall>
+            </div> 
         </div>
     </div>
 </template>
 
 <script>
+import Vue from 'vue';
 import user from './auth'
+import waterfall from "vue-waterfall2";
 import { ImagePreview } from 'vant';
+
+Vue.use(waterfall);
+
 export default {
     data() {
         return {
@@ -94,6 +112,16 @@ export default {
             }
         }
     },
+    computed: {
+        itemWidth() {
+            //return 138 * 0.5 * (document.documentElement.clientWidth / 375); //rem布局 计算宽度
+            return document.documentElement.clientWidth / 2;
+        },
+        gutterWidth() {
+            //return 9 * 0.5 * (document.documentElement.clientWidth / 375); //rem布局 计算x轴方向margin(y轴方向的margin自定义在css中即可)
+            return 10;
+        }
+    },
     created() {        
         if(user.status==true){ 
             this.token = user.token;
@@ -102,7 +130,6 @@ export default {
     },
     methods: {
         onClickLeft() {
-            console.log(1);
             this.$router.go(-1);
         },
         gotoUser(id){
@@ -125,17 +152,41 @@ export default {
             }
         },
         userinfo(){
-            var that = this;
-            if(user.status){
-                var data = {
-                    userid:that.$route.query.userid,
-                    token:user.token,
-                };                
-                that.$http.post("/V1/account/userDetail",data).then(result => {
-                    let res = result.data;
-                    this.info = res.body;
-                });
+            var that = this;  
+            var data = {
+                userid:that.$route.query.userid,
+                token:user.token,
+            };                
+            that.$http.post("/V1/account/userDetail",data).then(result => {
+                let res = result.data;
+                this.info = res.body;
+            });
+        },
+        getPhoto(){
+            var that = this; 
+            that.ablum = [];
+            this.$toast.loading({duration:0});             
+            var data = {
+                userid:that.$route.query.userid,
+            };                
+            that.$http.post("/V1/account/album",data).then(result => {
+                this.$toast.clear();
+                let res = result.data;
+                var dd = res.body.chat;
+                for(var i in dd){
+                    for(var j in dd[i]['images']){
+                        that.ablum.push({id:dd[i]['id'],image:dd[i]['images'][j]['url']});
+                    }
+                }  
+            });
+        },
+        onClickTab(index){
+            if(index==1){
+                this.getPhoto();
             }
+        },
+        gotoComment(info){
+            this.$router.push({'path':'/chat/comment',query:{id:info.id,token:this.token}});
         },
         doFocus(){//关注
             var that = this;
@@ -198,4 +249,6 @@ export default {
 .visitor .bd li img{width: 40px; height: 40px; border-radius: 50%}
 
 .photo{clear: both; overflow: hidden; background: #fff}
+.cell-item{ padding:5px;}
+.cell-item>img{width: 100%; display: block}
 </style>
