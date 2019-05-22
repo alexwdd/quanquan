@@ -96,7 +96,7 @@ export default {
             });
         },
         gotoComment(info){
-            this.$router.push({'path':'/comment',query:{id:info.chatID,token:this.token}});
+            this.$router.push({'path':'/chat/comment',query:{id:info.chatID,token:this.token}});
         },
         onLoad() {
             var that = this;

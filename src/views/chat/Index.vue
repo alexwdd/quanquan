@@ -4,7 +4,7 @@
             <div class="tab">
                 <li class="active">话题</li>
                 <li @click="focus" v-show="token!=''">关注</li>
-                <li>CP配</li>
+                <li v-show="token!=''">CP配</li>
             </div>
             <div class="right">
                 <span v-show="token!=''"><van-icon name="photo-o" @click="onClickMy"/><div class="dot" v-if="commentNumber>0">{{commentNumber}}</div></span>
@@ -39,16 +39,15 @@
 
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div class="chat" v-for="(vo,idx) in info" :key="vo.id">
-                <div class="user">
-                    <div class="face"><img :src="vo.face"></div>
+                <div class="user">      
+                    <div class="face" @click="gotoUser(vo.memberID)"><img :src="vo.face"></div>
                     <div class="name"><p>{{vo.nickname}}</p><span>{{vo.createTime}}</span></div>
-
                     <template v-if="user.id == vo.memberID">
                         <div class="focus focused" @click=doDel(idx,vo)>删除</div>
                     </template>
                     <template v-else="">
-                        <div class="arrowBtn" @click="onClickAction(vo)"><van-icon name="arrow-down" /></div>
-                        <div class="focus" v-if="!vo.focus" @click=doFocus(vo)>关注</div>
+                        <div class="arrowBtn" @click="onClickAction(vo)" v-show="token!=''"><van-icon name="arrow-down" /></div>
+                        <div class="focus" v-if="!vo.focus" @click=doFocus(vo) v-show="token!=''">关注</div>
                     </template>                    
                 </div>
                 <div class="say" :id="'say'+vo.id"><span class="tag" v-for="tag in vo.tag" :key="tag.name" :style="'color:'+tag.color">#{{tag.name}}#</span>{{vo.content}}</div>
@@ -174,6 +173,8 @@ export default {
             this.actionShow = false;
             if(item.name!='举报'){
                 this.doFocus(this.local);
+            }else{
+                this.$router.push({name:'jubao',params:{id:this.local.id}});
             }
         },
         doDel(index,info){//删除话题
@@ -208,19 +209,22 @@ export default {
             this.$router.push({'path':'/chat/search',query:{token:this.token}});
         },
         onClickRight(){
-            this.$router.push({'path':'/write',query:{token:this.token}});
+            this.$router.push({'path':'/chat/write',query:{token:this.token}});
         },
         onClickMy(){
-            this.$router.push({'path':'/mychat',query:{token:this.token}});
+            this.$router.push({'path':'/chat/mychat',query:{token:this.token}});
         },
         onClickReply(){
-            this.$router.push({'path':'/reply',query:{token:this.token}});
+            this.$router.push({'path':'/chat/reply',query:{token:this.token}});
+        },
+        gotoUser(id){
+            this.$router.push({'path':'/chat/user',query:{userid:id,token:this.token}});
         },
         show(){
             this.cateShow = !this.cateShow;
         },
         focus(){
-            this.$router.push({'path':'/focus',query:{token:this.token}});
+            this.$router.push({'path':'/chat/focus',query:{token:this.token}});
         },
         changeCate(sort){
             this.cid = sort;
@@ -312,7 +316,7 @@ export default {
             }            
         },
         gotoComment(info){
-            this.$router.push({'path':'/comment',query:{id:info.id,token:this.token}});
+            this.$router.push({'path':'/chat/comment',query:{id:info.id,token:this.token}});
         },
         onLoad() {
             var that = this;

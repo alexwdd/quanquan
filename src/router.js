@@ -18,6 +18,8 @@ import MyChat from './views/chat/MyChat.vue'
 import Reply from './views/chat/Reply.vue'
 import More from './views/chat/More.vue'
 import ChatSearch from './views/chat/Search.vue'
+import Jubao from './views/chat/Jubao.vue'
+import User from './views/chat/User.vue'
 
 import Test from './views/Test.vue'
 
@@ -83,6 +85,7 @@ export default new Router({
             meta:{index:2},
             component: Commend
         },
+        
         {
             path: "/chat",
             name: "chat",
@@ -90,37 +93,37 @@ export default new Router({
             component: Chat
         },
         {
-            path: "/focus",
+            path: "/chat/focus",
             name: "focus",
             meta:{index:2},
             component: Focus
         },
         {
-            path: "/write",
+            path: "/chat/write",
             name: "write",
             meta:{index:3},
             component: Write
         },
         {
-            path: "/comment",
+            path: "/chat/comment",
             name: "comment",
             meta:{index:3},
             component: Comment
         },
         {
-            path: "/mychat",
+            path: "/chat/mychat",
             name: "mychat",
             meta:{index:2},
             component: MyChat
         },
         {
-            path: "/reply",
+            path: "/chat/reply",
             name: "reply",
             meta:{index:2},
             component: Reply
         },
         {
-            path: "/more",
+            path: "/chat/more",
             name: "more",
             meta:{index:3},
             component: More
@@ -130,6 +133,18 @@ export default new Router({
             name: "chatSearch",
             meta:{index:3},
             component: ChatSearch
+        },
+        {
+            path: "/chat/jubao/:id",
+            name: "jubao",
+            meta:{index:3},
+            component: Jubao
+        },
+        {
+            path: "/chat/user",
+            name: "user",
+            meta:{index:9},
+            component: User
         },
 
 

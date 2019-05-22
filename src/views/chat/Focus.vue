@@ -4,7 +4,7 @@
             <div class="tab">
                 <li @click="chat">话题</li>
                 <li class="active" v-show="token!=''">关注</li>
-                <li>CP配</li>
+                <li v-show="token!=''">CP配</li>
             </div>
             <div class="right">
                 <span v-show="token!=''"><van-icon name="photo-o" @click="onClickMy"/><div class="dot" v-if="commentNumber>0">{{commentNumber}}</div></span>
@@ -41,21 +41,20 @@
                 <div class="user">
                     <div class="face"><img :src="vo.face"></div>
                     <div class="name"><p>{{vo.nickname}}</p><span>{{vo.createTime}}</span></div>
-                    <div class="focus focused" v-if="vo.focus" @click=doFocus(idx,vo)>已关注</div>
-                    <div class="focus" v-else="" @click=doFocus(idx,vo)>关注</div>
+                                 
+                    <div class="arrowBtn" @click="onClickAction(vo)" v-show="token!=''"><van-icon name="arrow-down" /></div> 
                 </div>
                 <div class="say" :id="'say'+vo.id"><span class="tag" v-for="tag in vo.tag" :key="tag.name" :style="'color:'+tag.color">#{{tag.name}}#</span>{{vo.content}}</div>
                 <div class="btn" :id="'btn'+vo.id" v-if="vo.content.length>100" @click="openSay(vo.id)">展开</div>
-                <template v-if="vo.images!=''">
 
+                <template v-if="vo.images!=''">
                 <div class="photo single" v-if="vo.num==1">
-                    <li v-for="(photo,index) in vo.images" :key="photo" @click="showImagePreview(index,vo)">
-                        <img :src="photo" @click="showImagePreview">
+                    <li v-for="(photo,index) in vo.images" :key="photo.url" @click="showImagePreview(index,vo)">
+                        <img :src="photo.url">
                     </li>
                 </div>
-
                 <div class="photo" v-else="">
-                    <li v-for="(photo,index) in vo.thumb" :key="photo" @click="showImagePreview(index,vo)">
+                    <li v-for="(photo,index) in vo.thumb" :key="index" @click="showImagePreview(index,vo)">
                         <img :src="photo">
                     </li>
                 </div>
@@ -64,7 +63,7 @@
                 <div class="bottom">
                     <div class="read">{{vo.hit}}阅读</div>
                     <div class="action">
-                        <li @click="doLike(idx,vo)"><i class="icon icon-like"></i> {{vo.like}}</li>
+                        <li @click="doLike(idx,vo)"><i class="icon icon-like" :class="{'active':vo.liked=='1'}"></i> {{vo.like}}</li>
                         <li @click="gotoComment(vo)"><i class="icon icon-wechat"></i> {{vo.comment}}</li>
                         <li><i class="icon icon-share"></i> 分享</li>
                     </div>
@@ -76,7 +75,14 @@
             <li @click="onClickRight">图文</li>
             <li>视频</li>
         </div>
-        <div class="ball" @click="showType"><van-icon name="plus" /></div>     
+        <div class="ball" @click="showType"><van-icon name="plus" /></div>   
+
+        <van-actionsheet
+        v-model="actionShow"
+        :actions="actions"
+        cancel-text="取消"
+        @select="onSelect"
+        />  
     </div>
 </template>
 
@@ -98,7 +104,15 @@ export default {
             loading: false,
             finished: false,
             canPost:true,
-            page:1
+            page:1,
+
+            //选择器
+            local:[],//当前信息
+            actionShow: false,
+            actions: [
+                {name: '关注'},
+                {name: '举报'}
+            ]
         };
     },
     watch: {
@@ -119,26 +133,44 @@ export default {
         }
     },
     methods: {
+        onClickAction(info){
+            if(info.focus){
+                this.actions[0]['name'] = '取消关注';
+            }else{
+                this.actions[0]['name'] = '关注';
+            }
+            this.local = info;
+            this.actionShow = true;
+        },
+        onSelect(item){//举报、关注选择器
+            this.actionShow = false;
+            if(item.name!='举报'){
+                this.doFocus(this.local);
+            }else{
+                this.$router.push({name:'jubao',params:{id:this.local.id}});
+            }
+        },
+        
         showType(){
             this.typeShow = !this.typeShow;
         },
         onClickRight(){
-            this.$router.push({'path':'/write',query:{token:this.token}});
+            this.$router.push({'path':'/chat/write',query:{token:this.token}});
         },
         onClickSearch() {
             this.$router.push({'path':'/chat/search',query:{token:this.token}});
         },
         onClickMy(){
-            this.$router.push({'path':'/mychat',query:{token:this.token}});
+            this.$router.push({'path':'/chat/mychat',query:{token:this.token}});
         },
         onClickReply(){
-            this.$router.push({'path':'/reply',query:{token:this.token}});
+            this.$router.push({'path':'/chat/reply',query:{token:this.token}});
         },
         chat(){
             this.$router.push({'path':'/chat',query:{token:this.token}});
         },
         more(){
-            this.$router.push({'path':'/more',query:{token:this.token}});
+            this.$router.push({'path':'/chat/more',query:{token:this.token}});
         },
         showImagePreview(index, info) {
             var images = info.images;
@@ -311,6 +343,10 @@ export default {
 .chat .user .name span{color: #999}
 .chat .user .focus{float: right; font-size: 12px; height: 24px; line-height: 24px; border-radius: 12px; background-color: #c00; width: 60px; text-align: center; color: #fff; margin-top: 10px}
 .chat .user .focused{background-color: #ccc; color: #fff;}
+
+.chat .user .arrowBtn{float: right; border:1px #dbdbdb solid; width: 22px; height: 22px; border-radius: 50%; text-align: center; margin-top: 10px}
+.chat .user .arrowBtn i{color: #999; font-size: 14px; line-height: 22px}
+
 .chat .say{clear: both; font-size: 14px; margin-bottom: 10px; padding: 0 10px;overflow: hidden;max-height: 58px}
 .chat .photo{clear: both; padding-left: 10px}
 .chat .photo li{float: left; width: 33.333%; padding-right: 10px; box-sizing: border-box; padding-bottom: 10px}
@@ -321,5 +357,6 @@ export default {
 .chat .bottom .action{float: right;}
 .chat .action li{float: left; text-align: center; font-size: 13px; line-height: 30px; color: #999; padding:0 10px}
 .chat .action li i{font-size: 16px; display: inline;}
+.chat .action li i.active{color: #05c1af}
 .btn{text-align: right; font-size: 14px; padding-right: 10px; color: #586a9c; margin-top: -10px; margin-bottom: 10px}
 </style>

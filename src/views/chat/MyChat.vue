@@ -7,7 +7,8 @@
                 <div class="user">
                     <div class="face"><img :src="vo.face"></div>
                     <div class="name"><p>{{vo.nickname}}<i v-if="vo.noread > 0" @click="gotoComment(vo)">{{vo.noread}}条动态</i></p><span>{{vo.createTime}}</span></div>
-                    <div class="del" @click=doDel(idx,vo)>删除</div>
+
+                    <div class="focus focused" @click=doDel(idx,vo)>删除</div>
                 </div>
                 <div class="say" :id="'say'+vo.id"><span class="tag" v-for="tag in vo.tag" :key="tag.name" :style="'color:'+tag.color">#{{tag.name}}#</span>{{vo.content}}</div>
                 <div class="btn" :id="'btn'+vo.id" v-if="vo.content.length>100" @click="openSay(vo.id)">展开</div>
@@ -110,7 +111,7 @@ export default {
             }            
         },
         gotoComment(info){
-            this.$router.push({'path':'/comment',query:{id:info.id,token:this.token}});
+            this.$router.push({'path':'/chat/comment',query:{id:info.id,token:this.token}});
         },
         onLoad() {
             var that = this;
@@ -157,7 +158,9 @@ export default {
 .chat .user .name p{ margin: 0;}
 .chat .user .name p i{display:inline-block;min-width:14px; height:14px; line-height:14px; border-radius:7px; background: #111;top:0px; right: 0px; font-size:12px; color:#fff; font-style: normal; margin-left: 5px; text-align: center; padding: 0 5px}
 .chat .user .name span{color: #999}
-.chat .user .del{float: right; font-size: 14px; height: 24px; line-height: 24px;color: #586a9c; margin-top: 10px}
+.chat .user .focus{float: right; font-size: 12px; height: 24px; line-height: 24px; border-radius: 12px; background-color: #05c1af; width: 60px; text-align: center; color: #fff; margin-top: 10px; margin-right: 10px;}
+.chat .user .focused{border: 1px #dbdbdb solid; background: #fff; color: #999; margin-right: 0}
+
 
 .chat .say{clear: both; font-size: 14px; margin-bottom: 10px; padding: 0 10px;overflow: hidden;max-height: 58px}
 .chat .photo{clear: both; padding-left: 10px}
