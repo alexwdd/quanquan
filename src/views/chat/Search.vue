@@ -44,7 +44,7 @@
                     <div class="action">
                         <li @click="doLike(idx,vo)"><i class="icon icon-like" :class="{'active':vo.liked=='1'}"></i> {{vo.like}}</li>
                         <li @click="gotoComment(vo)"><i class="icon icon-wechat"></i> {{vo.comment}}</li>
-                        <li><i class="icon icon-share"></i> 分享</li>
+                        <li @click="share(vo)"><i class="icon icon-share"></i> 分享</li>
                     </div>
                 </div>                
             </div>
@@ -107,6 +107,10 @@ export default {
         }
     },
     methods: {
+        share(info){
+            let url = 'app://shareURL?url='+this.config.DOMAIN+'/chat/comment?id='+info.id+'&title='+info.nickname+'的话题';
+            window.location.href = url;
+        },
         gotoUser(id){
             this.$router.push({'path':'/chat/user',query:{userid:id,token:this.token}});
         },
@@ -274,7 +278,7 @@ export default {
 .chat{background: #fff; clear: both; overflow: hidden; border-bottom: 1px #f1f1f1 solid; padding: 10px 0}
 .chat .user{clear: both; margin-bottom: 10px; overflow: hidden; padding: 0 10px}
 .chat .user .face{float: left; margin-right: 10px}
-.chat .user .face img{display: block; width: 50px; height: 50px; border-radius: 50%;}
+.chat .user .face img{display: block; width: 50px; height: 50px; border-radius: 5px;}
 .chat .user .name{float: left;font-size: 12px; line-height:20px; padding: 5px 0}
 .chat .user .name p{ margin: 0;}
 .chat .user .name span{color: #999}

@@ -7,7 +7,7 @@
             <div class="userList">  
                 <li v-for="(vo,idx) in info" :key="vo.id">
                     <div class="num" :class="'n'+idx">{{idx+1}}</div>
-                    <div class="face">                        
+                    <div class="face" @click="gotoUser(vo.id)">                        
                         <img :src="vo.headimg">                        
                     </div>
                     <div class="name">{{vo.nickname}}</div>
@@ -52,6 +52,9 @@ export default {
     methods: {    
         onClickLeft() {
             this.$router.go(-1);
+        },
+        gotoUser(id){
+            this.$router.push({'path':'/chat/user',query:{userid:id,token:this.token}});
         },
         doFocus(index,info){//关注
             var that = this;
@@ -122,7 +125,7 @@ export default {
 .n1{color:rgb(231, 75, 210)}
 .n2{color: rgb(0, 153, 255)}
 .userList li .face{float: left; margin-right: 10px}
-.userList li .face img{width: 50px; height: 50px; border-radius: 50%; display: block;}
+.userList li .face img{width: 50px; height: 50px; border-radius: 5px; display: block;}
 .userList li .name{float: left; line-height: 50px; font-size: 14px; max-width: 40%; overflow: hidden; white-space: nowrap}
 .userList li .focus{float: right; font-size: 12px; height: 24px; line-height: 24px; border-radius: 12px; background-color: #c00; width: 60px; text-align: center; color: #fff; margin-top: 10px}
 .userList li .focused{background-color: #ccc; color: #fff;}

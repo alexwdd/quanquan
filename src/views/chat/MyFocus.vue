@@ -107,7 +107,7 @@ export default {
 .userList li .num{float: left; width: 24px; line-height: 50px; font-size: 14px; text-align: center}
 
 .userList li .face{float: left; margin-right: 10px}
-.userList li .face img{width: 50px; height: 50px; border-radius: 50%; display: block;}
+.userList li .face img{width: 50px; height: 50px; border-radius: 5px; display: block;}
 .userList li .name{float: left; line-height: 50px; font-size: 14px; max-width: 40%; overflow: hidden; white-space: nowrap}
 .userList li .focus{float: right; font-size: 12px; height: 24px; line-height: 24px; border-radius: 12px; background-color: #c00; width: 60px; text-align: center; color: #fff; margin-top: 10px}
 .userList li .focused{border: 1px #dbdbdb solid; background: #fff; color: #999; margin-right: 0}

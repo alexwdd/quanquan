@@ -32,7 +32,7 @@
                     <div class="action">
                         <li @click="doLike(idx,vo)"><i class="icon icon-like"></i> {{vo.like}}</li>
                         <li @click="gotoComment(vo)"><i class="icon icon-wechat"></i> {{vo.comment}}</li>
-                        <li><i class="icon icon-share"></i> 分享</li>
+                        <li @click="share(vo)"><i class="icon icon-share"></i> 分享</li>
                     </div>
                 </div>
             </div>
@@ -71,6 +71,10 @@ export default {
     methods: {
         onClickLeft() {
             this.$router.go(-1);
+        },
+        share(info){
+            let url = 'app://shareURL?url='+this.config.DOMAIN+'/chat/comment?id='+info.id+'&title='+info.nickname+'的话题';
+            window.location.href = url;
         },
         showImagePreview(index, info) {
             var images = info.images;
@@ -153,7 +157,7 @@ export default {
 .chat{background: #fff; clear: both; overflow: hidden; border-bottom: 1px #f1f1f1 solid; padding: 10px 0}
 .chat .user{clear: both; margin-bottom: 10px; overflow: hidden; padding: 0 10px}
 .chat .user .face{float: left; margin-right: 10px}
-.chat .user .face img{display: block; width: 50px; height: 50px; border-radius: 50%;}
+.chat .user .face img{display: block; width: 50px; height: 50px; border-radius: 5px;}
 .chat .user .name{float: left;font-size: 12px; line-height:20px; padding: 5px 0}
 .chat .user .name p{ margin: 0;}
 .chat .user .name p i{display:inline-block;min-width:14px; height:14px; line-height:14px; border-radius:7px; background: #111;top:0px; right: 0px; font-size:12px; color:#fff; font-style: normal; margin-left: 5px; text-align: center; padding: 0 5px}

@@ -8,6 +8,7 @@
 
             <div class="top">{{info.nickname}}</div>
             <div class="arrow"><van-icon name="arrow-left" @click="onClickLeft"/></div>
+            <div class="edit" v-show="info.edit"><van-icon name="edit" @click="onClickRight"/></div>
             <div class="face"><img :src="info.headimg"></div>
         </div>
 
@@ -41,7 +42,7 @@
                 </li>
                 <li>
                     <i class="icon icon-xingbie color4"></i>
-                    <p>{{info.gender}} {{info.work}}</p>
+                    <p>{{info.gender}} {{info.age}} {{info.work}}</p>
                 </li>
                 <li>
                     <i class="icon icon-qian color5"></i>
@@ -132,6 +133,9 @@ export default {
         onClickLeft() {
             this.$router.go(-1);
         },
+        onClickRight() {
+            window.location.href = "app://userEdit";
+        },
         gotoUser(id){
             this.$router.push({'path':'/chat/user',query:{userid:id,token:this.token}});
         },
@@ -221,8 +225,9 @@ export default {
 .bg{background: #333; width: 100%; height:40vh; position: relative;}
 .bg .top{color: #fff; line-height: 40px; position: absolute; left: 0; top: 0;text-align: center; z-index: 88; width: 100%;}
 .bg .arrow{position: absolute; left: 10px; top: 10px; color: #fff;z-index: 99;}
-.bg .face{position: absolute; left: 40px; bottom: -35px; width:70px; height:70px; border-radius: 50%; background: #fff; box-shadow: 0 0 5px #666}
-.bg .face img{width: 66px; height: 66px; border-radius: 50%; display: block; margin: auto; margin-top: 2px;}
+.bg .edit{position: absolute; right: 10px; top: 10px; color: #fff;z-index: 99;}
+.bg .face{position: absolute; left: 40px; bottom: -35px; width:70px; height:70px; border-radius: 5px; background: #fff; box-shadow: 0 0 5px #666}
+.bg .face img{width: 66px; height: 66px; border-radius: 5px; display: block; margin: auto; margin-top: 2px;}
 .banner{height: 40vh; background-size: cover}
 
 .base{margin-top: 40px; padding: 10px}
@@ -246,7 +251,7 @@ export default {
 .visitor .hd{font-weight:bold; font-size: 14px}
 .visitor .bd{clear: both; margin-top: 10px}
 .visitor .bd li{float: left; padding: 5px;}
-.visitor .bd li img{width: 40px; height: 40px; border-radius: 50%}
+.visitor .bd li img{width: 40px; height: 40px; border-radius: 5px}
 
 .photo{clear: both; overflow: hidden; background: #fff}
 .cell-item{ padding:5px;}
