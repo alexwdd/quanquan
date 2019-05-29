@@ -116,7 +116,7 @@ export default {
 };
 </script>
 <style scoped>
-.wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
+.wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
 
 .userList{background: #fff; clear: both; border-bottom:1px #f1f1f1 solid}
 .userList li{clear: both; overflow: hidden; padding: 10px}

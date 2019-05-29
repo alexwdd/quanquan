@@ -15,8 +15,12 @@
             </van-uploader>
         </div>
 
-        <van-cell title="版块" is-link arrow-direction="down" :value="cate.name" @click="clickShowCate"/>
-        <van-cell title="标签" is-link arrow-direction="down" :value="tag"  @click="clickShowTag"/>
+        <van-cell title="版块(选填)" is-link arrow-direction="down" :value="cate.name" @click="clickShowCate"/>
+        <van-cell title="标签(选填)" is-link arrow-direction="down" @click="clickShowTag">
+            <template>
+                <span class="custom-text" v-for="(vo,index) in tag" :key="vo.id">{{vo.name}}</span>
+            </template>
+        </van-cell>
         <van-cell-group>
             <van-switch-cell v-model="checked" title="公开" active-color="#7507c2"/>
         </van-cell-group>
@@ -32,7 +36,19 @@
         </van-popup>
         <van-popup v-model="tagShow" position="bottom">
             <div class="tag">
-                <li v-for="vo in tagArr" :key="vo.cid" @click="onSelectTag(vo.name)"><van-tag plain size="medium">{{vo.name}}</van-tag></li>
+                <div class="hd">最多可选两个标签</div>
+                <div class="bd">
+                    <li v-for="vo in tagArr" :key="vo.cid" @click="onSelectTag(vo)"><van-tag plain size="large" :color="vo.value">{{vo.name}}</van-tag></li>
+                </div>
+                <div class="hd">已选标签</div>
+                <div class="fd">
+                    <li v-for="(vo,index) in tag" :key="vo.id">
+                        <span>{{vo.name}}<i @click="delTag(vo,index)">X</i></span>                        
+                    </li>
+                </div>
+                <div class="ad">
+                    <div class="selectBtn" @click="confirmTag">选好了</div>                    
+                </div>
             </div>
         </van-popup>
     </div>
@@ -50,7 +66,7 @@ export default {
             cateArr:[],
             cate:[],
             tagArr:[],
-            tag:'',
+            tag:[],
             images:[],
             checked:true,
         };
@@ -142,9 +158,27 @@ export default {
         clickShowTag(){
             this.tagShow = true;
         },
-        onSelectTag(value){
-            this.tag = value;
-            this.tagShow = false;
+        onSelectTag(info){
+            if(this.tag.length<2){
+                var flag = true;
+                for(var i=0 ; i<this.tag.length; i++){
+                    if(this.tag[i]['id']==info.id){
+                        flag = false;
+                        break;
+                    }
+                }
+                if(flag){
+                    this.tag.push(info);
+                }
+            }
+        },
+        delTag(index){
+            this.tag.splice(index, 1);
+        },
+        confirmTag(value){
+            if(this.tag.length>0){
+                this.tagShow = false;
+            }            
         },
         init(){
             var that = this;
@@ -170,14 +204,14 @@ export default {
                 that.$dialog.alert({title:'错误信息',message:'请输入内容'});
                 return false;
             }
-            if(that.cate.cid == '' || that.cate.cid == undefined){
+            /* if(that.cate.cid == '' || that.cate.cid == undefined){
                 that.$dialog.alert({title:'错误信息',message:'请选择版块'});
                 return false;
             }
-            if(that.tag == ''){
+            if(that.tag.length==0){
                 that.$dialog.alert({title:'错误信息',message:'请选择标签'});
                 return false;
-            }
+            } */
             if(that.images.length>9){
                 that.$dialog.alert({title:'错误信息',message:'最多上传9张图片'});
                 return false;
@@ -190,13 +224,21 @@ export default {
                     imageStr += "###" + that.images[i].content;
                 }
             }
+            let tag = '';
+            for(var i=0;i<that.tag.length;i++){
+                if(i==0){
+                    tag = that.tag[i].name+'|'+that.tag[i].value;
+                }else{
+                    tag += "," + that.tag[i].name+'|'+that.tag[i].value;
+                }
+            }
             var data = {
                 cityID:that.config.CITYID,
                 token:user.token,
                 content:that.content,
                 images:imageStr,
                 cid:that.cate.cid,
-                tag:that.tag,
+                tag:tag,
                 type:1
             };
             if(that.checked){
@@ -243,6 +285,15 @@ export default {
 .quick li{float: left; width:20%; text-align: center;font-size: 12px; padding: 10px 0}
 .quick li img{display: block; margin: auto; height: 40px}
 
-.tag{clear: both; margin-bottom: 30px; overflow: hidden; padding-left: 10px; padding-top: 20px}
-.tag li{float: left; margin-right: 10px; margin-bottom: 10px}
+.tag{clear: both; margin-bottom: 30px; overflow: hidden; padding-left: 10px;}
+.tag .hd{color: #999; clear: both; overflow: hidden; font-size: 12px; line-height: 40px;}
+.tag .bd{clear: both; overflow: hidden;}
+.tag .bd li{float: left; margin-right: 10px; margin-bottom: 10px}
+.tag .fd{clear: both; overflow: hidden;}
+.tag .fd li{margin-bottom: 10px; clear: both; overflow: hidden;}
+.tag .fd li span{border:1px #dbdbdb solid; line-height: 26px; height: 26px; display: block; float: left; border-radius: 13px; font-size: 14px; padding-left:10px; padding-right: 3px;}
+.tag .fd li span i{background: #ccc; color: #fff; font-size: 12px; line-height: 20px; width: 20px; border-radius: 50%; text-align: center; display:inline-block; font-style: normal; margin-left:10px}
+.tag .ad{clear: both; overflow: hidden;}
+.tag .ad .selectBtn{background: #7507c2; color: #fff; width: 80px; margin: auto; line-height: 40px; border-radius: 20px; text-align: center; font-size: 14px}
+.custom-text{padding-left: 5px;}
 </style>
