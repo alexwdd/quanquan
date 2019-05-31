@@ -21,7 +21,11 @@ import ChatSearch from './views/chat/Search.vue'
 import Jubao from './views/chat/Jubao.vue'
 import User from './views/chat/User.vue'
 
-import Test from './views/Test.vue'
+//代购商城
+import Store from './views/store/Index.vue'
+import StoreAddress from './views/store/Address.vue'
+import StoreAddressAdd from './views/store/AddressAdd.vue'
+import StoreAddressEdit from './views/store/AddressEdit.vue'
 
 
 
@@ -149,11 +153,9 @@ export default new Router({
 
 
 
-        {
-            path: "/test",
-            name: "test",
-            meta:{index:1},
-            component: Test
-        },
+        {path: "/store",name: "store",meta:{index:1},component: Store},
+        {path: "/store/address",name: "storeAddress",meta:{index:1},component: StoreAddress},
+        {path: "/store/addressAdd",name: "storeAddressAdd",meta:{index:2},component: StoreAddressAdd},
+        {path: "/store/addressEdit",name: "storeAddressEdit",meta:{index:2},component: StoreAddressEdit},
     ]
 })
