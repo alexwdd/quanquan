@@ -91,7 +91,7 @@ export default {
     },
     watch:{
     	$route(to,from){
-		    if (to.path=='/addressAdd') {
+		    if (to.path=='/store/addressAdd') {
                 this.formData = {
                     front:'',
                     back:''
@@ -179,6 +179,9 @@ export default {
                 that.$toast('请输入详细地址');
                 return false;
             }
+            if(that.checked){
+                that.formData.def = 1;
+            }
             that.formData.token = user.token;
             this.$toast.loading({mask: true,duration:0});
             that.$http.post("/v1/store/addressPub",that.formData).then(result => {
@@ -186,7 +189,7 @@ export default {
                 let res = result.data;
                 if (res.code == 0) {              
                     this.$dialog.alert({title:'提示',message:res.desc});
-                    this.$router.push({path:'/address'});
+                    this.$router.push({path:'/store/address',query:{token:user.token}});
                 }else if(res.code==999) {
                     that.$dialog.alert({title:'错误信息',message:res.desc}).then(() => {
                         window.location.href = 'app://login';

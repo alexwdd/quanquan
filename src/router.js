@@ -156,6 +156,6 @@ export default new Router({
         {path: "/store",name: "store",meta:{index:1},component: Store},
         {path: "/store/address",name: "storeAddress",meta:{index:1},component: StoreAddress},
         {path: "/store/addressAdd",name: "storeAddressAdd",meta:{index:2},component: StoreAddressAdd},
-        {path: "/store/addressEdit",name: "storeAddressEdit",meta:{index:2},component: StoreAddressEdit},
+        {path: "/store/addressEdit/:id",name: "storeAddressEdit",meta:{index:2},component: StoreAddressEdit},
     ]
 })
