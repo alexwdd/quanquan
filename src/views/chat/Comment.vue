@@ -199,7 +199,7 @@ export default {
     methods: {
         share(){
             let info = this.info;
-            let url = 'app://shareURL?url='+this.config.DOMAIN+'/chat/comment?id='+info.id+'&title='+info.nickname+'的话题';
+            let url = 'app://shareURL?url='+this.config.DOMAIN+'chat/comment?id='+info.id+'&title='+info.nickname+'的话题';
             window.location.href = url;
         },
         openApp(){

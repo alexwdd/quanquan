@@ -3,8 +3,7 @@
         <div class="header">
             <div class="tab">
                 <li class="active">话题</li>
-                <li @click="focus" v-show="token!=''">关注</li>
-                <li v-show="token!=''">CP配</li>
+                <li @click="focus" v-show="token!=''">关注</li>        
             </div>
             <div class="right">
                 <span v-show="token!=''"><van-icon name="photo-o" @click="onClickMy"/><div class="dot" v-if="commentNumber>0">{{commentNumber}}</div></span>
@@ -82,7 +81,7 @@
             <li @click="onClickRight">图文</li>
             <li>视频</li>
         </div>
-        <div class="ball" @click="showType"><van-icon name="plus" /></div>
+        <div class="ball" @click="onClickRight"><van-icon name="plus" /></div>
 
         <van-actionsheet
         v-model="actionShow"
@@ -227,7 +226,7 @@ export default {
             this.$router.push({'path':'/chat/focus',query:{token:this.token}});
         },
         share(info){
-            let url = 'app://shareURL?url='+this.config.DOMAIN+'/chat/comment?id='+info.id+'&title='+info.nickname+'的话题';
+            let url = 'app://shareURL?url='+this.config.DOMAIN+'chat/comment?id='+info.id+'&title='+info.nickname+'的话题';
             window.location.href = url;
         },
         changeCate(sort){
@@ -370,13 +369,13 @@ export default {
 .header{height: 46px; width: 100%; position: fixed;top: 0; left: 0; background: #fff}
 .tab{float: left; line-height: 46px;}
 .tab li{display: inline-block; font-size: 14px; padding:0 10px;}
-.tab li.active{color: #7507c2;}
+.tab li.active{color: #7507c2; font-size: 16px}
 
 .right{float: right; padding-top: 12px}
 .right span{ padding:0 10px; font-size: 20px; position: relative;}
 .right span .dot{position: absolute;min-width:14px; height:14px; line-height:14px; border-radius:50%; background: #c00;top:0px; right: 0px; font-size:12px; color:#fff; text-align: center}
 
-.ball{background:#191919; color: #fff; width: 50px; height: 50px; text-align: center; position: fixed; right: 5px; bottom: 100px; border-radius: 50%;}
+.ball{background:rgba(117, 7, 194, 0.5); color: #fff; width: 50px; height: 50px; text-align: center; position: fixed; right: 5px; bottom: 100px; border-radius: 50%;}
 .ball i{font-size:24px;line-height: 50px}
 .selectType{width: 50px; position:fixed; right: 5px; bottom: 150px}
 .selectType li{width: 50px; height: 50px;line-height: 50px;font-size: 14px; text-align: center; border-radius: 50px; margin-bottom: 10px; background: #191919; color: #fff}
@@ -384,7 +383,7 @@ export default {
 
 .topCate{position: fixed; top: 45px; width: 100%; display: flex;background: #fff}
 .cateTab{flex: 1}
-.cateBar{width: 40px; height: 44px; text-align: center}
+.cateBar{width: 0px; height: 44px; text-align: center; font-size: 0; display: none}
 .cateBar i{line-height: 44px;color: #7507c2;}
 .cateList{position: fixed; top:45px; width: 100%; z-index: 999; background: #fff}
 .cateList .hd{height: 44px; line-height: 44px; text-align: center; position: relative; background: #7507c2; color: #fff}

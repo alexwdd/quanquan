@@ -4,7 +4,6 @@
             <div class="tab">
                 <li @click="chat">话题</li>
                 <li class="active" v-show="token!=''">关注</li>
-                <li v-show="token!=''">CP配</li>
             </div>
             <div class="right">
                 <span v-show="token!=''"><van-icon name="photo-o" @click="onClickMy"/><div class="dot" v-if="commentNumber>0">{{commentNumber}}</div></span>
@@ -75,7 +74,7 @@
             <li @click="onClickRight">图文</li>
             <li>视频</li>
         </div>
-        <div class="ball" @click="showType"><van-icon name="plus" /></div>   
+        <div class="ball" @click="onClickRight"><van-icon name="plus" /></div>   
 
         <van-actionsheet
         v-model="actionShow"
@@ -134,7 +133,7 @@ export default {
     },
     methods: {
         share(info){
-            let url = 'app://shareURL?url='+this.config.DOMAIN+'/chat/comment?id='+info.id+'&title='+info.nickname+'的话题';
+            let url = 'app://shareURL?url='+this.config.DOMAIN+'chat/comment?id='+info.id+'&title='+info.nickname+'的话题';
             window.location.href = url;
         },
         gotoUser(id){
@@ -316,7 +315,7 @@ export default {
 .header{height: 46px; width: 100%; position: fixed;top: 0; left: 0; background: #fff}
 .tab{float: left; line-height: 46px;}
 .tab li{display: inline-block; font-size: 14px; padding:0 10px;}
-.tab li.active{color: #05c1af;}
+.tab li.active{color: #05c1af; font-size: 16px}
 
 .right{float: right; padding-top: 12px}
 .right span{ padding:0 10px; font-size: 20px; position: relative;}

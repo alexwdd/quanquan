@@ -26,6 +26,8 @@ import Store from './views/store/Index.vue'
 import StoreAddress from './views/store/Address.vue'
 import StoreAddressAdd from './views/store/AddressAdd.vue'
 import StoreAddressEdit from './views/store/AddressEdit.vue'
+import StoreDetail from './views/store/Detail.vue'
+import StoreCart from './views/store/Cart.vue'
 
 
 
@@ -157,5 +159,8 @@ export default new Router({
         {path: "/store/address",name: "storeAddress",meta:{index:1},component: StoreAddress},
         {path: "/store/addressAdd",name: "storeAddressAdd",meta:{index:2},component: StoreAddressAdd},
         {path: "/store/addressEdit/:id",name: "storeAddressEdit",meta:{index:2},component: StoreAddressEdit},
+        
+        {path: "/store/detail/:id",name: "storeDetail",meta:{index:2},component: StoreDetail},
+        {path: "/store/cart",name: "storeCart",meta:{index:2},component: StoreCart},
     ]
 })
