@@ -61,9 +61,13 @@
                         <div class="date">{{vo.createTime}}</div>
                         <div class="say" @click="reply(vo,vo.id)">{{vo.content}}</div>
                     </div>
+                    <div class="action" @click="onClickComment(vo,index)" v-show="token!=''">
+                        <van-icon name="arrow-down" />
+                    </div>
                 </li>  
-                <div class="reply" v-for="item in vo.reply" :key="item.id" @click="reply(item,vo.id)">
-                    <span>{{item.nickname}}</span> 回复 <span>{{item.toNickname}}</span>：{{item.content}}
+                <div class="reply" v-for="(item,idx) in vo.reply" :key="item.id">
+                    <span @click="reply(item,vo.id)">{{item.nickname}}</span> 回复 <span>{{item.toNickname}}</span>：{{item.content}}
+                    <span class="delBtn" @click="delReply(item,index,idx)" v-if="user.id==item.memberID">删除</span>
                 </div>              
 			</div>
             </van-list>	
@@ -97,6 +101,13 @@
         :actions="actions"
         cancel-text="取消"
         @select="onSelect"
+        />
+
+        <van-actionsheet
+        v-model="commentShow"
+        :actions="commentActions"
+        cancel-text="取消"
+        @select="onSelectComment"
         />
 
         <div class="footer" v-show="notApp">
@@ -169,8 +180,16 @@ export default {
                 {name: '举报'}
             ],
 
+            //留言选择器
+            local:[],//当前信息
+            commentShow: false,
+            commentActions: [
+                {name: '删除'}
+            ],
+            localComment:[],
+            index:0,
+
             notApp:true,
-            back:false,
             show:false,
             downShow:false,
 		}
@@ -183,7 +202,6 @@ export default {
                 this.empty = false;
                 this.init();
                 this.getData();
-                this.back = true;
             }
         }
     },
@@ -280,6 +298,68 @@ export default {
                 this.$router.push({name:'jubao',params:{id:this.info.id}});
             }
         },
+        onClickComment(info,index){
+            if(this.user.id == info.memberID){
+                this.commentActions[0]['name'] = '删除';
+            }else{
+                this.commentActions[0]['name'] = '举报';
+            }
+            this.localComment = info;
+            this.index = index;
+            this.commentShow = true;
+        },
+        onSelectComment(item){
+            this.commentShow = false;
+            if(item.name!='举报'){
+                this.doDelComment(this.localComment);
+            }else{
+                this.$router.push({name:'jubao',params:{id:this.info.id}});
+            }
+        },
+        doDelComment(info){//删除话题
+            var that = this;
+            that.$dialog.confirm({
+                title: '系统提示',
+                message: '确认删除吗'
+            }).then(() => {
+                var data = {
+                    token:user.token,
+                    id:info.id
+                };                
+                that.$http.post("/V1/chat/delComment",data).then(result => {
+                    let res = result.data;
+                    if (res.code == 0) {
+                        that.comment.splice(this.index, 1);
+                    }else if(res.code==999){
+                        window.location.href='app://login';  
+                    }else{
+                        that.$dialog.alert({title:'错误信息',message:res.desc});
+                    }
+                });
+            })
+        },
+        delReply(info,index,idx){//删除话题
+            var that = this;
+            that.$dialog.confirm({
+                title: '系统提示',
+                message: '确认删除吗'
+            }).then(() => {
+                var data = {
+                    token:user.token,
+                    id:info.id
+                };                
+                that.$http.post("/V1/chat/delComment",data).then(result => {
+                    let res = result.data;
+                    if (res.code == 0) {
+                        that.comment[index]['reply'].splice(idx, 1);
+                    }else if(res.code==999){
+                        window.location.href='app://login';  
+                    }else{
+                        that.$dialog.alert({title:'错误信息',message:res.desc});
+                    }
+                });
+            })
+        },
         doDel(){//删除话题
             var that = this;
             that.$dialog.confirm({
@@ -313,11 +393,11 @@ export default {
             })
         },
         onClickLeft() {
-            if(this.back){
+            if(this.config.isApp()){
                 this.$router.go(-1);
             }else{
                 this.$router.push('/')
-            } 
+            }
         },
         doFocus(){
             var that = this;
@@ -534,7 +614,7 @@ export default {
 .chat .action li i.active{color: #05c1af}
 .btn{text-align: right; font-size: 14px; padding-right: 10px; color: #586a9c; margin-top: -10px; margin-bottom: 10px}
 
-.footerBox{width: 100%; position: fixed; bottom: 0; left: 0; height: 46px; background: #fff; box-sizing: border-box; padding: 8px; display: flex}
+.footerBox{width: 100%; position: fixed; bottom: 0; left: 0; height: 46px; background: #fff; box-sizing: border-box; padding: 8px; display: flex; display: none}
 .writeBox{background: #f1f1f1; height: 30px; border-radius: 18px; flex: 1; line-height: 30px; font-size: 14px; padding-left: 10px; color: #999}
 .share,.like{width:60px; text-align: center; height: 30px; line-height: 30px}
 .share i{font-size:20px}
@@ -557,13 +637,13 @@ export default {
 .feedback .bd li>.desc .name{font-size: 12px; color: #999; margin-top:5px}
 .feedback .bd li>.desc .date{font-size: 12px; color: #999}
 .feedback .bd li>.desc .say{font-size: 14px; margin-top: 10px}
-.feedback .bd li>.like{ width:60px; text-align: right; color: #586a9c}
-.feedback .bd li>.like img{height:20px;display: block; float: right}
-.feedback .bd li>.like span{display: block; float: right; line-height: 20px; font-size: 12px; margin-top:2px}
+.feedback .bd li>.action{ width:60px; text-align: right}
+.feedback .bd li>.action i{display: block; border:1px #dbdbdb solid; color: #dbdbdb; float: right; border-radius:9px; padding:0 5px}
 
 .reply{clear: both; overflow: hidden; display: flex; padding-left: 20px; background: #f7f7f7; margin-left: 50px; padding: 5px;}
 .reply{font-size: 14px; line-height: 100%}
 .reply span{color:#05c1af; padding:0 3px}
+.reply span.delBtn{color: rgb(46, 64, 114)}
 
 .empty{text-align: center; padding: 30px 0; color: #999}
 

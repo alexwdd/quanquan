@@ -31,7 +31,7 @@
 
         <van-popup v-model="cateShow" position="bottom">
             <div class="quick">
-                <li v-for="vo in cateArr" :key="vo.cid" @click="onSelectCate(vo)"><img :src="vo.icon"><p>{{vo.name}}</p></li>
+                <li v-for="vo in cateArr" :key="vo.cid" @click="onSelectCate(vo)"><p>{{vo.name}}</p></li>
             </div>
         </van-popup>
         <van-popup v-model="tagShow" position="bottom">
@@ -278,11 +278,11 @@ export default {
 .del{position: absolute; right: 0; top: 0; background:rgba(0, 0, 0, 0.8); color: #fff;}
 .cam{font-size: 30px; line-height: 60px; color: #ccc}
 .photo img{display: block; width: 100%}
-.btn{padding: 10px; position: fixed; bottom: 20px; left: 0; width: 100%; box-sizing: border-box}
+.btn{padding: 10px; width: 100%; box-sizing: border-box}
 .my-btn{background: #7507c2; color: #fff;}
 
-.quick{clear: both; overflow: hidden; margin-bottom: 30px;}
-.quick li{float: left; width:20%; text-align: center;font-size: 12px; padding: 10px 0}
+.quick{clear: both; overflow: hidden; padding:20px;}
+.quick li{float: left;text-align: center;font-size: 12px; padding:5px 10px; border:1px #dbdbdb solid; border-radius:14px; margin-right: 10px; margin-bottom: 10px}
 .quick li img{display: block; margin: auto; height: 40px}
 
 .tag{clear: both; margin-bottom: 30px; overflow: hidden; padding-left: 10px;}

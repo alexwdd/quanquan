@@ -1,13 +1,14 @@
 <template>
     <div class="wrap">
-        <van-nav-bar fixed title="排行榜" left-arrow @click-left="onClickLeft"/>
+        <van-nav-bar fixed title="红人榜" left-arrow @click-left="onClickLeft"/>
         <div style="height:46px"></div>        
 
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div class="userList">  
                 <li v-for="(vo,idx) in info" :key="vo.id">
                     <div class="num" :class="'n'+idx">{{idx+1}}</div>
-                    <div class="face" @click="gotoUser(vo.id)">                        
+                    <div class="face" @click="gotoUser(vo.id)">  
+                        <i class="icon icon-huangguan" :class="'n'+idx" v-if="idx<3"></i>                      
                         <img :src="vo.headimg">                        
                     </div>
                     <div class="name">{{vo.nickname}}</div>
@@ -124,9 +125,14 @@ export default {
 .n0{color: #f30}
 .n1{color:rgb(231, 75, 210)}
 .n2{color: rgb(0, 153, 255)}
-.userList li .face{float: left; margin-right: 10px}
-.userList li .face img{width: 50px; height: 50px; border-radius: 5px; display: block;}
+.userList li .face{float: left; margin-right: 10px; position: relative; width: 50px; height:50px;}
+.userList li .face i{position: absolute;left: 0; top: 0; z-index: 9;transform:rotate(-25deg);
+-ms-transform:rotate(-25deg); 	/* IE 9 */
+-moz-transform:rotate(-25deg); 	/* Firefox */
+-webkit-transform:rotate(-25deg); /* Safari 和 Chrome */
+-o-transform:rotate(-25deg); 	/* Opera */}
+.userList li .face img{width:40px; height:40px; border-radius: 5px; display: block; position: absolute; left: 5px; top: 5px; z-index: 0}
 .userList li .name{float: left; line-height: 50px; font-size: 14px; max-width: 40%; overflow: hidden; white-space: nowrap}
-.userList li .focus{float: right; font-size: 12px; height: 24px; line-height: 24px; border-radius: 12px; background-color: #c00; width: 60px; text-align: center; color: #fff; margin-top: 10px}
+.userList li .focus{float: right; font-size: 12px; height: 24px; line-height: 24px; border-radius: 12px; background-color: #05c1af; width: 60px; text-align: center; color: #fff; margin-top: 10px}
 .userList li .focused{background-color: #ccc; color: #fff;}
 </style>

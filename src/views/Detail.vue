@@ -246,7 +246,7 @@ import wx from 'weixin-js-sdk';
 
 import { ImagePreview } from 'vant';
 
-/* import 'vue-googlemaps/dist/vue-googlemaps.css'
+import 'vue-googlemaps/dist/vue-googlemaps.css'
 import VueGoogleMaps from 'vue-googlemaps'
 Vue.use(VueGoogleMaps,{
     load: {
@@ -257,7 +257,7 @@ Vue.use(VueGoogleMaps,{
         // Use new renderer
         useBetaRenderer: false,
     }
-}) */
+})
 Vue.use(Lazyload,{
     loading:'/static/image/default_320.jpg'
 });

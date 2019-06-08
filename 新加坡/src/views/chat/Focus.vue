@@ -26,7 +26,7 @@
             </div>
             <div class="more" @click="more">
                 <div class="text">
-                    <p>排行榜</p>
+                    <p>红人榜</p>
                     <span>每日更新</span>
                 </div>
                 <div class="arrow">
@@ -74,7 +74,7 @@
             <li @click="onClickRight">图文</li>
             <li>视频</li>
         </div>
-        <div class="ball" @click="onClickRight"><van-icon name="plus" /></div>   
+        <div class="ball" @click="onClickRight" v-show="submitBtn"><van-icon name="plus" /></div>   
 
         <van-actionsheet
         v-model="actionShow"
@@ -95,6 +95,7 @@ export default {
             replyNumber:0,//最新回复数
 
             typeShow:false,
+            submitBtn:false,
 
             commend:[],
 
@@ -118,6 +119,7 @@ export default {
         $route(to) {
             if (to.name == "focus") {
                 this.typeShow=false;
+                this.submitBtn=false;
                 this.info = [];
                 this.page = 1;
                 this.onLoad();
@@ -300,6 +302,9 @@ export default {
                     if(res.body.next==0){
                         that.finished = true;
                     }
+                    setTimeout(function(){
+                        that.submitBtn = true
+                    },500);
                 }else if(res.code==999){
                     window.location.href='app://login';  
                 }else{
