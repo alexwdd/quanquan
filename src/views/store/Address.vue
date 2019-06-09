@@ -37,7 +37,6 @@ export default {
             window.location.href = 'app://goback'
         },
         onClickAdd(){
-            this.$router.push({path:'/store/addressAdd'});
             this.$router.push({path:'/store/addressAdd',query:{token:user.token}});
         },
         onClickEdit(item){
@@ -46,7 +45,7 @@ export default {
         init(){
             var that = this;
             var data = {token:user.token};
-            that.$http.post("/V1/store/address",data).then(result => {
+            that.$http.post("/V1/address/lists",data).then(result => {
                 let res = result.data;
                 if (res.code == 0) {
                     that.info = res.body;
@@ -67,7 +66,7 @@ export default {
                     token:user.token,
                     id:info.id
                 };                
-                that.$http.post("/V1/store/addressDel",data).then(result => {
+                that.$http.post("/V1/address/addressDel",data).then(result => {
                     let res = result.data;
                     if (res.code == 0) {
                         that.info.splice(index, 1);

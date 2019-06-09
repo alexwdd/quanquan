@@ -184,7 +184,7 @@ export default {
             }
             that.formData.token = user.token;
             this.$toast.loading({mask: true,duration:0});
-            that.$http.post("/v1/store/addressPub",that.formData).then(result => {
+            that.$http.post("/v1/address/addressPub",that.formData).then(result => {
                 this.$toast.clear();
                 let res = result.data;
                 if (res.code == 0) {              

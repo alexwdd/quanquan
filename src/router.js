@@ -160,7 +160,7 @@ export default new Router({
         {path: "/store/addressAdd",name: "storeAddressAdd",meta:{index:2},component: StoreAddressAdd},
         {path: "/store/addressEdit/:id",name: "storeAddressEdit",meta:{index:2},component: StoreAddressEdit},
         
-        {path: "/store/detail/:id",name: "storeDetail",meta:{index:2},component: StoreDetail},
+        {path: "/store/detail/:id/:specid",name: "storeDetail",meta:{index:2},component: StoreDetail},
         {path: "/store/cart",name: "storeCart",meta:{index:2},component: StoreCart},
     ]
 })

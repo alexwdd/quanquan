@@ -160,7 +160,7 @@ export default {
                 token:user.token,
                 id:that.$route.params.id
             };
-            that.$http.post("/V1/store/addressInfo",data).then(result => {
+            that.$http.post("/V1/address/addressInfo",data).then(result => {
                 let res = result.data;
                 if (res.code == 0) {
                     that.info = res.body;
@@ -208,7 +208,7 @@ export default {
             that.formData.token = user.token;
             that.formData.id = that.info.id;
             this.$toast.loading({mask: true,duration:0});
-            that.$http.post("/v1/store/addressPub",that.formData).then(result => {
+            that.$http.post("/v1/address/addressPub",that.formData).then(result => {
                 this.$toast.clear();
                 let res = result.data;
                 if (res.code == 0) {              
