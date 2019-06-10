@@ -131,7 +131,11 @@ export default {
     },
     methods: {
         onClickLeft() {
-            this.$router.go(-1);
+            if(this.$route.query.appBack){
+                window.location.href = 'app://goback'
+            }else{
+                this.$router.go(-1);
+            }
         },
         onClickRight() {
             window.location.href = "app://userEdit";

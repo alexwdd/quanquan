@@ -26,16 +26,32 @@
                     <span><van-icon name="delete" @click="doDel(vo,index)"/></span>
                 </div>
             </div>            
-        </div>        
+        </div> 
 
         <template v-if="info.length > 0">
         <div class="title">
             <p>选择快递公司</p>
         </div>
         <div class="kuaidi">
-	        <li :class="{'active':wuliuName==vo.name}" v-for="vo in wuliu" :key="vo.id" @click="onClickWuliu(vo)">{{vo.name}}</li>
-	    </div>        
-	    <div class="kdResult"></div>
+	        <li :class="{'active':thisWuliu.name==vo.name}" v-for="vo in wuliu" :key="vo.id" @click="onClickWuliu(vo)">{{vo.name}}</li>
+	    </div>
+
+	    <div class="kdResult" v-if="kdInfo!=''">
+            <div class="kdTotle">共 {{kdInfo.number}} 箱 - ${{kdInfo.totalPrice}}</div>
+            <div class="kdBaoguo">
+                <li v-if="kdInfo.totalExtend > 0"><div class="goods">偏远地区加收邮费</div><div class="yunfei">${{kdInfo.totalExtend}}</div></li>
+                <li v-for="vo in kdInfo.baoguo">
+                    <div class="goods">
+                        <p v-for="f in vo.goods">{{f.goodsNumber}} * {{f.name}}</p>
+                    </div>
+                    <div class="yunfei">
+                        {{vo.kuaidi}} - 约{{vo.totalWuliuWeight}}kg - ${{vo.yunfei}}
+                    </div>
+                </li>
+            </div>
+        </div>
+
+        <div style="height:60px"></div>
 
         <van-submit-bar
         :price="heji.total"
@@ -55,8 +71,8 @@ export default {
             info:[],
             heji:[],
             wuliu:[],
-            wuliuName:'',
-            wuliuInfo:[]
+            thisWuliu:[],
+            kdInfo:[]
         };
     },
     watch: {
@@ -178,11 +194,11 @@ export default {
         },
         onClickWuliu(info){
             var that = this;
-            if(info.name == this.wuliuName){
-                this.wuliuName = '';
-                that.wuliuInfo = [];
+            if(info.name == this.thisWuliu.name){
+                this.thisWuliu = [];
+                that.kdInfo = [];
             }else{
-                this.wuliuName = info.name;
+                this.thisWuliu = info;
                 var data = {
                     token:user.token,
                     agentid:user.agentid,
@@ -191,7 +207,8 @@ export default {
                 that.$http.post("/V1/store/getYunfei",data).then(result => {
                     let res = result.data;
                     if (res.code == 0) {
-                        that.wuliuInfo = res.body.data;
+                        that.kdInfo = res.body.data;
+                        that.kdInfo.number = that.kdInfo.baoguo.length;
                     }else if(res.code==999){
                         window.location.href='app://login';  
                     }else{
@@ -201,7 +218,12 @@ export default {
             }
         },
         onSubmit(){
-
+            if(this.thisWuliu==''){
+                this.$toast('请选择快递公司');
+                return false;
+            }
+            this.$store.commit('SET_WULIU',this.thisWuliu);
+            this.$router.push({name:'storeCreate',query:{token:user.token,agentid:user.agentid}});
         }
     }
 };
@@ -234,4 +256,11 @@ export default {
 .emptyCart{ text-align: center; padding: 20px 0; color: #999}
 .emptyCart p{margin-bottom: 30px;}
 .my-btn{background: #05c1af; color: #fff;}
+.kdResult{clear: both; overflow: hidden; background: #fff}
+.kdResult .kdTotle{text-align: right; font-size: 16px; height: 40px; line-height: 40px; color: #39c4da;border-bottom: 1px #dbdbdb solid; padding-right: 10px}
+.kdResult .kdBaoguo{ clear: both; color: #999}
+.kdResult .kdBaoguo li{border-bottom: 1px #dbdbdb solid; clear: both; padding: 10px 0; overflow: hidden;}
+.kdResult .kdBaoguo li .goods{ clear: both; padding: 0 5px}
+.kdResult .kdBaoguo li .goods p{margin: 0; font-size: 12px;}
+.kdResult .kdBaoguo li .yunfei{ clear: both; text-align: right; padding: 0 5px; font-size: 12px; color: #000}
 </style>

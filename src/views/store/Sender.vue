@@ -1,10 +1,10 @@
 <template>
     <div class="wrap">
-        <van-nav-bar title="收货地址" left-arrow @click-left="onClickLeft" right-text="+新增" @click-right="onClickAdd"/>
-        <div class="address" v-for="(vo,index) in info" :key="vo.id">
-            <div class="info" @click="onClickAddress(vo)">
-                <p>{{vo.name}} {{vo.mobile}}</p>
-                <span>{{vo.province}}{{vo.city}}{{vo.area}}{{vo.address}}</span>
+        <van-nav-bar title="发件人" left-arrow @click-left="onClickLeft" right-text="+新增" @click-right="onClickAdd"/>
+        <div class="sender" v-for="(vo,index) in info" :key="vo.id">
+            <div class="info" @click="onClickSender(vo)">
+                <p>{{vo.name}}</p>
+                <p>{{vo.mobile}}</p>
             </div>
             <div class="action">
                 <van-icon name="edit" @click="onClickEdit(vo)"/>
@@ -24,7 +24,7 @@ export default {
     },
     watch: {
         $route(to) {
-            if (to.name == "storeAddress") {
+            if (to.name == "storeSender") {
                 this.init();
             }
         }
@@ -41,21 +41,21 @@ export default {
             }            
         },
         onClickAdd(){
-            this.$router.push({path:'/store/addressAdd',query:{token:user.token,agentid:user.agentid}});
+            this.$router.push({path:'/store/senderAdd',query:{token:user.token,agentid:user.agentid}});
         },
         onClickEdit(item){
-            this.$router.push({name:'storeAddressEdit', params:{ id: item.id },query:{token:user.token,agentid:user.agentid}});
+            this.$router.push({name:'storeSenderEdit', params:{ id: item.id },query:{token:user.token,agentid:user.agentid}});
         }, 
-        onClickAddress(item){
+        onClickSender(item){
             if(this.$route.query.agentid){
-                this.$store.commit('SET_ADDRESS',item);
+                this.$store.commit('SET_SENDER',item);
                 this.$router.push({name:'storeCreate',query:{token:user.token,agentid:user.agentid}});
             }
         },
         init(){
             var that = this;
             var data = {token:user.token};
-            that.$http.post("/V1/address/lists",data).then(result => {
+            that.$http.post("/V1/address/sender",data).then(result => {
                 let res = result.data;
                 if (res.code == 0) {
                     that.info = res.body;
@@ -76,7 +76,7 @@ export default {
                     token:user.token,
                     id:info.id
                 };                
-                that.$http.post("/V1/address/addressDel",data).then(result => {
+                that.$http.post("/V1/address/senderDel",data).then(result => {
                     let res = result.data;
                     if (res.code == 0) {
                         that.info.splice(index, 1);
@@ -96,9 +96,9 @@ export default {
 .van-nav-bar {background-color: #05c1af; color: #fff}
 .van-nav-bar__title{color: #fff}
 .van-nav-bar__text{color: #fff}
-.address{clear: both; overflow: hidden; padding: 10px; background: #fff; display: flex; border-bottom: 1px #f1f1f1 solid}
-.address .action{width: 60px; text-align: center}
-.address .action i{text-align: right; display: block; line-height: 20px;}
-.address .info{font-size: 14px; flex: 1}
-.address .info span{color: #999}
+.sender{clear: both; overflow: hidden; padding: 10px; background: #fff; display: flex; border-bottom: 1px #f1f1f1 solid}
+.sender .action{width: 60px; text-align: center}
+.sender .action i{text-align: right; display: block; line-height: 20px;}
+.sender .info{font-size: 14px; flex: 1}
+.sender .info span{color: #999}
 </style>

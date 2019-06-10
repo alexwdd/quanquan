@@ -26,8 +26,12 @@ import Store from './views/store/Index.vue'
 import StoreAddress from './views/store/Address.vue'
 import StoreAddressAdd from './views/store/AddressAdd.vue'
 import StoreAddressEdit from './views/store/AddressEdit.vue'
+import StoreSender from './views/store/Sender.vue'
+import StoreSenderAdd from './views/store/SenderAdd.vue'
+import StoreSenderEdit from './views/store/SenderEdit.vue'
 import StoreDetail from './views/store/Detail.vue'
 import StoreCart from './views/store/Cart.vue'
+import StoreCreate from './views/store/Create.vue'
 
 
 
@@ -159,8 +163,12 @@ export default new Router({
         {path: "/store/address",name: "storeAddress",meta:{index:1},component: StoreAddress},
         {path: "/store/addressAdd",name: "storeAddressAdd",meta:{index:2},component: StoreAddressAdd},
         {path: "/store/addressEdit/:id",name: "storeAddressEdit",meta:{index:2},component: StoreAddressEdit},
+        {path: "/store/sender",name: "storeSender",meta:{index:1},component: StoreSender},
+        {path: "/store/senderAdd",name: "storeSenderAdd",meta:{index:2},component: StoreSenderAdd},
+        {path: "/store/senderEdit/:id",name: "storeSenderEdit",meta:{index:2},component: StoreSenderEdit},
         
         {path: "/store/detail/:id/:specid",name: "storeDetail",meta:{index:2},component: StoreDetail},
         {path: "/store/cart",name: "storeCart",meta:{index:2},component: StoreCart},
+        {path: "/store/create",name: "storeCreate",meta:{index:3},component: StoreCreate},
     ]
 })

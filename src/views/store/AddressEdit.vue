@@ -213,7 +213,12 @@ export default {
                 let res = result.data;
                 if (res.code == 0) {              
                     this.$dialog.alert({title:'提示',message:res.desc});
-                    this.$router.push({path:'/store/address',query:{token:user.token}});
+                    if(that.$route.query.agentid){
+                        that.$store.commit('SET_ADDRESS',res.body);
+                        that.$router.push({name:'storeCreate',query:{token:user.token,agentid:user.agentid}});
+                    }else{
+                        that.$router.push({path:'/store/address',query:{token:user.token}});
+                    }
                 }else if(res.code==999) {
                     that.$dialog.alert({title:'错误信息',message:res.desc}).then(() => {
                         window.location.href = 'app://login';
