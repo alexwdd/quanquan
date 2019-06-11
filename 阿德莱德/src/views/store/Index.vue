@@ -7,7 +7,7 @@
             <div class="center">回国礼品店</div>
             <div class="right">
                 <span><van-icon name="share" @click="onClickShare"/></span>
-                <span><van-icon name="cart-o" @click="onClickCart"/><div class="dot" v-if="commentNumber>0">{{commentNumber}}</div></span>
+                <span><van-icon name="cart-o" @click="onClickCart"/><div class="dot" v-if="cartNumber>0">{{cartNumber}}</div></span>
             </div>
         </div>
 
@@ -21,10 +21,7 @@
 
         <div class="hotKey">
             热门
-            <span>贝拉米</span>
-            <span>贝拉米</span>
-            <span>贝拉米</span>
-            <span>贝拉米</span>
+            <span v-for="vo in hotkey" :key="vo">{{vo}}</span>
         </div>
 
         <div style="height:126px"></div>
@@ -32,49 +29,31 @@
         <van-notice-bar
         color="#05C1AF"
         background="#e6fffc"
-        text="通知内容通知内容通知内容通知内容通知内容通知内容通知内容通知内容"
+        :text="notice"
         left-icon="volume-o"
         />
-        <div class="banner"></div>
-        <div class="title">
-            <p>特价商品</p>
+    
+        <van-swipe :autoplay="3000" indicator-color="white">
+			<van-swipe-item v-for="vo in ad" :key="vo.name"><div class="banner"><img :src="vo.image" @click="goLink(vo)"/></div></van-swipe-item>
+		</van-swipe>
+
+        <template v-for="vo in goods">
+        <div class="title" :key="vo.path">
+            <p>{{vo.name}}</p>
             <span>更多</span>
         </div>
-        <van-card
-            price="2.00"
-            tag="包邮"
-            currency="$"
-            desc="本产品可以防止胶原和弹性蛋白的分解；刺激胶原蛋白的合成，并"  
-            title="Anthogenol 月光宝盒 高浓度花青素葡萄籽精华 100粒"
-            :thumb="'https://img.51go.com.au/img/200/0001856_bio-e-cherry-juice-500ml.jpeg'"
-            onClick="detail"
-        >
-        <div slot="num">
-            <van-stepper v-model="value" style="font-size:12px"/>
-        </div>
-        </van-card>
-        <div class="product">
-            <div class="img"><img src="https://img.51go.com.au/img/200/0000019_anthogenol-100-capsules.png"></div>
+        <div class="product" v-for="f in vo.goods" :key="f.id">
+            <div class="img"><img :src="f.picname" @click="goDetail(f)"></div>
             <div class="info">
-                <h1>Anthogenol 月光宝盒 高浓度花青素葡萄籽精华 100粒</h1>
-                <h2>本产品可以防止胶原和弹性蛋白的分解；刺激胶原蛋白的合成，并</h2>
+                <h1 @click="goDetail(f)">{{f.name}}</h1>
+                <h2 @click="goDetail(f)">{{f.say}}</h2>
                 <div class="price">
-                    <p>$15.7</p>
-                    <span><van-stepper v-model="value"/></span>
+                    <p>${{f.price}}</p>
+                    <span><van-stepper min="0" v-model="f.num"/></span>
                 </div>
             </div>
         </div>
-        <div class="product">
-            <div class="img"><img src="https://img.51go.com.au/img/200/0000019_anthogenol-100-capsules.png"></div>
-            <div class="info">
-                <h1>Anthogenol 月光宝盒 高浓度花青素葡萄籽精华 100粒</h1>
-                <h2>本产品可以防止胶原和弹性蛋白的分解；刺激胶原蛋白的合成，并</h2>
-                <div class="price">
-                    <p>$15.7</p>
-                    <span><van-icon name="cart-o"/></span>
-                </div>
-            </div>
-        </div>
+        </template>
     </div>
 </template>
 
@@ -84,18 +63,22 @@ import { ImagePreview } from 'vant';
 export default {
     data() {
         return {
-            commentNumber : 1
+            ad : [],
+            notice : '',
+            hotkey : '',
+            goods:[],
+            cartNumber : 0
         };
     },
     watch: {
         $route(to) {
-            if (to.name == "chat") {
-              
+            if (to.name == "store") {                
+                this.init();
             }
         }
     },
     created() {        
-       
+       this.init();
     },
     methods: {
         onClickLeft(){
@@ -105,10 +88,55 @@ export default {
 
         },
         onClickCart(){
-            this.$router.push({path:'/store/cart',query:{token:user.token}});
+            this.$router.push({path:'/store/cart',query:{token:user.token,agentid:user.agentid}});
         },
-        detail(item){
-            this.$router.push({name:'storeDetail', params:{ id: item.id },query:{token:user.token}});
+        goDetail(item){
+            this.$router.push({name:'storeDetail', params:{ id: item.goodsID,specid:item.id },query:{token:user.token,agentid:user.agentid}});
+        },
+        init(){
+            var that = this;
+            that.ad = [];
+            that.keyword = [],
+            that.goods = [];
+            that.cartNumber = 0;
+            that.getCartNumber();
+
+            var data = {
+                token:user.token,
+                agentid:user.agentid
+            };
+            that.$http.post("/V1/store/getMain",data).then(result => {
+                let res = result.data;
+                if (res.code == 0) {
+                    that.ad = res.body.ad;
+                    that.notice = res.body.notice;
+                    that.hotkey = res.body.hotkey;
+                    that.goods = res.body.goods;
+                }else if(res.code==999){
+                    window.location.href='app://login';  
+                }else{
+                    that.$dialog.alert({title:'错误信息',message:res.desc});
+                }               
+            });       
+        },
+        getCartNumber() {  
+            var that = this;          
+            var data = {
+                token:user.token,
+                agentid:user.agentid
+            };
+            that.$http.post("/v1/store/cartNumber",data).then(result => {
+                let res = result.data;
+                if (res.code == 0) {              
+                    that.cartNumber = res.body;
+                }else if(res.code==999) {
+                    that.$dialog.alert({title:'错误信息',message:res.desc}).then(() => {
+                        window.location.href = 'app://login';
+                    });
+                }else{
+                    that.$dialog.alert({title:'错误信息',message:res.desc});
+                }
+            });
         }
     }
 };
@@ -130,7 +158,6 @@ export default {
 .topSearch .cateBtn a{color: #fff; display: block; height: 30px; line-height: 30px;background: #05C1AF; color: #fff; margin-top: 5px; border-radius: 5px;}
 .hotKey{position: fixed; top: 86px; left: 0; width: 100%; background: #f7f7f7; height: 40px; line-height: 40px; color: #999; padding-left: 10px; box-sizing: border-box; font-size: 14px;z-index: 999;}
 .hotKey span{color: #333; padding-left: 10px}
-.banner{height: 200px;background: #000}
 .title{background: #fff; padding: 10px; clear: both; overflow: hidden;}
 .title p{float: left; border-left: 2px #05c1af solid; padding-left: 10px; font-size: 14px}
 .title span{float: right; font-size: 14px; color: #999}
@@ -140,9 +167,9 @@ export default {
 .product{clear: both; overflow: hidden; background: #fff; display: flex; padding: 10px; border-bottom: 1px #f1f1f1 double}
 .product .img{float: left; width: 100px; margin-right: 10px}
 .product .info{flex: 1; font-size: 14px}
-.product .info h1{font-weight: normal; font-size: 16px; margin-bottom: 5px}
-.product .info h2{font-weight: normal; font-size: 14px; color: #999; margin-bottom: 5px}
+.product .info h1{font-size: 14px; margin-bottom: 5px}
+.product .info h2{font-weight: normal; font-size: 12px; color: #999; margin-bottom: 5px}
 .product .info .price{clear: both; overflow: hidden;}
-.product .info .price p{float: left; color: #f00}
+.product .info .price p{float: left; color: #f00; line-height: 30px; font-weight: bold}
 .product .info .price span{float: right; font-size: 20px}
 </style>

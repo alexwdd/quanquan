@@ -6,7 +6,7 @@
                 <van-swipe-item v-for="vo in info.photo" :key="vo.imageID"><div @click="showImagePreview" class="banner" :style="{backgroundImage:'url('+vo.image+')'}"></div></van-swipe-item>
             </van-swipe>
 
-            <div class="top">{{info.nickname}}</div>
+            <!-- <div class="top">{{info.nickname}}</div> -->
             <div class="arrow"><van-icon name="arrow-left" @click="onClickLeft"/></div>
             <div class="edit" v-show="info.edit"><van-icon name="edit" @click="onClickRight"/></div>
             <div class="face"><img :src="info.headimg"></div>
@@ -131,7 +131,11 @@ export default {
     },
     methods: {
         onClickLeft() {
-            this.$router.go(-1);
+            if(this.$route.query.appBack){
+                window.location.href = 'app://goback'
+            }else{
+                this.$router.go(-1);
+            }
         },
         onClickRight() {
             window.location.href = "app://userEdit";
@@ -224,8 +228,9 @@ export default {
 .wrap{background: #fff}
 .bg{background: #333; width: 100%; height:40vh; position: relative;}
 .bg .top{color: #fff; line-height: 40px; position: absolute; left: 0; top: 0;text-align: center; z-index: 88; width: 100%;}
-.bg .arrow{position: absolute; left: 10px; top: 10px; color: #fff;z-index: 99;}
-.bg .edit{position: absolute; right: 10px; top: 10px; color: #fff;z-index: 99;}
+.bg .arrow{position: absolute; left: 10px; top: 10px; color: #fff;z-index: 99; background: rgba(0, 0, 0, 0.3); width: 30px; height: 30px; line-height: 30px; text-align: center; font-size: 20px; border-radius: 5px;}
+.bg .edit{position: absolute; right: 10px; top: 10px; color: #fff;z-index: 99; background: rgba(0, 0, 0, 0.3); width: 30px; height: 30px; line-height: 30px; text-align: center; font-size: 20px; border-radius: 5px}
+.bg .arrow i,.bg .edit i{line-height: 30px}
 .bg .face{position: absolute; left: 40px; bottom: -35px; width:70px; height:70px; border-radius: 5px; background: #fff; box-shadow: 0 0 5px #666}
 .bg .face img{width: 66px; height: 66px; border-radius: 5px; display: block; margin: auto; margin-top: 2px;}
 .banner{height: 40vh; background-size: cover}

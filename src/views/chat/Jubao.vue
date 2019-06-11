@@ -75,8 +75,8 @@ export default {
 };
 </script>
 <style scoped>
-.wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
+.wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
 .write{padding: 10px;}
 .write p{font-size: 14px; color: #999; margin: 10px 0;}
-.my-btn{color: #fff;background-color: #05c1af;border: 1px solid #05c1af;}
+.my-btn{color: #fff;background-color: #7507c2;border: 1px solid #7507c2;}
 </style>

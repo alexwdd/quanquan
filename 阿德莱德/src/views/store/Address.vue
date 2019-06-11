@@ -2,7 +2,7 @@
     <div class="wrap">
         <van-nav-bar title="收货地址" left-arrow @click-left="onClickLeft" right-text="+新增" @click-right="onClickAdd"/>
         <div class="address" v-for="(vo,index) in info" :key="vo.id">
-            <div class="info">
+            <div class="info" @click="onClickAddress(vo)">
                 <p>{{vo.name}} {{vo.mobile}}</p>
                 <span>{{vo.province}}{{vo.city}}{{vo.area}}{{vo.address}}</span>
             </div>
@@ -24,7 +24,7 @@ export default {
     },
     watch: {
         $route(to) {
-            if (to.name == "address") {
+            if (to.name == "storeAddress") {
                 this.init();
             }
         }
@@ -34,19 +34,28 @@ export default {
     },
     methods: {
         onClickLeft() {
-            window.location.href = 'app://goback'
+            if(this.$route.query.agentid){
+                this.$router.push({name:'storeCreate',query:{token:user.token,agentid:user.agentid}});
+            }else{
+                window.location.href = 'app://goback'
+            }            
         },
         onClickAdd(){
-            this.$router.push({path:'/store/addressAdd'});
-            this.$router.push({path:'/store/addressAdd',query:{token:user.token}});
+            this.$router.push({path:'/store/addressAdd',query:{token:user.token,agentid:user.agentid}});
         },
         onClickEdit(item){
-            this.$router.push({name:'storeAddressEdit', params:{ id: item.id },query:{token:user.token}});
+            this.$router.push({name:'storeAddressEdit', params:{ id: item.id },query:{token:user.token,agentid:user.agentid}});
         }, 
+        onClickAddress(item){
+            if(this.$route.query.agentid){
+                this.$store.commit('SET_ADDRESS',item);
+                this.$router.push({name:'storeCreate',query:{token:user.token,agentid:user.agentid}});
+            }
+        },
         init(){
             var that = this;
             var data = {token:user.token};
-            that.$http.post("/V1/store/address",data).then(result => {
+            that.$http.post("/V1/address/lists",data).then(result => {
                 let res = result.data;
                 if (res.code == 0) {
                     that.info = res.body;
@@ -67,7 +76,7 @@ export default {
                     token:user.token,
                     id:info.id
                 };                
-                that.$http.post("/V1/store/addressDel",data).then(result => {
+                that.$http.post("/V1/address/addressDel",data).then(result => {
                     let res = result.data;
                     if (res.code == 0) {
                         that.info.splice(index, 1);

@@ -81,7 +81,7 @@
             <li @click="onClickRight">图文</li>
             <li>视频</li>
         </div>
-        <div class="ball" @click="onClickRight"><van-icon name="plus" /></div>
+        <div class="ball" @click="onClickRight" v-show="submitBtn"><van-icon name="plus" /></div>
 
         <van-actionsheet
         v-model="actionShow"
@@ -104,6 +104,7 @@ export default {
             replyNumber:0,//最新回复数
 
             typeShow:false,
+            submitBtn:false,
 
             cateShow:true,
             cate:'',
@@ -134,6 +135,7 @@ export default {
                 this.quick = [];
                 this.cateShow=false;
                 this.typeShow=false;
+                this.submitBtn=false;
                 this.page = 1;
                 this.cid = 0;
                 this.onLoad();
@@ -353,6 +355,9 @@ export default {
                     if(res.body.next==0){
                         that.finished = true;
                     }
+                    setTimeout(function(){
+                        that.submitBtn = true
+                    },500);
                 }else{
                     that.$dialog.alert({title:'错误信息',message:res.desc});
                 }

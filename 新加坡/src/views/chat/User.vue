@@ -230,6 +230,7 @@ export default {
 .bg .top{color: #fff; line-height: 40px; position: absolute; left: 0; top: 0;text-align: center; z-index: 88; width: 100%;}
 .bg .arrow{position: absolute; left: 10px; top: 10px; color: #fff;z-index: 99; background: rgba(0, 0, 0, 0.3); width: 30px; height: 30px; line-height: 30px; text-align: center; font-size: 20px; border-radius: 5px}
 .bg .edit{position: absolute; right: 10px; top: 10px; color: #fff;z-index: 99; background: rgba(0, 0, 0, 0.3); width: 30px; height: 30px; line-height: 30px; text-align: center; font-size: 20px; border-radius: 5px}
+.bg .arrow i,.bg .edit i{line-height: 30px}
 .bg .face{position: absolute; left: 40px; bottom: -35px; width:70px; height:70px; border-radius: 5px; background: #fff; box-shadow: 0 0 5px #666}
 .bg .face img{width: 66px; height: 66px; border-radius: 5px; display: block; margin: auto; margin-top: 2px;}
 .banner{height: 40vh; background-size: cover}
