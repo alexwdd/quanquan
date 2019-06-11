@@ -32,6 +32,8 @@ import StoreSenderEdit from './views/store/SenderEdit.vue'
 import StoreDetail from './views/store/Detail.vue'
 import StoreCart from './views/store/Cart.vue'
 import StoreCreate from './views/store/Create.vue'
+import StorePay from './views/store/Pay.vue'
+import StoreCardPay from './views/store/Card.vue'
 
 
 
@@ -170,5 +172,7 @@ export default new Router({
         {path: "/store/detail/:id/:specid",name: "storeDetail",meta:{index:2},component: StoreDetail},
         {path: "/store/cart",name: "storeCart",meta:{index:2},component: StoreCart},
         {path: "/store/create",name: "storeCreate",meta:{index:3},component: StoreCreate},
+        {path: "/store/pay/:order_no",name: "storePay",meta:{index:3},component: StorePay},
+        {path: "/store/cardPay/:order_no",name: "storeCardPay",meta:{index:3},component: StoreCardPay},
     ]
 })

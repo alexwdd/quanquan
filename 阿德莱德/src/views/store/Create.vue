@@ -27,19 +27,6 @@
             </div>
         </div>
 
-        <div class="panel" v-show="show">
-            <div class="hd">
-                <p>签名</p>
-            </div>
-            <div class="bd">
-                <van-field
-                    v-model="sign"
-                    clearable
-                    placeholder="输入签名（必填，中文一个字，英文不超过1个单词）"
-                />
-            </div>
-        </div>
-
         <div class="panel">
             <div class="hd">
                 <p>费用明细</p>
@@ -72,10 +59,8 @@ export default {
             info:[],
             heji:[],
             kdInfo:[],
-            address:'',
-            sender:'',
-            sign:'',
-            show:false,
+            address:[],
+            sender:[],
             money:[],
             baoguo:[],
             total:0,
@@ -93,7 +78,7 @@ export default {
     },
     methods: {        
         onClickLeft() {
-            this.$router.push({name:'storeCart',query:{token:user.token,agentid:user.agentid}});
+            this.$router.go(-1);
         },
         onClickSender(){
             this.$router.push({path:'/store/sender',query:{token:user.token,agentid:user.agentid}});
@@ -102,7 +87,14 @@ export default {
             this.$router.push({path:'/store/address',query:{token:user.token,agentid:user.agentid}});
         },
         init(){
-            var that = this;            
+            var that = this;
+            if(that.$store.state.order.address){
+                that.address = that.$store.state.order.address;
+            }
+            if(that.$store.state.order.sender){
+                that.sender = that.$store.state.order.sender;
+            }
+            
             var data = {
                 token:user.token,
                 agentid:user.agentid,
@@ -117,15 +109,7 @@ export default {
                     that.money = res.body.money;
                     that.baoguo = res.body.baoguo;
                     that.total = that.total*100;
-                    if(res.body.flag==1){
-                        that.show = true;
-                    }
-                    if(that.$store.state.order.address){
-                        that.address = that.$store.state.order.address;
-                    }
-                    if(that.$store.state.order.sender){
-                        that.sender = that.$store.state.order.sender;
-                    }
+
                 }else if(res.code==999){
                     window.location.href='app://login';  
                 }else{
@@ -134,59 +118,7 @@ export default {
             });      
         },
         onSubmit(){
-            var that = this;
-            if(this.address==''){
-                this.$toast('请选择收件人');
-                return false;
-            }
-            if(this.sender==''){
-                this.$toast('请选择发件人');
-                return false;
-            }
-            if(this.show){
-                if(this.sign==''){
-                    this.$toast('请输入签名');
-                    return false;
-                }
-                checkVal = this.sign;
-                var reg = /^[\u4E00-\u9FA5]{1,500}$/;
-                if(reg.test(checkVal)){//中文 
-                    if (checkVal.length>1){
-                        this.$toast('中文只能1个汉字'); return false;
-                    }
-                }else{
-                    if (checkVal.indexOf(' ') >= 0){
-                        this.$toast('英文不能超过1个单词'); return false;
-                    }
-                }
-            }
-            let data = {
-                token:user.token,
-                agentid:user.agentid,
-                kid:that.$store.state.order.wuliu.id,
-                sender:that.sender['name']+','+that.sender['mobile'],
-
-                province:that.address.province,
-                city:that.address.city,
-                area:that.address.area,
-                address:that.address.address,
-                name:that.address.name,
-                mobile:that.address.mobile,
-                front:that.address.front,
-                back:that.address.back,
-                addressID:that.address.id,
-                sign:that.sign
-            };
-            that.$http.post("/V1/store/doSubmit",data).then(result => {
-                let res = result.data;
-                if (res.code == 0) {
-                    this.$router.push({name:'storePay',params:{order_no:res.body},query:{token:user.token,agentid:user.agentid}});
-                }else if(res.code==999){
-                    window.location.href='app://login';  
-                }else{
-                    that.$dialog.alert({title:'错误信息',message:res.desc});
-                }
-            });
+            
         }
     }
 };
