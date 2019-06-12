@@ -93,12 +93,12 @@ export default {
             }
             
             if (this.payType=='1'){
-                url = 'app://MallPay?payType=1&order_no='+info.order_no;
+                url = 'app://DaigouPay?payType=1&order_no='+info.order_no;
                 window.location.href=url;            
             }
             
             if (this.payType=='2'){
-                url = 'app://MallPay?payType=2&order_no='+info.order_no;
+                url = 'app://DaigouPay?payType=2&order_no='+info.order_no;
                 window.location.href=url;
             }
 

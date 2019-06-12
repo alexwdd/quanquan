@@ -42,7 +42,7 @@
         <template v-for="(vo,index) in goods">
         <div class="title" :key="vo.path">
             <p>{{vo.name}}</p>
-            <span>更多</span>
+            <span @click="onClickMore(vo)">更多</span>
         </div>
         <div class="product" v-for="(f,idx) in vo.goods" :key="f.id">
             <div class="img"><img :src="f.picname" @click="goDetail(f)"></div>
@@ -105,6 +105,9 @@ export default {
         },
         onClickCate(){
             this.$router.push({path:'/store/cate',query:{token:user.token,agentid:user.agentid}});
+        },
+        onClickMore(info){
+            this.$router.push({path:'/store/goods',query:{path:info.path,token:user.token,agentid:user.agentid}});
         },
         goDetail(item){
             this.$router.push({name:'storeDetail', params:{ id: item.goodsID,specid:item.id },query:{token:user.token,agentid:user.agentid}});

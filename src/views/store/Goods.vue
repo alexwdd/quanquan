@@ -1,11 +1,6 @@
 <template>
     <div class="wrap">
-        <div class="search">
-            <div class="ipt">
-                <input type="text" v-model="keyword" placeholder="请输入关键词">
-            </div>
-            <div class="cancel" @click="onClickLeft">取消</div>
-        </div>
+        <van-nav-bar fixed :title="cate.name" left-arrow @click-left="onClickLeft"/>
 
         <div style="height:46px"></div>
 
@@ -34,7 +29,7 @@ import user from '../chat/auth'
 export default {
     data() {
         return {
-            keyword:'',
+            cate:[],
             info:[],
             loading: false,
             finished: false,
@@ -44,34 +39,24 @@ export default {
     },
     watch: {
         $route(to) {
-            if (to.name == "storeSearch") {
-                let keyword = this.$route.query.keyword;
-                if(keyword!='' && keyword!=undefined){
-                    this.keyword = keyword;
-                }else{
-                    this.keyword = '';
-                    this.info = []
-                }
-                
-            }
-        },
-        keyword(newVal, oldVal) {
-            //普通的watch监听
-            if (newVal != "") {
+            if (to.name == "storeGoods") {
                 this.info = [];
                 this.page = 1;
                 this.loading = true;
                 this.finished = false;
                 this.canPost = true;
                 this.onLoad();
+                this.getCateName();
             }
         }
     },
-    created() {        
+    created(){
+        this.onLoad();
+        this.getCateName();
     },
     methods: {
         onClickLeft() {
-            this.$router.go(-1);
+            this.$router.push({name:'store',query:{token:user.token,agentid:user.agentid}});
         },
         goDetail(item){
             this.$router.push({name:'storeDetail', params:{ id: item.goodsID,specid:item.id },query:{token:user.token,agentid:user.agentid}});
@@ -111,9 +96,29 @@ export default {
                 }
             });
         },
+        getCateName(){
+            var that = this;
+            let data = {
+                token : user.token,
+                agentid : user.agentid,   
+                path : that.$route.query.path
+            };
+            that.$http.post("/v1/store/getCateName",data).then(result => {
+                let res = result.data;
+                if (res.code == 0) {
+                    that.cate = res.body;
+                }else if(res.code==999) {
+                    that.$dialog.alert({title:'错误信息',message:res.desc}).then(() => {
+                        window.location.href = 'app://login';
+                    });
+                }else{
+                    that.$dialog.alert({title:'错误信息',message:res.desc});
+                }
+            });
+        },
         onLoad() {
             var that = this;
-            if(!that.canPost || that.keyword==''){
+            if(!that.canPost){
                 that.loading = false;
                 return false;
             }
@@ -121,7 +126,7 @@ export default {
             let data = {
                 token : user.token,
                 agentid : user.agentid,
-                keyword : that.keyword,
+                path : that.$route.query.path,
                 page : that.page,
             };
             that.$http.post("v1/store/goods",data).then(result => {

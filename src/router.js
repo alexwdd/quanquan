@@ -25,6 +25,7 @@ import User from './views/chat/User.vue'
 import Store from './views/store/Index.vue'
 import StoreSearch from './views/store/Search.vue'
 import StoreCate from './views/store/Category.vue'
+import StoreGoods from './views/store/Goods.vue'
 import StoreAddress from './views/store/Address.vue'
 import StoreAddressAdd from './views/store/AddressAdd.vue'
 import StoreAddressEdit from './views/store/AddressEdit.vue'
@@ -36,6 +37,8 @@ import StoreCart from './views/store/Cart.vue'
 import StoreCreate from './views/store/Create.vue'
 import StorePay from './views/store/Pay.vue'
 import StoreCardPay from './views/store/Card.vue'
+import StoreOrder from './views/store/Order.vue'
+import StoreOrderInfo from './views/store/Info.vue'
 
 
 
@@ -166,6 +169,7 @@ export default new Router({
         {path: "/store",name: "store",meta:{index:1},component: Store},
         {path: "/store/search",name: "storeSearch",meta:{index:2},component: StoreSearch},
         {path: "/store/cate",name: "storeCate",meta:{index:2},component: StoreCate},
+        {path: "/store/goods",name: "storeGoods",meta:{index:2},component: StoreGoods},
         {path: "/store/address",name: "storeAddress",meta:{index:1},component: StoreAddress},
         {path: "/store/addressAdd",name: "storeAddressAdd",meta:{index:2},component: StoreAddressAdd},
         {path: "/store/addressEdit/:id",name: "storeAddressEdit",meta:{index:2},component: StoreAddressEdit},
@@ -178,5 +182,7 @@ export default new Router({
         {path: "/store/create",name: "storeCreate",meta:{index:3},component: StoreCreate},
         {path: "/store/pay/:order_no",name: "storePay",meta:{index:3},component: StorePay},
         {path: "/store/cardPay/:order_no",name: "storeCardPay",meta:{index:3},component: StoreCardPay},
+        {path: "/store/order",name: "storeOrder",meta:{index:3},component: StoreOrder},
+        {path: "/store/orderInfo/:order_no",name: "storeOrderInfo",meta:{index:9},component: StoreOrderInfo},
     ]
 })
