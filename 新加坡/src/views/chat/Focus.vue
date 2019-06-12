@@ -131,6 +131,8 @@ export default {
         if(user.status==true){
             this.token = user.token;
             this.commendUser();
+        }else{
+            window.location.href='app://login'; 
         }
     },
     methods: {

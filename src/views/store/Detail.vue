@@ -100,7 +100,7 @@ export default {
             let data = {
                 token : user.token,
                 agentid : user.agentid,
-                goodsID : that.info.id,
+                goodsID : that.info.goodsID,
                 typeID : that.info.typeID,
                 specid : that.specid,
                 server : that.serverid,

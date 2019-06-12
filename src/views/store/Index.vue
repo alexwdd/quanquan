@@ -12,16 +12,18 @@
         </div>
 
         <div class="topSearch">
-            <div class="search">        
-                <div class="indexIpt" style="padding-left: 10px; color: #999">商品名称</div>
+            
+            <div class="search" @click="onClickSearch('')">   
+                <van-icon name="search" />
+                <span>商品名称</span>     
             </div>
-            <div class="act" onclick="window.location.href='#'"><van-icon name="search" /></div>
-            <div class="act cateBtn"><a href="#">分类</a></div>
+            
+            <div class="cateBtn" @click="onClickCate">分类</div>
         </div>
 
         <div class="hotKey">
             热门
-            <span v-for="vo in hotkey" :key="vo">{{vo}}</span>
+            <span v-for="vo in hotkey" :key="vo" @click="onClickSearch(vo)">{{vo}}</span>
         </div>
 
         <div style="height:126px"></div>
@@ -37,19 +39,23 @@
 			<van-swipe-item v-for="vo in ad" :key="vo.name"><div class="banner"><img :src="vo.image" @click="goLink(vo)"/></div></van-swipe-item>
 		</van-swipe>
 
-        <template v-for="vo in goods">
+        <template v-for="(vo,index) in goods">
         <div class="title" :key="vo.path">
             <p>{{vo.name}}</p>
             <span>更多</span>
         </div>
-        <div class="product" v-for="f in vo.goods" :key="f.id">
+        <div class="product" v-for="(f,idx) in vo.goods" :key="f.id">
             <div class="img"><img :src="f.picname" @click="goDetail(f)"></div>
             <div class="info">
                 <h1 @click="goDetail(f)">{{f.name}}</h1>
                 <h2 @click="goDetail(f)">{{f.say}}</h2>
                 <div class="price">
                     <p>${{f.price}}</p>
-                    <span><van-stepper min="0" v-model="f.num"/></span>
+                    <div class="numberAction">
+                        <div class="set" @click="onClickNumber(index,idx,'dec')">-</div>
+                        <div class="buyNumber">{{f.num}}</div>
+                        <div class="set" @click="onClickNumber(index,idx,'inc')">+</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,8 +93,18 @@ export default {
         onClickShare(){
 
         },
+        onClickSearch(keyword){
+            if(keyword!=''){
+                this.$router.push({path:'/store/search',query:{keyword:keyword,token:user.token,agentid:user.agentid}});
+            }else{
+                this.$router.push({path:'/store/search',query:{token:user.token,agentid:user.agentid}});
+            }            
+        },
         onClickCart(){
             this.$router.push({path:'/store/cart',query:{token:user.token,agentid:user.agentid}});
+        },
+        onClickCate(){
+            this.$router.push({path:'/store/cate',query:{token:user.token,agentid:user.agentid}});
         },
         goDetail(item){
             this.$router.push({name:'storeDetail', params:{ id: item.goodsID,specid:item.id },query:{token:user.token,agentid:user.agentid}});
@@ -118,6 +134,41 @@ export default {
                     that.$dialog.alert({title:'错误信息',message:res.desc});
                 }               
             });       
+        },
+        onClickNumber(index,idx,type){
+            if(type=='inc'){
+                this.goods[index]['goods'][idx]['num']++;
+            }else{
+                if(this.goods[index]['goods'][idx]['num']==0){
+                    return false;
+                }
+                this.goods[index]['goods'][idx]['num']--;
+            }
+            this.setCartNumber(this.goods[index]['goods'][idx],type);
+        },
+        setCartNumber(info,type){
+            var that = this;
+            let data = {
+                token : user.token,
+                agentid : user.agentid,
+                act:type,
+                goodsID : info.goodsID,
+                typeID : info.typeID,
+                specid : info.id, 
+                number : 1,
+            };
+            that.$http.post("/v1/store/cartAdd",data).then(result => {
+                let res = result.data;
+                if (res.code == 0) {
+                    this.getCartNumber();
+                }else if(res.code==999) {
+                    that.$dialog.alert({title:'错误信息',message:res.desc}).then(() => {
+                        window.location.href = 'app://login';
+                    });
+                }else{
+                    that.$dialog.alert({title:'错误信息',message:res.desc});
+                }
+            });
         },
         getCartNumber() {  
             var that = this;          
@@ -150,12 +201,11 @@ export default {
 .right span .dot{position: absolute;min-width:14px; height:14px; line-height:14px; border-radius:50%; background: #c00;top:0px; right: 0px; font-size:12px; color:#fff; text-align: center}
 
 .topSearch{height: 40px; width: 100%; line-height: 40px; background: #fff; position: fixed; top: 46px; left: 0; z-index: 999; display: flex; overflow: hidden; font-size: 14px;}
-.topSearch .search{flex:1;}
-.topSearch .search input{border: 0; margin: 0;}
-.topSearch .act{display: block; width: 44px; height: 40px; line-height: 40px; text-align: center;}
-.topSearch .act a{color: #666}
-.topSearch .cateBtn{margin-right: 5px;}
-.topSearch .cateBtn a{color: #fff; display: block; height: 30px; line-height: 30px;background: #05C1AF; color: #fff; margin-top: 5px; border-radius: 5px;}
+.topSearch .search{flex:1; text-align: left; padding-left: 10px; color: #eee}
+.topSearch .search a{color: #eee; display: block; height: 100%}
+.topSearch .search i{display: block; float: left; line-height: 40px; font-size:18px; margin-right: 10px}
+.topSearch .search span{display: block; float: left;}
+.topSearch .cateBtn{color: #fff; display: block; height: 30px; line-height: 30px;background: #05C1AF; color: #fff; margin-top: 5px; border-radius: 5px; width: 40px; text-align: center; margin-right: 5px;;}
 .hotKey{position: fixed; top: 86px; left: 0; width: 100%; background: #f7f7f7; height: 40px; line-height: 40px; color: #999; padding-left: 10px; box-sizing: border-box; font-size: 14px;z-index: 999;}
 .hotKey span{color: #333; padding-left: 10px}
 .title{background: #fff; padding: 10px; clear: both; overflow: hidden;}
@@ -171,5 +221,6 @@ export default {
 .product .info h2{font-weight: normal; font-size: 12px; color: #999; margin-bottom: 5px}
 .product .info .price{clear: both; overflow: hidden;}
 .product .info .price p{float: left; color: #f00; line-height: 30px; font-weight: bold}
-.product .info .price span{float: right; font-size: 20px}
+.numberAction{float: right;}
+.numberAction div{display: block; float: left; min-width: 24px; height: 24px; line-height:24px ;text-align: center; border: 1px #dbdbdb solid; margin-left: 5px; font-size: 12px; cursor: pointer;}
 </style>

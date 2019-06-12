@@ -21,7 +21,21 @@ import ChatSearch from './views/chat/Search.vue'
 import Jubao from './views/chat/Jubao.vue'
 import User from './views/chat/User.vue'
 
-import Test from './views/Test.vue'
+//代购商城
+import Store from './views/store/Index.vue'
+import StoreSearch from './views/store/Search.vue'
+import StoreCate from './views/store/Category.vue'
+import StoreAddress from './views/store/Address.vue'
+import StoreAddressAdd from './views/store/AddressAdd.vue'
+import StoreAddressEdit from './views/store/AddressEdit.vue'
+import StoreSender from './views/store/Sender.vue'
+import StoreSenderAdd from './views/store/SenderAdd.vue'
+import StoreSenderEdit from './views/store/SenderEdit.vue'
+import StoreDetail from './views/store/Detail.vue'
+import StoreCart from './views/store/Cart.vue'
+import StoreCreate from './views/store/Create.vue'
+import StorePay from './views/store/Pay.vue'
+import StoreCardPay from './views/store/Card.vue'
 
 
 
@@ -149,11 +163,20 @@ export default new Router({
 
 
 
-        {
-            path: "/test",
-            name: "test",
-            meta:{index:1},
-            component: Test
-        },
+        {path: "/store",name: "store",meta:{index:1},component: Store},
+        {path: "/store/search",name: "storeSearch",meta:{index:2},component: StoreSearch},
+        {path: "/store/cate",name: "storeCate",meta:{index:2},component: StoreCate},
+        {path: "/store/address",name: "storeAddress",meta:{index:1},component: StoreAddress},
+        {path: "/store/addressAdd",name: "storeAddressAdd",meta:{index:2},component: StoreAddressAdd},
+        {path: "/store/addressEdit/:id",name: "storeAddressEdit",meta:{index:2},component: StoreAddressEdit},
+        {path: "/store/sender",name: "storeSender",meta:{index:1},component: StoreSender},
+        {path: "/store/senderAdd",name: "storeSenderAdd",meta:{index:2},component: StoreSenderAdd},
+        {path: "/store/senderEdit/:id",name: "storeSenderEdit",meta:{index:2},component: StoreSenderEdit},
+        
+        {path: "/store/detail/:id/:specid",name: "storeDetail",meta:{index:2},component: StoreDetail},
+        {path: "/store/cart",name: "storeCart",meta:{index:2},component: StoreCart},
+        {path: "/store/create",name: "storeCreate",meta:{index:3},component: StoreCreate},
+        {path: "/store/pay/:order_no",name: "storePay",meta:{index:3},component: StorePay},
+        {path: "/store/cardPay/:order_no",name: "storeCardPay",meta:{index:3},component: StoreCardPay},
     ]
 })

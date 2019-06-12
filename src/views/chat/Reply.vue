@@ -185,11 +185,11 @@ export default {
 };
 </script>
 <style scoped>
-.wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
+.wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
 .wrap >>> .van-nav-bar .van-nav-bar__text {color: #666;}
 .comment{clear: both; overflow: hidden; background: #fff; margin-top: 5px; font-size: 14px}
 .comment .hd{padding: 10px;}
-.comment .hd span{color: #7507c2;}
+.comment .hd span{color: #05c1af;}
 .comment .hd span i{font-style: normal; color: #999; padding: 0 5px}
 .comment .bd{margin: 0 10px; background: #f7f7f7; padding: 10px}
 .comment .to{padding:0 10px 10px 10px; color: #999}

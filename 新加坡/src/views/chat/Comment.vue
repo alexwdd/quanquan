@@ -66,7 +66,7 @@
                     </div>
                 </li>  
                 <div class="reply" v-for="(item,idx) in vo.reply" :key="item.id">
-                    <span @click="reply(item,vo.id)">{{item.nickname}}</span> 回复 <span>{{item.toNickname}}</span>：{{item.content}}
+                    <span @click="reply(item,vo.id)">{{item.nickname}}</span> 回复 <span @click="reply(item,vo.id)">{{item.toNickname}}</span>：{{item.content}}
                     <span class="delBtn" @click="delReply(item,index,idx)" v-if="user.id==item.memberID">删除</span>
                 </div>              
 			</div>
@@ -640,7 +640,7 @@ export default {
 .feedback .bd li>.action{ width:60px; text-align: right}
 .feedback .bd li>.action i{display: block; border:1px #dbdbdb solid; color: #dbdbdb; float: right; border-radius:9px; padding:0 5px}
 
-.reply{clear: both; overflow: hidden; display: flex; padding-left: 20px; background: #f7f7f7; margin-left: 50px; padding: 5px;}
+.reply{clear: both; overflow: hidden; padding-left: 20px; background: #f7f7f7; margin-left: 50px; padding: 5px;}
 .reply{font-size: 14px; line-height: 100%}
 .reply span{color:#7507c2; padding:0 3px}
 .reply span.delBtn{color: rgb(46, 64, 114)}
