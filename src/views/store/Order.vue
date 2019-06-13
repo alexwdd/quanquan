@@ -21,11 +21,7 @@
                 </div>
                 <div class="fd">                    
                     <div style="float:left">
-                        <template v-if="vo.payStatus==0">      
-                        <van-tag type="danger">待付款</van-tag>
-                        <van-button type="default" size="mini">去支付</van-button>
-                        </template>
-
+                        <template v-if="vo.payStatus==0"><van-tag type="danger">待付款</van-tag></template>
                         <template v-else-if="vo.payStatus==1"><van-tag type="primary">待审核</van-tag></template>
                         <template v-else-if="vo.payStatus==2"><van-tag type="primary">待配货</van-tag></template>
                         <template v-else-if="vo.payStatus==3"><van-tag color="#7232dd">配货中</van-tag></template>
@@ -33,8 +29,11 @@
                         <template v-else-if="vo.payStatus==99"><van-tag>取消订单</van-tag></template>
                     </div> 
 
-                    <van-button type="default" size="mini" v-if="vo.payStatus==0">取消订单</van-button>
-                    <van-button type="default" size="mini">详情</van-button>
+                    <van-button type="warning" size="mini" v-if="vo.payStatus==0" @click="onClickDel(vo,index)">取消</van-button>
+
+                    <van-button type="default" size="mini" v-if="vo.payStatus==0" @click="onClickPay(vo)">去支付</van-button>
+
+                    <van-button type="default" size="mini" @click="onClickDetail(vo)">详情</van-button>
                 </div>
             </div>           
         </van-list>        
@@ -46,7 +45,7 @@ import user from '../chat/auth'
 export default {
     data() {
         return {
-            name:'11',
+            name:'',
             info:[],
             loading: false,
             finished: false,
@@ -74,8 +73,33 @@ export default {
         onClickLeft() {
             window.location.href = 'app://goback';
         },
-        goDetail(item){
-            this.$router.push({name:'storeOrderInfo', params:{id: item.id},query:{token:user.token,agentid:user.agentid}});
+        onClickDetail(item){
+            this.$router.push({name:'storeOrderInfo', params:{id: item.id}, query:{token:user.token,agentid:user.agentid}});
+        },
+        onClickPay(info){
+            this.$router.push({name:'storePay',params:{order_no:info.order_no},query:{token:user.token,agentid:user.agentid}});
+        },
+        onClickDel(info,index){
+            var that = this;
+            that.$dialog.confirm({
+                title: '系统提示',
+                message: '确认删除吗'
+            }).then(() => {
+                var data = {
+                    token:user.token,
+                    id:info.id
+                };                
+                that.$http.post("/V1/order/del",data).then(result => {
+                    let res = result.data;
+                    if (res.code == 0) {
+                        that.info.splice(index, 1);
+                    }else if(res.code==999){
+                        window.location.href='app://login';  
+                    }else{
+                        that.$dialog.alert({title:'错误信息',message:res.desc});
+                    }
+                });
+            })
         },
         onLoad() {
             var that = this;

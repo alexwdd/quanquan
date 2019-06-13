@@ -183,6 +183,6 @@ export default new Router({
         {path: "/store/pay/:order_no",name: "storePay",meta:{index:3},component: StorePay},
         {path: "/store/cardPay/:order_no",name: "storeCardPay",meta:{index:3},component: StoreCardPay},
         {path: "/store/order",name: "storeOrder",meta:{index:3},component: StoreOrder},
-        {path: "/store/orderInfo/:order_no",name: "storeOrderInfo",meta:{index:9},component: StoreOrderInfo},
+        {path: "/store/orderInfo/:id",name: "storeOrderInfo",meta:{index:9},component: StoreOrderInfo},
     ]
 })
