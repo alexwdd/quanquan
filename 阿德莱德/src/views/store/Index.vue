@@ -73,8 +73,7 @@ export default {
             notice : '',
             hotkey : '',
             goods:[],
-            cartNumber : 0,
-            shareUrl : ''
+            cartNumber : 0
         };
     },
     watch: {
@@ -89,19 +88,10 @@ export default {
     },
     methods: {
         onClickLeft(){
-            window.location.href = 'app://goback';
-        },
-        goLink(value){
-            if(value.url!=''){
-                window.location.href = value.url;
-            }else{
-                if(value.goodsId>0){
-                    this.$router.push({name:'storeDetail', params:{ id: value.goodsId,specid:item.id },query:{token:user.token,agentid:user.agentid}});
-                }
-            }
+
         },
         onClickShare(){
-            window.location.href = 'app://shareURL?url=http://wx.worldmedia.top/adelaide/store?agent='+user.agentid;
+
         },
         onClickSearch(keyword){
             if(keyword!=''){

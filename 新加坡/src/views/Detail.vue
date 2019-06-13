@@ -47,7 +47,10 @@
                     <van-icon class-prefix="icon" name="xingxing" /> 收藏
                 </div>
             </div>
-            <div class="cate"><span class="tag">{{info.sortName}}</span></div>
+            <div class="cate">
+                <span class="tag">{{info.sortName}}</span>
+                <div class="hit">阅读 {{info.hit}}</div>
+            </div>
 
             <div class="content">
                 <div class="hd">描述</div>
@@ -546,6 +549,7 @@ Vue.filter('empty', function (value) {
 .priceBox .price{float: left; color: #7507c2;}
 .priceBox .fav{float: right; color: #7507c2;}
 .cate{background: #fff; clear: both; overflow:hidden; border-bottom: 1px #dbdbdb dashed; padding:5px 10px}
+.cate .hit{float:right;font-size: 12px; color: #999}
 .content{clear: both; overflow: hidden; padding: 10px; background: #fff}
 .content .hd{text-align: center; font-weight: bold; line-height: 40px}
 .content .bd{color: #666; line-height: 150%}

@@ -4,101 +4,39 @@
             <div class="left" @click="onClickLeft"><img src="../assets/image/left.png"></div>
             <div class="right"><div class="btn" @click="openApp">打开APP</div></div>
         </div>
+
         <div class="box">
-            <template v-if="info.html!=''">
-            <div class="infoTitle">{{info.title}}</div>
-                <template v-if="isHide">
-                    <!-- 只显示摘要的画面 -->
-                    <div class="hideBg">
-                        <div class="content" v-html="info.content"></div>
-                        <div class="showBtn">
-                            <!-- 绑定点击事件onShow，点击展开全文 -->
-                            <a href="#" @click.stop.prevent="onShow">展开阅读全文&nbsp;
-                                <!-- 向下的角箭头符号，用css画 -->
-                                <span class="downArrow"></span>
-                            </a>
-                        </div>
-                    </div>
-                </template>
+            <div class="title">{{info.title}}</div>
+            <div class="date">{{info.time}}</div>
+            <!-- <div class="content" v-html="info.content"></div> -->
 
-                <template v-else>
-                    <!-- 显示完整内容的画面 -->
-                    <div class="showBg">
-                        <div class="content" v-html="info.content"></div>
-                        <div class="hideBtn">
-                            <!-- 绑定点击事件onHide，点击收起内容 -->
-                            <a href="#" @click.stop.prevent="onHide">收起&nbsp;
-                                <!-- 向上的角箭头符号 -->
-                                <span class="upArrow"></span>
-                            </a>
-                        </div>
+            <template v-if="isHide">
+                <!-- 只显示摘要的画面 -->
+                <div class="hideBg">
+                    <div class="content" v-html="info.content"></div>
+                    <div class="showBtn">
+                        <!-- 绑定点击事件onShow，点击展开全文 -->
+                        <a href="#" @click.stop.prevent="onShow">展开阅读全文&nbsp;
+                            <!-- 向下的角箭头符号，用css画 -->
+                            <span class="downArrow"></span>
+                        </a>
                     </div>
-                </template>
+                </div>
             </template>
 
-            <template v-else="">
-            <van-swipe :autoplay="3000" indicator-color="white">
-                <van-swipe-item v-for="vo in info.images" :key="vo"><div class="banner" @click="showImagePreview" :style="{backgroundImage:'url('+vo+')'}"></div></van-swipe-item>
-            </van-swipe>
-            <div class="infoTitle">{{info.title}}</div>
-            <div class="priceBox">
-                <div class="price"><van-icon class-prefix="icon" name="meiyuan" /> {{info.price}}</div>
-                <div class="fav" @click="download">
-                    <van-icon class-prefix="icon" name="xingxing" /> 收藏
+            <template v-else>
+                <!-- 显示完整内容的画面 -->
+                <div class="showBg">
+                    <div class="content" v-html="info.content"></div>
+                    <div class="hideBtn">
+                        <!-- 绑定点击事件onHide，点击收起内容 -->
+                        <a href="#" @click.stop.prevent="onHide">收起&nbsp;
+                            <!-- 向上的角箭头符号 -->
+                            <span class="upArrow"></span>
+                        </a>
+                    </div>
                 </div>
-            </div>
-            <div class="cate">
-                <span class="tag">{{info.sortName}}</span>
-                <div class="hit">阅读 {{info.hit}}</div>
-            </div>
-
-            <div class="content">
-                <div class="hd">描述</div>
-                <div class="bd" v-html="info.detail"></div>
-            </div>
-
-            <infoCell :info="info" :type="type"></infoCell>
-
-            <van-cell title="联系人" icon="contact" :value="info.contact|empty"/>
-            <van-cell title="联系电话" icon="phone-o" :value="info.phone|empty"/>
-            <van-cell title="微信" icon="chat-o" :value="info.wechat|empty"/>
-
-            <div class="map" v-if="info.address !=''">
-                <googlemaps-map
-                style="height:220px"
-                :center.sync="center"
-                :zoom.sync="zoom">
-                    <googlemaps-marker                        
-                        :position="infoCenter"
-                        icon="/adelaide/static/image/map.png"
-                    />
-                </googlemaps-map>
-                <div class="address" v-if="info.address!=''">{{info.address}}</div>
-            </div>
             </template>
-
-            <div class="comment">
-                <div class="hd">
-                    <h4>最新评论</h4>
-                    <span><a href="javascript:void(0)" @click="download"><i class="icon icon-pinglun"></i> 写评论</a></span>
-                </div>
-                <div class="bd">
-                    <li v-for="item in info.comments" :key="item.id">
-                        <div class="face"><img :src="item.headimg"></div>
-                        <div class="info">
-                            <div class="userInfo">
-                                <div class="name">{{item.nickname}}</div>
-                                <div class="date">{{item.createTime}}</div>
-                            </div>
-                            <div class="con">{{item.content}}</div>
-                        </div>
-                        
-                    </li>				
-                </div>			
-                <div class="fd">
-                    <p  @click="download">下载{{config.APP_NAME}}APP查看全部评论 <i class="mui-icon mui-icon-arrowright"></i></p>
-                </div>
-            </div>
 
             <div class="cateTitle">
                 <p>{{config.APP_NAME}}更多精彩内容</p>
@@ -107,7 +45,7 @@
             <van-swipe style="background:#fff" @change="onChange">
                 <van-swipe-item v-for="(vo,index) in quick" :key="index">
                     <div class="quick">
-                        <li v-for="f in vo" :key="f.name" @click="goLink(f)"><a :href="vo.url"><img :src="f.image"><p>{{f.name}}</p></a></li>
+                        <li v-for="(f,i) in vo" :key="i" @click="goLink(f)"><a :href="vo.url"><img :src="f.image"><p>{{f.name}}</p></a></li>
                     </div>
                 </van-swipe-item>
                 <div class="custom-indicator" slot="indicator">
@@ -118,59 +56,33 @@
                 </div>
             </van-swipe>
 
-
             <van-swipe :autoplay="3000" indicator-color="white">
                 <van-swipe-item v-for="vo in ad1" :key="vo.name"><div class="ad"><img :src="vo.image" @click="goLink(vo)"/></div></van-swipe-item>
             </van-swipe>
    
 
             <div class="cateTitle">
-                <router-link :to="'/list/'+type">
+                <router-link :to="'/news/'+info.cid">
                 <p>相关推荐</p>
                 <span>查看全部</span>
                 </router-link>
             </div>
 
-            <van-row class="news" v-for="vo in about" :key="vo.articleid">
-                <template v-if="type=='zp'">
-                <van-col span="24">
-                    <div class="info" @click="detail(vo.articleid)">
-                        <div class="title" style="height:auto"><h1>{{vo.title}}</h1></div>
-                        <div class="address"><van-icon class-prefix="icon" name="loufang" /> {{info.company|empty}}</div>
-			            <div class="address"><van-icon class-prefix="icon" name="weizhi" /> {{info.address|empty}}</div>
-                        <div class="bottom">
-                            <div class="price"><van-icon class-prefix="icon" name="meiyuan" /> {{vo.price}}</div>
-                            <div class="date">
-                            {{vo.createTime}}
-                            </div>
-                        </div>
-                    </div>
-                </van-col>
-                </template>
-                <template v-else="">
-                <van-col span="8"><div class="img" @click="detail(vo.articleid)"><img v-lazy="vo.thumb_s"></div></van-col>
+            <van-row class="news" v-for="vo in about" :key="vo.id">
+                <van-col span="8"><div class="img" @click="detail(vo.id)"><img v-lazy="vo.picname"></div></van-col>
                 <van-col span="16">
-                    <div class="info" @click="detail(vo.articleid)">
+                    <div class="info" @click="detail(vo.id)">
                         <div class="title">
                         <h1>{{vo.title}}</h1>
                         </div>
-                        <div class="address"><van-icon class-prefix="icon" name="weizhi" /> {{vo.address|empty}}</div>
-                        <div class="bottom">
-                            <div class="price"><van-icon class-prefix="icon" name="meiyuan" /> {{vo.price}}</div>
-                            <div class="date">
-                            {{vo.createTime}}
-                            </div>
-                        </div>
+                        <div class="bottom">{{vo.createTime}}</div>
                     </div>
                 </van-col>
-                </template>
             </van-row>
-
 
             <van-swipe :autoplay="3000" indicator-color="white">
                 <van-swipe-item v-for="vo in ad2" :key="vo.name"><div class="ad"><img :src="vo.image" @click="goLink(vo)"/></div></van-swipe-item>
             </van-swipe>
-  
 
             <div class="cateTitle">
                 <router-link to="/commend">
@@ -205,8 +117,9 @@
                         </div>
                     </template>
                 </waterfall>
-            </div> 
+            </div>
         </div>
+
         <div class="footer">
             <div class="logo"><img src="../assets/image/logo.jpg"></div>
             <div class="info">
@@ -242,57 +155,30 @@
 
 <script>
 import Vue from 'vue';
-import { Lazyload } from 'vant';
-import infoCell from "../components/infoCell";
 import waterfall from "vue-waterfall2";
 import wx from 'weixin-js-sdk';
-
-import { ImagePreview } from 'vant';
-
-/* import 'vue-googlemaps/dist/vue-googlemaps.css'
-import VueGoogleMaps from 'vue-googlemaps'
-Vue.use(VueGoogleMaps,{
-    load: {
-        // Google API key
-        apiKey: 'AIzaSyD6569ST34pV9m3ECxVXSakk8tz760nfAk',
-        // Enable more Google Maps libraries here
-        libraries: ['places'],
-        // Use new renderer
-        useBetaRenderer: false,
-    }
-}) */
-Vue.use(Lazyload,{
-    loading:'/static/image/default_320.jpg'
-});
 Vue.use(waterfall);
+
 export default {
     data(){
 		return {
-			id:'',
+            show:false,
+            downShow:false,
+            id:'',
             info:{},
             ad1:[],
             ad2:[],
             quick:{},
             about:[],
-            type:'',
             fallData:[],
-            back:false,
-
-            show:false,
-            downShow:false,
-
-            infoCenter : { lat: -34.8911, lng:138.6463},
-            center: { lat: -34.8911, lng:138.6463},
-            zoom : 14,
-
             isHide: true,    //初始值为true，显示为折叠画面
+            back:false,
             current:0
 		}
-    },
-    components:{infoCell},
+	},
 	watch: {
         $route(to) {
-            if (to.name == "detail") {
+            if (to.name == "view") {
                 this.back = true;
                 this.isHide = true;
                 this.init();
@@ -317,38 +203,13 @@ export default {
         this.init();
         this.getData();
 	},
-    methods: {        
-        showImagePreview(position, timer) {
-            var that = this;
-            var images = that.info.images;
-            const instance = ImagePreview({
-                images,
-                asyncClose: !!timer,
-                startPosition: typeof position === 'number' ? position : 0
-            });
-            if (timer) {
-                setTimeout(() => {
-                    instance.close();
-                }, timer);
-            }
-        },
-        goLink(value){
-            if(value.url!=''){
-                window.location.href = value.url;
+    methods: {
+        onClickLeft() {
+            if(this.back){
+                this.$router.go(-1);
             }else{
-                if(value.articleid>0){
-                    this.$router.push({name:'detail',params:{type: value.type,id:value.articleid}})
-                }
-            }
-        },
-        onChange(index) {
-            this.current = index;
-        },
-        onShow: function(){
-            this.isHide = false;    //点击onShow切换为false，显示为展开画面
-        },
-        onHide: function(){
-            this.isHide = true;    //点击onHide切换为true，显示为折叠画面
+                this.$router.push('/')
+            }            
         },
         openApp(){
             if(this.config.isWeiXin()){
@@ -395,18 +256,28 @@ export default {
             }
         },
         download(){
-            this.downShow = true;
+            this.downShow = true;  
         },
-        onClickLeft() {
-            if(this.back){
-                this.$router.go(-1);
+        goLink(value){
+            if(value.url!=''){
+                window.location.href = value.url;
             }else{
-                this.$router.push('/')
-            } 
+                if(value.articleid>0){
+                    this.$router.push({name:'detail',params:{type: value.type,id:vaule.articleid}})
+                }
+            }
+        },
+        onChange(index) {
+            this.current = index;
+        },
+        onShow: function(){
+            this.isHide = false;    //点击onShow切换为false，显示为展开画面
+        },
+        onHide: function(){
+            this.isHide = true;    //点击onHide切换为true，显示为折叠画面
         },
         detail(infoid){
-            let type = this.$route.params.type;
-            this.$router.push({name:'detail',params:{type: type,id:infoid}})
+            this.$router.push({name:'view',params:{id:infoid}})
         },
         commInfo(info){
             if(info.type=='article'){
@@ -418,14 +289,12 @@ export default {
         init(){
             var that = this;
             that.id = that.$route.params.id;
-            that.type = that.$route.params.type;
 			if (that.id>0 && that.id!=''){
                 let data = {
-                    cityID : that.config.CITYID,
-                    articleid : that.id,
-                    type:that.$route.params.type
+                    id : that.id,
+                    cityID:that.config.CITYID
                 };
-				that.$http.post("/V3/weixin/getinfo",data).then(result => {   
+				that.$http.post("/V3/weixin/view",data).then(result => {
                     let res = result.data;
                     if (res.code == 0) {
                         // 加载状态结束
@@ -435,20 +304,16 @@ export default {
                         that.quick = res.body.quick;
                         that.about = res.body.about;
                         document.title = res.body.data.title
-                        if(that.info.latitude!='' && that.info.longitude!=''){
-                            that.center = {lat: parseFloat(that.info.latitude), lng:parseFloat(that.info.longitude)}
-                            that.infoCenter = {lat: parseFloat(that.info.latitude), lng:parseFloat(that.info.longitude)}
-                        }
                         that.share(that.info);
                     }else{
                         that.$dialog.alert({title:'错误信息',message:res.desc});
                     }
                 });
-			}
+            }          
         },
         share(info){
             var that = this;
-            var url = that.config.DOMAIN+'detail/'+that.type+'/'+info.articleid;
+            var url = that.config.DOMAIN+'view/'+info.id;
             that.$http.post("/V3/weixin/wxsdk",{ reqUrl: window.location.href }).then(result => {
                 let res = result.data;
                 wx.config({ 
@@ -470,7 +335,7 @@ export default {
                             'onMenuShareTimeline', //检测客户微信版本是否支持该接口
                             'onMenuShareAppMessage'
                         ],
-                        success: function () {
+                        success: function (res) {
                             //alert(JSON.stringify(res));
                         }
                     });
@@ -511,65 +376,14 @@ export default {
         }
     }
 };
-
-Vue.filter('empty', function (value) {
-	if (value == '' || value == null || value == undefined) {
-		return '详情请咨询'
-	} else {
-		return value
-	}
-})
 </script>
+
 <style scoped>
-.van-swipe__indicator {
-    background-color: #ccc;
-}
 .top{clear: both; overflow: hidden; height: 46px; position: fixed; left: 0; width: 100%; z-index: 999; background: #fff; border-bottom: 1px #f1f1f1 solid}
 .top img{display: block; height: 46px;}
 .top .left{float: left;}
 .top .right{float: right;}
 .top .right .btn{float:right; height: 30px; line-height: 30px; background: #05c1af; border-radius: 5px; color: #fff; margin-right: 10px; margin-top: 10px; font-size: 14px; padding: 0 10px}
-.banner{height:250px; background-size: cover; background-position: center}
-.map{background: #f1f1f1; width: 100%; height:220px; position: relative;}
-.map .address{position: absolute; background: rgba(0,0,0,0.6); color: #fff; font-size: 12px; left: 10%; top:52%;z-index: 999; width: 80%; text-align: center; padding: 5px; border-radius: 5px}
-.box{padding-top: 46px; padding-bottom: 60px; clear: both; overflow: hidden;}
-.footer{background: rgba(0,0,0,0.8); width:100%; height: 50px; border-radius: 5px; margin: auto; position: fixed; left: 0;bottom: 0px; z-index: 999;}
-.footer .logo{float: left; height: 40px; margin-top: 5px; margin-left: 5px; margin-right: 10px}
-.footer .logo img{height: 40px; display: block;border-radius: 5px}
-.footer .info{float: left; font-size: 14px; color: #fff; padding-top: 5px}
-.footer .info p{line-height: 20px;}
-.footer .info p i{color:#f60 }
-.footer .download{float:right; height: 30px; line-height: 30px; background: #05c1af; border-radius: 5px; color: #fff; margin-right: 10px; margin-top: 10px; font-size: 14px; padding: 0 10px}
-
-.tag{font-size: 14px; line-height: 24px; padding: 0 10px; display: block;float: left; margin-right: 10px;background: #def7f4; color: #05c1af}
-
-
-.infoTitle{padding: 10px; background: #fff}
-.priceBox{background: #fff; padding: 0 10px; clear: both; overflow: hidden; font-size: 14px}
-.priceBox .price{float: left; color: #05c1af;}
-.priceBox .fav{float: right; color: #05c1af;}
-.cate{background: #fff; clear: both; overflow:hidden; border-bottom: 1px #dbdbdb dashed; padding:5px 10px}
-.cate .hit{float:right;font-size: 12px; color: #999}
-.content{clear: both; overflow: hidden; padding: 10px; background: #fff}
-.content .hd{text-align: center; font-weight: bold; line-height: 40px}
-.content .bd{color: #666; line-height: 150%}
-
-.comment{padding: 10px; padding-bottom: 0; clear: both; overflow: hidden; background: #fff}
-.comment .hd{clear: both; overflow: hidden; border-bottom:1px #ddd dashed; padding:10px 0}
-.comment .hd h4{float: left; margin: 0; color: #000}
-.comment .hd span{display: block; float: right;color: #05c1af}
-.comment .hd span a{color: #05c1af}
-.comment .bd{clear: both; overflow: hidden;}
-.comment .bd li{ border-bottom: 1px #ddd dashed; clear: both; overflow: hidden; padding: 10px 0}
-.comment .bd li .face{float: left; width: 50px; height: 50px;}
-.comment .bd li .face img{width: 50px; height: 50px;border-radius:50%;}
-.comment .bd li .info{margin-left: 60px;}
-.comment .bd li .userInfo{overflow: hidden; font-size: 14px}
-.comment .bd li .userInfo .name{float: left;}
-.comment .bd li .userInfo .date{float: right; font-size: 12px; color: #999}
-.comment .bd li .con{overflow: hidden; margin-top: 10px; font-size: 14px;color: #666}
-.comment .fd{padding: 20px 10px; clear: both; overflow: hidden; text-align: center}
-.comment .fd p{height: 30px; line-height:30px;display:inline-block; margin: auto; text-align: center; border:1px #05c1af solid; border-radius: 15px; color: #05c1af; font-size: 14px; padding: 0 20px}
 
 .cateTitle{background: #fff; clear: both; overflow: hidden; margin-top: 3px; height: 40px; line-height: 40px; padding-right:5px; font-size: 14px;margin-bottom: 1px;}
 .cateTitle p{float: left; border-left: 2px #05c1af solid; padding-left: 5px; font-weight: bold}
@@ -587,10 +401,8 @@ Vue.filter('empty', function (value) {
 
 .news .info h1{font-size: 15px;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;}
 .news .info .title{height:40px; margin-bottom: 10px}
-.news .info .address{ overflow:hidden;  text-overflow:ellipsis; white-space:nowrap; width: 100%; font-size: 14px;color: #999}
-.news .info .bottom .price{float: left; font-size: 14px;color: #05c1af}
-.news .info .bottom .date{font-size: 12px; text-align: right; color: #999; line-height: 20px; float: right;}
-.news .info i{color: #05c1af}
+.news .info .bottom{font-size: 12px; text-align: right; color: #999; line-height: 20px;}
+
 
 .cell-item{ padding:5px;}
 .cell-item>img{width: 100%; border-radius: 5px; display: block}
@@ -604,14 +416,20 @@ Vue.filter('empty', function (value) {
 .item-footer .like i{float: left; margin-top: 7px; margin-right: 3px}
 .item-footer .like .like-total{float: left; font-size: 12px}
 
-.alert{width: 100%;}
-.alert img{width: 100%}
-.my-van-popup {background-color:transparent; width: 80%;}
-.down{clear: both; overflow: hidden;}
-.down img{display: block}
-.down .hd{clear: both;}
-.down .bd{background: #fff; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; padding: 20px; overflow: hidden; padding-right: 0}
-.down .bd li{float: left; width: 50%; padding-right: 20px; box-sizing: border-box}
+.footer{background: rgba(0,0,0,0.8); width:100%; height: 50px; border-radius: 5px; margin: auto; position: fixed; left: 0;bottom: 0px; z-index: 999;}
+.footer .logo{float: left; height: 40px; margin-top: 5px; margin-left: 5px; margin-right: 10px}
+.footer .logo img{height: 40px; display: block;border-radius: 5px}
+.footer .info{float: left; font-size: 14px; color: #fff; padding-top: 5px}
+.footer .info p{line-height: 20px;}
+.footer .info p i{color:#f60 }
+.footer .download{float:right; height: 30px; line-height: 30px; background: #05c1af; border-radius: 5px; color: #fff; margin-right: 10px; margin-top: 10px; font-size: 14px; padding: 0 10px}
+
+.box{padding-top: 46px; padding-bottom: 60px; clear: both; overflow: hidden; background: #fff}
+
+.title{font-size: 18px; padding: 10px;background:#fff}
+.date{font-size: 12px; color:#999; padding: 10px; border-bottom: 1px #dbdbdb solid;background:#fff}
+
+.content{padding: 10px;background:#fff; z-index: 0;}
 
 .hideBg {
     width: 100%;
@@ -619,6 +437,7 @@ Vue.filter('empty', function (value) {
     height: 500px;
     overflow: hidden;
     position: relative;
+    margin-bottom: 50px
 }
 /* 全文背景板，基本与摘要相同 */
 .showBg { clear: both; overflow: hidden;}
@@ -631,11 +450,11 @@ Vue.filter('empty', function (value) {
     z-index: 1;    /* 正序堆叠，覆盖在p元素上方 */
     text-align: center;
     background: linear-gradient(rgba(255,255,255,0), white);    /* 背景色半透明到白色的渐变层 */
-    padding-top: 5em
+    padding-top: 5rem;
 }
 /* 收起按钮 */
 .hideBtn {
-    background: #fff;text-align: right; padding: 10px;
+    text-align: right; padding-right: 10px;
 }
 /* 向下角箭头 */
 .downArrow {
@@ -658,6 +477,14 @@ Vue.filter('empty', function (value) {
     margin-top: 3px;
 }
 
+.alert{width: 100%;}
+.alert img{width: 100%}
+.my-van-popup {background-color:transparent; width: 80%;}
+.down{clear: both; overflow: hidden;}
+.down img{display: block}
+.down .hd{clear: both;}
+.down .bd{background: #fff; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; padding: 20px; overflow: hidden; padding-right: 0}
+.down .bd li{float: left; width: 50%; padding-right: 20px; box-sizing: border-box}
 .custom-indicator {
     position: absolute;
     left: 0px;
@@ -666,6 +493,7 @@ Vue.filter('empty', function (value) {
     height: 20px;
     text-align: center
 }
+
 .custom-indicator li{display: inline-block; padding: 0 3px}
 .custom-indicator li span{display: block; width: 6px; height: 6px; border-radius:3px; background: #ccc}
 .custom-indicator li span.active{background: #f60; width: 14px}
