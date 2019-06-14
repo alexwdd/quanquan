@@ -45,7 +45,11 @@
             <span @click="onClickMore(vo)">更多</span>
         </div>
         <div class="product" v-for="(f,idx) in vo.goods" :key="f.id">
-            <div class="img"><img :src="f.picname" @click="goDetail(f)"></div>
+            <div class="img">
+                <img :src="f.picname" @click="goDetail(f)">
+                <div class="tag" v-if="f.tag>0"><img :src="f.tagImg"/></div>
+            </div>
+           
             <div class="info">
                 <h1 @click="goDetail(f)">{{f.name}}</h1>
                 <h2 @click="goDetail(f)">{{f.say}}</h2>
@@ -228,7 +232,9 @@ export default {
 .van-card__price{line-height: 30px; font-size: 16px;}
 
 .product{clear: both; overflow: hidden; background: #fff; display: flex; padding: 10px; border-bottom: 1px #f1f1f1 double}
-.product .img{float: left; width: 100px; margin-right: 10px}
+.product .img{float: left; width: 100px; margin-right: 10px; position: relative;}
+.product .img img{display: block;}
+.product .img .tag{position: absolute; left: 0; top: 0; width: 40%}
 .product .info{flex: 1; font-size: 14px}
 .product .info h1{font-size: 14px; margin-bottom: 5px}
 .product .info h2{font-weight: normal; font-size: 12px; color: #999; margin-bottom: 5px}
