@@ -91,14 +91,14 @@ export default {
                 this.$toast('请选择支付方式');
                 return false;
             }
-            
+            let url = '';
             if (this.payType=='1'){
-                url = 'app://DaigouPay?payType=1&order_no='+info.order_no;
+                url = 'app://DaigouPay?payType=1&order_no='+this.info.order_no;
                 window.location.href=url;            
             }
             
             if (this.payType=='2'){
-                url = 'app://DaigouPay?payType=2&order_no='+info.order_no;
+                url = 'app://DaigouPay?payType=2&order_no='+this.info.order_no;
                 window.location.href=url;
             }
 

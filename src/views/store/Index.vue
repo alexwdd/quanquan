@@ -11,8 +11,7 @@
             </div>
         </div>
 
-        <div class="topSearch">
-            
+        <div class="topSearch">            
             <div class="search" @click="onClickSearch('')">   
                 <van-icon name="search" />
                 <span>商品名称</span>     
@@ -36,9 +35,17 @@
         />
     
         <van-swipe :autoplay="3000" indicator-color="white">
-			<van-swipe-item v-for="vo in ad" :key="vo.name"><div class="banner"><img :src="vo.image" @click="goLink(vo)"/></div></van-swipe-item>
+			<van-swipe-item v-for="vo in banner" :key="vo.id"><div class="banner"><img :src="vo.image" @click="goLink(vo)"/></div></van-swipe-item>
 		</van-swipe>
 
+        <div class="quick">
+            <li v-for="vo in quick" :key="vo.id"><img :src="vo.image" @click="goLink(vo)"/></li>  
+        </div>
+
+        <div class="ad">
+            <li v-for="vo in ad" :key="vo.id"><img :src="vo.image" @click="goLink(vo)"/></li>
+        </div>
+         
         <template v-for="(vo,index) in goods">
         <div class="title" :key="vo.path">
             <p>{{vo.name}}</p>
@@ -46,7 +53,7 @@
         </div>
         <div class="product" v-for="(f,idx) in vo.goods" :key="f.id">
             <div class="img">
-                <img :src="f.picname" @click="goDetail(f)">
+                <img v-lazy="f.picname" @click="goDetail(f)">
                 <div class="tag" v-if="f.tag>0"><img :src="f.tagImg"/></div>
             </div>
            
@@ -69,11 +76,19 @@
 
 <script>
 import user from '../chat/auth'
-import { ImagePreview } from 'vant';
+
+import Vue from 'vue';
+import { Lazyload } from 'vant';
+Vue.use(Lazyload,{
+    loading:'../static/image/default_320.jpg'
+});
+
 export default {
     data() {
         return {
-            ad : [],
+            banner : [],
+            quick:[],
+            ad:[],
             notice : '',
             hotkey : '',
             goods:[],
@@ -141,6 +156,8 @@ export default {
             that.$http.post("/V1/store/getMain",data).then(result => {
                 let res = result.data;
                 if (res.code == 0) {
+                    that.banner = res.body.banner;
+                    that.quick = res.body.quick;
                     that.ad = res.body.ad;
                     that.notice = res.body.notice;
                     that.hotkey = res.body.hotkey;
@@ -217,6 +234,14 @@ export default {
 .right span{ padding:0 10px; font-size: 20px; position: relative;}
 .right span .dot{position: absolute;min-width:14px; height:14px; line-height:14px; border-radius:50%; background: #c00;top:0px; right: 0px; font-size:12px; color:#fff; text-align: center}
 
+.quick{clear: both; overflow: hidden;}
+.quick li{float: left; width: 20%; text-align: center}
+.quick li img{display: block; width: 70%; margin: auto; padding: 10px 0;}
+
+.ad{clear: both; overflow: hidden; padding-left: 10px;}
+.ad li{float: left; width: 50%; margin-bottom: 10px; height: 100px;padding-right: 10px; box-sizing: border-box}
+.ad li:first-child{height: 210px;}
+.ad li img{ width: 100%; height: 100%; display: block}
 .topSearch{height: 40px; width: 100%; line-height: 40px; background: #fff; position: fixed; top: 46px; left: 0; z-index: 999; display: flex; overflow: hidden; font-size: 14px;}
 .topSearch .search{flex:1; text-align: left; padding-left: 10px; color: #eee}
 .topSearch .search a{color: #eee; display: block; height: 100%}

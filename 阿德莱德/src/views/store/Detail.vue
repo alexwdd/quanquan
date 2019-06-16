@@ -20,14 +20,14 @@
                 <van-stepper v-model="num"/>
             </div>
 
-            <div class="serverBox">
+            <div class="serverBox" v-if="spec!=''">
                 <div class="hd">套餐</div>
                 <div class="fd">
                     <li v-for="vo in spec" :key="vo.id" :class="{'active':vo.id==specid}" @click="onClickSpec(vo)"><template v-if="vo.wuliu!=''">【{{vo.wuliu}}】包邮</template>{{vo.name}} {{vo.weight}}kg ${{vo.price}}</li>
                 </div>  
             </div>
 
-            <div class="serverBox">
+            <div class="serverBox" v-if="info.extends!=''">
                 <div class="hd">规格</div>
                 <div class="fd">
                     <li v-for="vo in info.extends" :key="vo" :class="{'active':vo==exts}" @click="onClickExts(vo)">{{vo}}</li>
@@ -42,8 +42,12 @@
                 </div>
             </div>
 
-            <div class="content">
-                <div class="hd">商品介绍</div>
+            <div class="more" v-show="!show">
+                <p><van-button type="default" size="small" @click="showMore">查看更多介绍</van-button></p>
+            </div>
+
+            <div class="content" v-show="show">
+                <div class="hd">商品介绍</div>                
                 <div class="bd" v-html="info.content"></div>
             </div>
         </div>
@@ -75,7 +79,8 @@ export default {
             server:[],
             spec:[],
             thisSpec:[],
-            cartNumber:0
+            cartNumber:0,
+            show:false
         };
     },
     watch:{
@@ -91,7 +96,10 @@ export default {
     methods: {
         onClickLeft() {
             this.$router.go(-1);
-        },              
+        },  
+        showMore(){
+            this.show = !this.show;
+        },         
         onClickCart(){
             this.$router.push({name:'storeCart',query:{token:user.token,agentid:user.agentid}});
         },
@@ -167,6 +175,7 @@ export default {
             that.spec = [];
             that.thisSpec = [];
             that.cartNumber = 0;
+            that.show = false;
             that.getCartNumber();
 
             that.specid = that.$route.params.specid;
@@ -234,6 +243,7 @@ export default {
 .serverBox .fd li.active{color:red;border-color:red}
 
 .content{padding: 10px; font-size: 14px}
+.more{text-align: center; padding-bottom: 50px; color: #999}
 .content .hd{background: #f1f1f1; text-align: center; line-height: 30px;}
 .content .bd{padding: 10px 0}
 

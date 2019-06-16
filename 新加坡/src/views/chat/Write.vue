@@ -10,7 +10,7 @@
                 <van-icon class="del" name="cross" @click="delImg(index)"/>
             </div>
 
-            <van-uploader v-show="show" :after-read="onRead" class="photo" accept="image/gif, image/jpeg, image/png" multiple>
+            <van-uploader v-show="show" :after-read="onRead" class="photo" multiple>
                 <van-icon class="cam" name="photograph"/>
             </van-uploader>
         </div>

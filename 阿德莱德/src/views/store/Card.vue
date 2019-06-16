@@ -11,7 +11,7 @@
             <div class="bd">
                 <van-cell title="澳币" :value="'$'+info.total" />
                 <van-cell title="人民币" :value="'￥'+info.rmb" />
-                <van-cell title="支付时请备注单号" :value="info.order_no+' 复制'" />
+                <van-cell title="支付时请备注单号" :value="info.order_no+' 复制'" @click="copy" :data-clipboard-text="info.order_no" class="copy"/>
                 <van-cell title="下单时间" :value="info.createTime" />
             </div>
         </div>
@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import Clipboard from 'clipboard'
 import user from '../chat/auth'
 import payImage from '../../assets/image/pay.png'
 export default {
@@ -77,7 +78,21 @@ export default {
     created(){
         this.init();
     },
-    methods: {        
+    methods: {  
+        copy() {
+            var clipboard = new Clipboard(".copy");
+            clipboard.on("success", e => {
+                this.$toast("复制成功");
+                // 释放内存
+                clipboard.destroy();
+            });
+            clipboard.on("error", e => {
+                // 不支持复制
+                this.$toast("该浏览器不支持自动复制");
+                // 释放内存
+                clipboard.destroy();
+            });
+        },      
         init(){
             var that = this;            
             that.getCard();
