@@ -61,7 +61,10 @@
                 <h1 @click="goDetail(f)">{{f.name}}</h1>
                 <h2 @click="goDetail(f)">{{f.say}}</h2>
                 <div class="price">
-                    <p>${{f.price}}</p>
+                    <p>
+                        <span class="m">${{f.price}} AUD</span>
+                        <span>约￥{{f.rmb}}</span>
+                    </p>
                     <div class="numberAction">
                         <div class="set" @click="onClickNumber(index,idx,'dec')">-</div>
                         <div class="buyNumber">{{f.num}}</div>
@@ -259,12 +262,19 @@ export default {
 .product{clear: both; overflow: hidden; background: #fff; display: flex; padding: 10px; border-bottom: 1px #f1f1f1 double}
 .product .img{float: left; width: 100px; margin-right: 10px; position: relative;}
 .product .img img{display: block;}
-.product .img .tag{position: absolute; left: 0; top: 0; width: 40%}
+.product .img .tag{position: absolute; left: 0; top: 0; width:60%;
+transform:rotate(-25deg);
+-ms-transform:rotate(-25deg); 	/* IE 9 */
+-moz-transform:rotate(-25deg); 	/* Firefox */
+-webkit-transform:rotate(-25deg); /* Safari 和 Chrome */
+-o-transform:rotate(-25deg); 	/* Opera */}
 .product .info{flex: 1; font-size: 14px}
-.product .info h1{font-size: 14px; margin-bottom: 5px}
-.product .info h2{font-weight: normal; font-size: 12px; color: #999; margin-bottom: 5px}
+.product .info h1{font-size: 14px; margin-bottom: 5px;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;}
+.product .info h2{font-weight: normal; font-size: 12px; color: #999; margin-bottom: 5px;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;}
 .product .info .price{clear: both; overflow: hidden;}
-.product .info .price p{float: left; color: #f00; line-height: 30px; font-weight: bold}
+.product .info .price p{float: left}
+.product .info .price p span{color: #999; display: block; font-size: 12px}
+.product .info .price p span.m{color: #f00;font-weight: bold; font-size: 14px}
 .numberAction{float: right;}
 .numberAction div{display: block; float: left; min-width: 24px; height: 24px; line-height:24px ;text-align: center; border: 1px #dbdbdb solid; margin-left: 5px; font-size: 12px; cursor: pointer;}
 </style>

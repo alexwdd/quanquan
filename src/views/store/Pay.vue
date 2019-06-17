@@ -3,14 +3,25 @@
         <van-nav-bar title="选择支付方式"/>
 
         <div class="payPrice">
-            <h2><span>￥</span>{{info.rmb}}</h2>
-            <p>应付RMB</p>
+            <li>
+                <label>支付手续费</label>
+                <p>$1.59 AUD</p>
+            </li>
+            <li>
+                <label>实付金额</label>
+                <p>$160.75 AUD</p>
+            </li>
+            <li>
+                <label>当前汇率</label>
+                <p>4.7710</p>
+            </li>
+            <li>
+                <label>折合人民币</label>
+                <p class="m">￥766.9 RMB</p>
+            </li>   
         </div>
-
         <div class="panel">
             <div class="bd">
-                <van-cell title="澳币" :value="'$'+info.total" />
-                <van-cell title="人民币" :value="'￥'+info.rmb" />
                 <van-cell title="订单号" :value="info.order_no" />
                 <van-cell title="下单时间" :value="info.createTime" />
             </div>
@@ -115,9 +126,11 @@ export default {
 .van-nav-bar__title{color: #fff}
 .van-nav-bar__text{color: #fff}
 
-.payPrice{ text-align: center; padding: 30px 0 }
-.payPrice h2 span{font-size: 12px; font-weight: normal}
-.payPrice p{margin-top: 10px; color: #999;}
+.payPrice{ text-align: center; padding: 30px 0; background: #fff; margin-bottom: 5px}
+.payPrice li{clear: both; overflow: hidden; font-size: 14px; padding:5px 0}
+.payPrice li label{float: left; width:100px; text-align: right; margin-right: 10px; color: #999}
+.payPrice li p{ float: left;}
+.payPrice li p.m{color: #000; font-weight: bold}
 
 .panel{background: #fff; clear: both; overflow: hidden; margin-bottom: 5px}
 .panel .hd{padding: 10px; font-size: 14px; clear: both; overflow: hidden; border-bottom: 1px #f1f1f1 solid}
