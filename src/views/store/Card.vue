@@ -104,7 +104,7 @@ export default {
             that.$http.post("/V1/store/orderInfo",data).then(result => {
                 let res = result.data;
                 if (res.code == 0) {
-                    that.info = res.body;
+                    that.info = res.body.data;
                 }else if(res.code==999){
                     window.location.href='app://login';  
                 }else{

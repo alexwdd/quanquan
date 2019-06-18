@@ -5,19 +5,19 @@
         <div class="payPrice">
             <li>
                 <label>支付手续费</label>
-                <p>$1.59 AUD</p>
+                <p>${{payInfo.shouxufei}} AUD</p>
             </li>
             <li>
                 <label>实付金额</label>
-                <p>$160.75 AUD</p>
+                <p>${{payInfo.total}} AUD</p>
             </li>
             <li>
                 <label>当前汇率</label>
-                <p>4.7710</p>
+                <p>{{payInfo.huilv}}</p>
             </li>
             <li>
                 <label>折合人民币</label>
-                <p class="m">￥766.9 RMB</p>
+                <p class="m">￥{{payInfo.rmb}} RMB</p>
             </li>   
         </div>
         <div class="panel">
@@ -32,29 +32,19 @@
                 <p>选择支付方式</p>
             </div>
             <div class="bd">
-                <van-radio-group v-model="payType">
-                    <van-cell-group>
-                        <van-cell title="支付宝" clickable @click="payType = '1'">
-                        <van-radio name="1" />
-                        </van-cell>
-                        <van-cell title="微信支付" clickable @click="payType = '2'">
-                        <van-radio name="2" />
-                        </van-cell>
-                        <van-cell title="银行转账(人工审核)" clickable @click="payType = '3'">
-                        <van-radio name="3" />
-                        </van-cell>
-                    </van-cell-group>
-                </van-radio-group>              
+                <div class="intr">支付宝、微信支付手续费{{shouxufei}}%</div>
+                <div class="payType">
+                    <li @click="setPay(1)"><img src="../../assets/image/type1.png" :class="{'active':payType==1}"></li>
+                    <li @click="setPay(2)"><img src="../../assets/image/type2.png" :class="{'active':payType==2}"></li>
+                    <li @click="setPay(3)"><img src="../../assets/image/type3.png" :class="{'active':payType==3}"></li>
+                </div>
             </div>
         </div>
 
         <div class="btn">
             <van-button size="large" class="my-btn" @click="onSubmit">确认支付</van-button>
         </div>
-
         <div style="height:60px"></div>
-
-        
     </div>
 </template>
 
@@ -64,6 +54,13 @@ export default {
     data() {
         return {
             info:[],
+            payInfo:{
+                shouxufei:0,
+                total:0,
+                huilv:0,
+                rmb:0,
+            },
+            shouxufei:0,
             payType:'',
         };
     },
@@ -88,13 +85,33 @@ export default {
             that.$http.post("/V1/store/orderInfo",data).then(result => {
                 let res = result.data;
                 if (res.code == 0) {
-                    that.info = res.body;
+                    that.info = res.body.data;
+                    that.payInfo.huilv = res.body.huilv;
+                    that.payInfo.rmb = that.info.rmb;
+                    that.payInfo.total = that.info.total;
+                    that.shouxufei = res.body.shouxufei;
                 }else if(res.code==999){
                     window.location.href='app://login';  
                 }else{
                     that.$dialog.alert({title:'错误信息',message:res.desc});
                 }
             });
+        },
+        setPay(value){
+            this.payType = value;
+            if(value=='3'){                
+                this.payInfo.shouxufei = 0;
+                this.payInfo.total = this.info.total;
+                this.payInfo.rmb = this.info.rmb;
+            }else{
+                console.log(value);
+                let shouxufei = this.info.total * (this.shouxufei / 100);
+                let total = parseFloat(this.info.total) + parseFloat(shouxufei);
+                let rmb = total * parseFloat(this.payInfo.huilv);
+                this.payInfo.shouxufei = shouxufei.toFixed(2);
+                this.payInfo.total = total.toFixed(2);
+                this.payInfo.rmb = rmb.toFixed(2);
+            }
         },
         onSubmit(){
             var that = this;
@@ -137,6 +154,12 @@ export default {
 .panel .hd p{float: left; border-left: 2px #05c1af solid; padding-left: 10px; font-size: 14px; font-weight: bold}
 .panel .hd span{float: right; font-size: 14px; color: #999}
 .panel .hd{clear: both; overflow: hidden;}
+
+.intr{font-size: 12px; padding: 10px}
+.payType{clear: both; padding: 0 10px; padding-bottom: 10px; overflow: hidden;}
+.payType li {float: left; margin-right:20px;}
+.payType li img{display: block; padding: 3px; border: 1px #fff solid; width: 40px}
+.payType li img.active{border: 1px #05c1af solid; padding: 3px; border-radius: 2px}
 
 .btn{padding: 10px; width: 100%; box-sizing: border-box}
 .my-btn{background: #05c1af; color: #fff;}

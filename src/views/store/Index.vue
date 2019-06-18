@@ -253,9 +253,9 @@ export default {
 .topSearch .cateBtn{color: #fff; display: block; height: 30px; line-height: 30px;background: #05C1AF; color: #fff; margin-top: 5px; border-radius: 5px; width: 40px; text-align: center; margin-right: 5px;;}
 .hotKey{position: fixed; top: 86px; left: 0; width: 100%; background: #f7f7f7; height: 40px; line-height: 40px; color: #999; padding-left: 10px; box-sizing: border-box; font-size: 14px;z-index: 999;}
 .hotKey span{color: #333; padding-left: 10px}
-.title{background: #fff; padding: 10px; clear: both; overflow: hidden;}
-.title p{float: left; border-left: 2px #05c1af solid; padding-left: 10px; font-size: 14px}
-.title span{float: right; font-size: 14px; color: #999}
+.title{background: #fff; padding: 10px; clear: both; overflow: hidden; border-bottom: 1px #f1f1f1 solid;}
+.title p{float: left; border-left: 2px #05c1af solid; padding-left: 10px; font-size: 14px; font-weight: bold; color: #05C1AF; }
+.title span{float: right; font-size: 12px; color: #999;}
 
 .van-card__price{line-height: 30px; font-size: 16px;}
 
