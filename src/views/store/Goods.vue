@@ -39,7 +39,8 @@
                             <span class="m">${{f.price}} AUD</span>
                             <span>约￥{{f.rmb}}</span>
                         </p>
-                        <div class="numberAction">
+                        <dir class="cartIcon" v-show="f.cartShow"><van-icon name="cart-o" @click="onClickIcon(idx)"/></dir>
+                        <div class="numberAction" v-show="!f.cartShow">
                             <div class="set" @click="onClickNumber(idx,'dec')">-</div>
                             <div class="buyNumber">{{f.num}}</div>
                             <div class="set" @click="onClickNumber(idx,'inc')">+</div>
@@ -111,6 +112,12 @@ export default {
         },
         goDetail(item){
             this.$router.push({name:'storeDetail', params:{ id: item.goodsID,specid:item.id },query:{token:user.token,agentid:user.agentid}});
+        },
+        onClickIcon(index){
+            for (let i = 0; i < this.info.length; i++) {
+                this.info[i]['cartShow'] = true;
+            }
+            this.info[index]['cartShow'] = false;
         },
         onClickNumber(index,type){
             if(type=='inc'){
@@ -240,7 +247,8 @@ transform:rotate(-25deg);
 .product .info .price p{float: left}
 .product .info .price p span{color: #999; display: block; font-size: 12px}
 .product .info .price p span.m{color: #f00;font-weight: bold; font-size: 14px}
-
+.product .cartIcon{ float: right;}
+.product .cartIcon i{background: rgb(247, 65, 125); width: 26px; height: 26px; text-align: center; line-height: 26px; color: #fff; border-radius: 50%}
 .numberAction{float: right;}
 .numberAction div{display: block; float: left; min-width: 24px; height: 24px; line-height:24px ;text-align: center; border: 1px #dbdbdb solid; margin-left: 5px; font-size: 12px; cursor: pointer;}
 </style>

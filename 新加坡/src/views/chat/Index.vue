@@ -147,6 +147,7 @@ export default {
             this.token = user.token;
             this.getUserInfo();
         }
+        this.onLoad();
     },
     methods: {
         getUserInfo(){
