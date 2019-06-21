@@ -167,7 +167,14 @@ export default {
             };                
             that.$http.post("/V1/account/userDetail",data).then(result => {
                 let res = result.data;
-                this.info = res.body;
+                if (res.code == 0) {
+                    let res = result.data;
+                    this.info = res.body;
+                }else if(res.code==999){
+                    window.location.href='app://login';  
+                }else{
+                    that.$dialog.alert({title:'错误信息',message:res.desc});
+                }                
             });
         },
         getPhoto(){
