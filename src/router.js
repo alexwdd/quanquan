@@ -20,6 +20,7 @@ import More from './views/chat/More.vue'
 import ChatSearch from './views/chat/Search.vue'
 import Jubao from './views/chat/Jubao.vue'
 import User from './views/chat/User.vue'
+import MyFocus from './views/chat/MyFocus.vue'
 
 //代购商城
 import Store from './views/store/Index.vue'
@@ -162,6 +163,12 @@ export default new Router({
             name: "user",
             meta:{index:9},
             component: User
+        },
+        {
+            path: "/chat/myFocus",
+            name: "myFocus",
+            meta:{index:9},
+            component: MyFocus
         },
 
 
