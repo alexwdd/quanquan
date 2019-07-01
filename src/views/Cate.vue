@@ -162,7 +162,7 @@ export default {
 };
 </script>
 <style scoped>
-.wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
+.wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
 .list{clear: both; overflow: hidden; padding-left: 10px;}
 .list li{float: left; width: 50%; padding-right: 10px; box-sizing: border-box; margin-top: 10px}
 .list li img{display: block}

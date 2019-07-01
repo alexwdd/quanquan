@@ -4,7 +4,7 @@
 
         <div class="topCate" :style="'top:'+top+'px'">
             <div class="cateTab">
-                <van-tabs color="#05c1af" v-model="cateActive">
+                <van-tabs color="#7507c2" v-model="cateActive">
                     <van-tab v-for="vo in cate" :title="vo.title" :key="vo.id">
                         <div class="tab-title" slot="title" @click="changeCate(vo.id)">{{vo.title}}</div>
                     </van-tab>
@@ -205,13 +205,13 @@ export default {
 };
 </script>
 <style scoped>
-.wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
+.wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
 .topCate{position: fixed; width: 100%; display: flex;background: #fff; z-index: 999;}
 .cateTab{flex: 1}
 .cateBar{width: 40px; height: 44px; text-align: center}
-.cateBar i{line-height: 44px;color: #05c1af;}
+.cateBar i{line-height: 44px;color: #7507c2;}
 .cateList{position: fixed; top:46px; width: 100%; z-index: 999; background: #fff}
-.cateList .hd{height: 44px; line-height: 44px; text-align: center; position: relative; background: #05c1af; color: #fff}
+.cateList .hd{height: 44px; line-height: 44px; text-align: center; position: relative; background: #7507c2; color: #fff}
 .cateList i{position: absolute;right: 5px; top: 15px}
 .my-swipe{height: 250px;width: 100vw; border-bottom: 1px #f1f1f1 solid}
 .wrap >>> .mint-swipe-indicator.is-active {background: #f00;}
@@ -231,9 +231,9 @@ export default {
 .news .info h1{font-size: 15px;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;}
 .news .info .title{height:40px; margin-bottom: 10px}
 .news .info .address{ overflow:hidden;  text-overflow:ellipsis; white-space:nowrap; width: 100%; font-size: 14px;color: #999}
-.news .info .bottom .price{float: left; font-size: 14px;color: #05c1af}
+.news .info .bottom .price{float: left; font-size: 14px;color: #7507c2}
 .news .info .bottom .date{font-size: 12px; text-align: right; color: #999; line-height: 20px; float: right;}
-.news .info i{color: #05c1af}
+.news .info i{color: #7507c2}
 
 
 </style>

@@ -29,8 +29,17 @@ const global = {
         if(ua.match(/AustraliaApp/i) == 'australiaapp'){
             return true;
         }else{
-            return false;
+            if(this.getQueryString('isApp')){
+                return true;
+            }else{
+                return false;
+            }
         }
+    },
+    getQueryString: function(name){
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r!=null)return  unescape(r[2]); return null;
     },
     checkMobile: function (checkVal) {
         var reg = /^[0-9]{8}$/;

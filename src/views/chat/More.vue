@@ -7,8 +7,8 @@
             <div class="userList">  
                 <li v-for="(vo,idx) in info" :key="vo.id">
                     <div class="num" :class="'n'+idx">{{idx+1}}</div>
-                    <div class="face" @click="gotoUser(vo.id)">  
-                        <i class="icon icon-huangguan" :class="'n'+idx" v-if="idx<3"></i>                      
+                    <div class="face" @click="gotoUser(vo.id)">
+                        <i class="icon icon-huangguan" :class="'n'+idx" v-if="idx<3"></i>
                         <img :src="vo.headimg">                        
                     </div>
                     <div class="name">{{vo.nickname}}</div>
@@ -117,7 +117,7 @@ export default {
 };
 </script>
 <style scoped>
-.wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
+.wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
 
 .userList{background: #fff; clear: both; border-bottom:1px #f1f1f1 solid}
 .userList li{clear: both; overflow: hidden; padding: 10px}
@@ -133,6 +133,6 @@ export default {
 -o-transform:rotate(-25deg); 	/* Opera */}
 .userList li .face img{width:40px; height:40px; border-radius: 5px; display: block; position: absolute; left: 5px; top: 5px; z-index: 0}
 .userList li .name{float: left; line-height: 50px; font-size: 14px; max-width: 40%; overflow: hidden; white-space: nowrap}
-.userList li .focus{float: right; font-size: 12px; height: 24px; line-height: 24px; border-radius: 12px; background-color: #05c1af; width: 60px; text-align: center; color: #fff; margin-top: 10px}
+.userList li .focus{float: right; font-size: 12px; height: 24px; line-height: 24px; border-radius: 12px; background-color: #7507c2; width: 60px; text-align: center; color: #fff; margin-top: 10px}
 .userList li .focused{background-color: #ccc; color: #fff;}
 </style>

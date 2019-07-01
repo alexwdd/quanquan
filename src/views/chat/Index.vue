@@ -3,7 +3,7 @@
         <div class="header">
             <div class="tab">
                 <li class="active">话题</li>
-                <li @click="focus" v-show="token!=''">关注</li>
+                <li @click="focus" v-show="token!=''">关注</li>        
             </div>
             <div class="right">
                 <span v-show="token!=''"><van-icon name="photo-o" @click="onClickMy"/><div class="dot" v-if="commentNumber>0">{{commentNumber}}</div></span>
@@ -14,7 +14,7 @@
 
         <div class="topCate">
             <div class="cateTab">
-                <van-tabs color="#05c1af" v-model="cateActive">
+                <van-tabs color="#7507c2" v-model="cateActive">
                     <van-tab v-for="vo in cate" :title="vo.title" :key="vo.id">
                         <div class="tab-title" slot="title" @click="changeCate(vo.id)">{{vo.title}}</div>
                     </van-tab>
@@ -147,6 +147,7 @@ export default {
             this.token = user.token;
             this.getUserInfo();
         }
+        this.onLoad();
     },
     methods: {
         getUserInfo(){
@@ -365,22 +366,22 @@ export default {
         }
     },
     mounted:function(){
-        this.show();
+        this.show();        
     },
 };
 </script>
 <style scoped>
-.wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
+.wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
 .header{height: 46px; width: 100%; position: fixed;top: 0; left: 0; background: #fff}
 .tab{float: left; line-height: 46px;}
 .tab li{display: inline-block; font-size: 14px; padding:0 10px;}
-.tab li.active{color: #05c1af; font-size: 16px}
+.tab li.active{color: #7507c2; font-size: 16px}
 
 .right{float: right; padding-top: 12px}
 .right span{ padding:0 10px; font-size: 20px; position: relative;}
 .right span .dot{position: absolute;min-width:14px; height:14px; line-height:14px; border-radius:50%; background: #c00;top:0px; right: 0px; font-size:12px; color:#fff; text-align: center}
 
-.ball{background:#191919; color: #fff; width: 50px; height: 50px; text-align: center; position: fixed; right: 5px; bottom: 100px; border-radius: 50%;}
+.ball{background:rgba(117, 7, 194, 0.5); color: #fff; width: 50px; height: 50px; text-align: center; position: fixed; right: 5px; bottom: 100px; border-radius: 50%;}
 .ball i{font-size:24px;line-height: 50px}
 .selectType{width: 50px; position:fixed; right: 5px; bottom: 150px}
 .selectType li{width: 50px; height: 50px;line-height: 50px;font-size: 14px; text-align: center; border-radius: 50px; margin-bottom: 10px; background: #191919; color: #fff}
@@ -389,9 +390,9 @@ export default {
 .topCate{position: fixed; top: 45px; width: 100%; display: flex;background: #fff}
 .cateTab{flex: 1}
 .cateBar{width: 0px; height: 44px; text-align: center; font-size: 0; display: none}
-.cateBar i{line-height: 44px;color: #05c1af;}
+.cateBar i{line-height: 44px;color: #7507c2;}
 .cateList{position: fixed; top:45px; width: 100%; z-index: 999; background: #fff}
-.cateList .hd{height: 44px; line-height: 44px; text-align: center; position: relative; background: #05c1af; color: #fff}
+.cateList .hd{height: 44px; line-height: 44px; text-align: center; position: relative; background: #7507c2; color: #fff}
 .cateList i{position: absolute;right: 5px; top: 15px}
 .my-swipe{height: 250px;width: 100vw; border-bottom: 1px #f1f1f1 solid}
 .wrap >>> .mint-swipe-indicator.is-active {background: #f00;}
@@ -410,7 +411,7 @@ export default {
 .chat .user .name{float: left;font-size: 12px; line-height:20px; padding: 5px 0}
 .chat .user .name p{ margin: 0;}
 .chat .user .name span{color: #999}
-.chat .user .focus{float: right; font-size: 12px; height: 24px; line-height: 24px; border-radius: 12px; background-color: #05c1af; width: 60px; text-align: center; color: #fff; margin-top: 10px; margin-right: 10px;}
+.chat .user .focus{float: right; font-size: 12px; height: 24px; line-height: 24px; border-radius: 12px; background-color: #7507c2; width: 60px; text-align: center; color: #fff; margin-top: 10px; margin-right: 10px;}
 .chat .user .focused{border: 1px #dbdbdb solid; background: #fff; color: #999; margin-right: 0}
 
 .chat .user .arrowBtn{float: right; border:1px #dbdbdb solid; width: 22px; height: 22px; border-radius: 50%; text-align: center; margin-top: 10px}
@@ -425,6 +426,6 @@ export default {
 .chat .bottom .action{float: right;}
 .chat .action li{float: left; text-align: center; font-size: 13px; line-height: 30px; color: #999; padding:0 10px}
 .chat .action li i{font-size: 16px; display: inline;}
-.chat .action li i.active{color: #05c1af}
+.chat .action li i.active{color: #7507c2}
 .btn{text-align: right; font-size: 14px; padding-right: 10px; color: #586a9c; margin-top: -10px; margin-bottom: 10px}
 </style>

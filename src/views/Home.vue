@@ -28,6 +28,7 @@
 
 <script>
 import infoDetail from "../components/infoDetail";
+import phoneIcon from '@/assets/image/phone.jpg'
 export default {
     data() {
         return {
@@ -70,11 +71,21 @@ export default {
                             res.body.cate[i]['icon'] = '/adelaide/static/image/'+res.body.cate[i]['type']+'_icon@2x.png';
                         }                        
                     } */
-                    that.cate = res.body.cate;
+                    that.cate = [{
+                        type:'phone',
+                        icon:phoneIcon,
+                        name:'话费充值',
+                        id:0
+                    }];
+                    //that.cate = res.body.cate;
+                    that.cate = that.cate.concat(res.body.cate);
                 }else{
                     that.$dialog.alert({title:'错误信息',message:res.desc});
                 }
             });
+        },
+        chongzhi(){
+            window.location.href="http://chongzhi.worldmedia.top"
         },
         goLink(value){
             if(value.url!=''){
@@ -100,6 +111,8 @@ export default {
                 this.$router.push({path:'/house'});
             }else if(value.type=='mall'){
                 window.location.href=value.url;
+            }else if(value.type=='phone'){
+                window.location.href="http://chongzhi.worldmedia.top";
             }else{
                 this.$router.push({path:'/list/'+value.type});
             }
@@ -117,5 +130,5 @@ export default {
 
 .indexList{clear: both; border-top: 1px #dbdbdb dashed; padding: 0 10px; padding-bottom: 10px;background: #fff}
 .indexList .hd{height: 40px; line-height: 40px;}
-.indexList .hd span{float: right; font-size: 12px; color: #05c1af}
+.indexList .hd span{float: right; font-size: 12px; color: #7507c2}
 </style>

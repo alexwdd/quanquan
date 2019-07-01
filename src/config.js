@@ -1,11 +1,11 @@
 const global = {
-    DOMAIN:'http://wx.worldmedia.top/adelaide/',
-    LOGO:'http://wx.worldmedia.top/adelaide/logo.jpg',
-    APP_NAME: '阿德莱德眼',
-    CITYID: 9,
-    SCHEME:'ausAdelaide://startapp',
-    IOS:'https://itunes.apple.com/cn/app/id1386824572?l=zh&ls=1&mt=8',
-    ANDROIDS:'https://play.google.com/store/apps/details?id=com.ldw.life',
+    DOMAIN:'http://wx.worldmedia.top/singapore/',
+    LOGO:'http://wx.worldmedia.top/singapore/logo.jpg',
+    APP_NAME: '新加坡生活圈',
+    CITYID: 39,
+    SCHEME:'ausSingapore://startapp',
+    IOS:'https://itunes.apple.com/cn/app/id1437373175?l=zh&ls=1&mt=8',
+    ANDROIDS:'https://play.google.com/store/apps/details?id=com.ldw.singapore',
     //判断是否是微信浏览器的函数
     isWeiXin : function(){
         //window.navigator.userAgent属性包含了浏览器类型、版本、操作系统类型、浏览器引擎类型等信息，这个属性可以用来判断浏览器类型
@@ -29,19 +29,20 @@ const global = {
         if(ua.match(/AustraliaApp/i) == 'australiaapp'){
             return true;
         }else{
-            return false;
+            if(this.getQueryString('isApp')){
+                return true;
+            }else{
+                return false;
+            }
         }
+    },
+    getQueryString: function(name){
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r!=null)return  unescape(r[2]); return null;
     },
     checkMobile: function (checkVal) {
         var reg = /^[0-9]{8}$/;
-        if (!reg.test(checkVal)) {
-            return false;
-        } else {
-            return true;
-        }
-    },
-    checkCnMobile: function (checkVal) {
-        var reg = /^1[3|4|5|6|7|8|9][0-9]{9}$/;
         if (!reg.test(checkVal)) {
             return false;
         } else {
