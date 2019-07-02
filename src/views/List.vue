@@ -175,8 +175,11 @@ export default {
                 sort : that.sort,
                 cityID : that.config.CITYID,
                 type : that.$route.params.type,
-                page : that.page,
+                page : that.page
             };
+            if(that.$route.query.keyword){
+                data.keyword = that.$route.query.keyword
+            }
             that.$http.post("V3/weixin/infolist",data).then(result => {
                 let res = result.data;
                 if (res.code == 0) {
