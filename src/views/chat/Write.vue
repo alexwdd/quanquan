@@ -56,7 +56,6 @@
 
 <script>
 import user from './auth'; // permission control
-var xhr;
 export default {
     data() {
         return {
