@@ -36,6 +36,12 @@
         <div :style="'height:'+height+'px'"></div>
 
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+
+            <template v-if="showType=='big'">
+            <infoDetail v-for="vo in info" :info="vo" :type="type" :padding="true" :key="vo.id"></infoDetail>
+            </template>
+
+            <template v-if="showType=='small'">
             <van-row class="news" v-for="vo in info" :key="vo.articleid">
                 <van-col span="8"><div class="img" @click="detail(vo)"><img v-lazy="vo.thumb_s"></div></van-col>
                 <van-col span="16">
@@ -53,6 +59,7 @@
                     </div>
                 </van-col>
             </van-row>
+            </template>
         </van-list>
     </div>
 </template>
@@ -63,6 +70,7 @@ import { Lazyload } from 'vant';
 Vue.use(Lazyload,{
     loading:'../static/image/default_320.jpg'
 });
+import infoDetail from "../components/infoDetail";
 export default {
     data() {
         return {
@@ -94,9 +102,11 @@ export default {
 			],
 			line:[],
 			subwayStr:'',
-			typeStr:'',
+            typeStr:'',
+            showType:'small',//展示模式small小图,big大图模式
         };
     },
+    components:{infoDetail},
     watch: {
         $route(to) {
             if (to.name == "house") {
@@ -119,6 +129,10 @@ export default {
     created() {
         var that = this;
         if(this.config.isApp()){
+            if(this.$route.query.showType=='big'){
+                this.showType = "big";
+            }
+
             that.barShow = false;
             that.top = 0;
             that.height = 46;

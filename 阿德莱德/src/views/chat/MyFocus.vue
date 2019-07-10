@@ -7,7 +7,7 @@
                         <img :src="vo.headimg">                        
                     </div>
                     <div class="name">{{vo.nickname}}</div>
-                    <div class="focus focused" @click=doFocus(idx,vo)>已关注</div>
+                    <div class="focus focused" @click=doFocus(idx,vo)>取消关注</div>
                 </li>
              </div>
         </van-list> 
