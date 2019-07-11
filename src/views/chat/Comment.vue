@@ -26,7 +26,7 @@
 
             <div class="photo single" v-if="info.num==1">
                 <li v-for="(photo,index) in info.images" :key="photo" @click="showImagePreview(index)">
-                    <img :src="photo">
+                    <img :src="photo.url">
                 </li>
             </div>
 

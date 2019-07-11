@@ -130,6 +130,11 @@ export default {
     created() {        
         if(user.status==true){
             this.token = user.token;
+            this.typeShow = false;
+            this.submitBtn = false;
+            this.info = [];
+            this.page = 1;
+            this.onLoad();
             this.commendUser();
         }else{
             window.location.href='app://login'; 
