@@ -2,6 +2,7 @@
     <div class="wrap">
         <div class="header">
             <div class="tab">
+                <li @click="onClickLeft"><van-icon name="arrow-left" style="margin-top:8px"/></li>
                 <li class="active">话题</li>
                 <li @click="focus" v-show="token!=''">关注</li>        
             </div>
@@ -205,7 +206,7 @@ export default {
             this.typeShow = !this.typeShow;
         },
         onClickLeft() {
-            this.$router.go(-1);
+            this.$router.push({'path':'/',query:{token:this.token}});
         },
         onClickSearch() {
             this.$router.push({'path':'/chat/search',query:{token:this.token}});

@@ -2,6 +2,7 @@
     <div class="wrap">
         <div class="header">
             <div class="tab">
+                <li @click="onClickLeft"><van-icon name="arrow-left" style="margin-top:8px"/></li>
                 <li @click="chat">话题</li>
                 <li class="active" v-show="token!=''">关注</li>
             </div>
@@ -136,6 +137,9 @@ export default {
         }
     },
     methods: {
+        onClickLeft() {
+            this.$router.push({'path':'/',query:{token:this.token}});
+        },
         share(info){
             let url = 'app://shareURL?url='+this.config.DOMAIN+'chat/comment?id='+info.id+'&title='+info.nickname+'的话题';
             window.location.href = url;
@@ -278,7 +282,7 @@ export default {
             }            
         },
         gotoComment(info){
-            this.$router.push({'path':'/comment',query:{id:info.id,token:this.token}});
+            this.$router.push({'path':'/chat/comment',query:{id:info.id,token:this.token}});
         },
         onLoad() {
             var that = this;

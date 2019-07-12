@@ -3,7 +3,7 @@
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div class="userList">  
                 <li v-for="(vo,idx) in info" :key="vo.id">
-                    <div class="face">                        
+                    <div class="face" @click="gotoUser(vo.userID)">                        
                         <img :src="vo.headimg">                        
                     </div>
                     <div class="name">{{vo.nickname}}</div>
@@ -100,7 +100,7 @@ export default {
 };
 </script>
 <style scoped>
-.wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
+.wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
 
 .userList{background: #fff; clear: both; border-bottom:1px #f1f1f1 solid}
 .userList li{clear: both; overflow: hidden; padding: 10px}

@@ -3,7 +3,7 @@
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div class="userList">  
                 <li v-for="(vo,idx) in info" :key="vo.id">
-                    <div class="face">                        
+                    <div class="face" @click="gotoUser(vo.userID)">                        
                         <img :src="vo.headimg">                        
                     </div>
                     <div class="name">{{vo.nickname}}</div>

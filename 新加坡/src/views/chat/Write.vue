@@ -4,10 +4,6 @@
         
         <textarea class="text" placeholder="请输入您要发布的内容" v-model="content"></textarea>
 
-        <a href="javascript:;" @click="uploadMultiFile" class="insert-btn" id="insert-btn">test</a>
-        
-        <input type="file" id="uploadfile" accept="image/*" capture="camera" style="display:none"/>  
-
         <div class="images-list">
             <div v-for="(vo,index) in images" :key="index" class="photo">
                 <img :src="vo.content">
@@ -60,8 +56,6 @@
 
 <script>
 import user from './auth'; // permission control
-import $ from 'jquery';
-var xhr;
 export default {
     data() {
         return {
@@ -94,79 +88,7 @@ export default {
     created() {
         this.init()
     },
-    methods: {
-        uploadMultiFile(){
-            var that = this;
-            $("#uploadfile").click();
-            $("#uploadfile").bind("change", function(){
-                if ($(this).val() != "") {
-                    var fileObj = document.getElementById("uploadfile").files[0]; // js 获取文件对象 
-           
-                        that.photoCompress(fileObj, {
-                            quality: 0.2
-                        }, function(base64Codes){
-                            console.log("压缩后：" + base64Codes.length / 1024 + " " + base64Codes);
-                            
-                            that.images = that.images.concat({content:base64Codes});
-                            if(that.images.length>=9){
-                                that.show = false;
-                            }
-                            
-                        });
-                    
-                }
-            })
-        },
-        /*
-        三个参数
-        file：一个是文件(类型是图片格式)，
-        w：一个是文件压缩的后宽度，宽度越小，字节越小
-        objDiv：一个是容器或者回调函数
-        photoCompress()
-        */
-        photoCompress(file,w,objDiv){
-            var that = this;
-            var ready=new FileReader();
-            /*开始读取指定的Blob对象或File对象中的内容. 当读取操作完成时,readyState属性的值会成为DONE,如果设置了onloadend事件处理程序,则调用之.同时,result属性中将包含一个data: URL格式的字符串以表示所读取文件的内容.*/
-            ready.readAsDataURL(file);
-            ready.onload=function(){
-                var re=this.result;
-                that.canvasDataURL(re,w,objDiv)
-            }
-        },
-        canvasDataURL(path, obj, callback){
-            var img = new Image();
-            img.src = path;
-            img.onload = function(){
-                var that = this;
-                // 默认按比例压缩
-                var w = that.width,
-                    h = that.height,
-                    scale = w / h;
-                w = obj.width || w;
-                h = obj.height || (w / scale);
-                var quality = 0.7;  // 默认图片质量为0.7
-                //生成canvas
-                var canvas = document.createElement('canvas');
-                var ctx = canvas.getContext('2d');
-                // 创建属性节点
-                var anw = document.createAttribute("width");
-                anw.nodeValue = w;
-                var anh = document.createAttribute("height");
-                anh.nodeValue = h;
-                canvas.setAttributeNode(anw);
-                canvas.setAttributeNode(anh);
-                ctx.drawImage(that, 0, 0, w, h);
-                // 图像质量
-                if(obj.quality && obj.quality <= 1 && obj.quality > 0){
-                    quality = obj.quality;
-                }
-                // quality值越小，所绘制出的图像越模糊
-                var base64 = canvas.toDataURL('image/jpeg', quality);
-                // 回调函数返回base64的值
-                callback(base64);
-            }
-        },
+    methods: {        
         onClickLeft() {
             this.$router.go(-1);
         },

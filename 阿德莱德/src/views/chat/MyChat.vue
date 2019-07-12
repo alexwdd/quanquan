@@ -72,6 +72,9 @@ export default {
         onClickLeft() {
             this.$router.go(-1);
         },
+        gotoUser(id){
+            this.$router.push({'path':'/chat/user',query:{userid:id,token:this.token}});
+        },
         share(info){
             let url = 'app://shareURL?url='+this.config.DOMAIN+'chat/comment?id='+info.id+'&title='+info.nickname+'的话题';
             window.location.href = url;

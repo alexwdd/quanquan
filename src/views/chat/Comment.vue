@@ -113,7 +113,7 @@
         <div class="footer" v-show="notApp">
             <div class="logo"><img src="../../assets/image/logo.jpg"></div>
             <div class="info">
-                <p>新加坡同城生活掌上宝</p>
+                <p>阿德莱德同城生活掌上宝</p>
                 <p>
                     <van-icon name="star" />
                     <van-icon name="star" />
@@ -137,6 +137,7 @@
                 <div class="bd">
                     <li><a :href="config.ANDROIDS"><img src="../../assets/image/googleplay.png"></a></li>
                     <li><a :href="config.IOS"><img src="../../assets/image/appstore.png"></a></li>
+                    <li class="long"><a :href="config.DOWNLOAD"><img src="../../assets/image/button.png"></a></li>
                 </div>
             </div>
         </van-popup>
@@ -289,7 +290,7 @@ export default {
                 this.actions[0]['name'] = '关注';
             }
             this.actionShow = true;
-        },        
+        },
         onSelect(item){//举报、关注选择器
             this.actionShow = false;
             if(item.name!='举报'){
@@ -588,7 +589,7 @@ export default {
 };
 </script>
 <style scoped>
-.wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
+.wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
 .chat{background: #fff; clear: both; overflow: hidden; border-bottom: 1px #f1f1f1 solid; padding: 10px 0}
 .chat .user{clear: both; margin-bottom: 10px; overflow: hidden; padding: 0 10px}
 .chat .user .face{float: left; margin-right: 10px}
@@ -596,7 +597,7 @@ export default {
 .chat .user .name{float: left;font-size: 12px; line-height:20px; padding: 5px 0}
 .chat .user .name p{ margin: 0;}
 .chat .user .name span{color: #999}
-.chat .user .focus{float: right; font-size: 12px; height: 24px; line-height: 24px; border-radius: 12px; background-color: #7507c2; width: 60px; text-align: center; color: #fff; margin-top: 10px; margin-right: 10px;}
+.chat .user .focus{float: right; font-size: 12px; height: 24px; line-height: 24px; border-radius: 12px; background-color: #05c1af; width: 60px; text-align: center; color: #fff; margin-top: 10px; margin-right: 10px;}
 .chat .user .focused{border: 1px #dbdbdb solid; background: #fff; color: #999; margin-right: 0}
 .chat .user .arrowBtn{float: right; border:1px #dbdbdb solid; width: 22px; height: 22px; border-radius: 50%; text-align: center; margin-top: 10px}
 .chat .user .arrowBtn i{color: #999; font-size: 14px; line-height: 22px}
@@ -611,7 +612,7 @@ export default {
 .chat .bottom .action{float: right;}
 .chat .action li{float: left; text-align: center; font-size: 13px; line-height: 30px; color: #999; padding:0 10px}
 .chat .action li i{font-size: 16px; display: inline;}
-.chat .action li i.active{color: #7507c2}
+.chat .action li i.active{color: #05c1af}
 .btn{text-align: right; font-size: 14px; padding-right: 10px; color: #586a9c; margin-top: -10px; margin-bottom: 10px}
 
 .footerBox{width: 100%; position: fixed; bottom: 0; left: 0; height: 46px; background: #fff; box-sizing: border-box; padding: 8px; display: flex; display: none}
@@ -642,7 +643,7 @@ export default {
 
 .reply{clear: both; overflow: hidden; padding-left: 20px; background: #f7f7f7; margin-left: 50px; padding: 5px;}
 .reply{font-size: 14px; line-height: 100%}
-.reply span{color:#7507c2; padding:0 3px}
+.reply span{color:#05c1af; padding:0 3px}
 .reply span.delBtn{color: rgb(46, 64, 114)}
 
 .empty{text-align: center; padding: 30px 0; color: #999}
@@ -652,14 +653,14 @@ export default {
 .top img{display: block; height: 46px;}
 .top .left{float: left;}
 .top .right{float: right;}
-.top .right .btn{float:right; height: 30px; line-height: 30px; background: #7507c2; border-radius: 5px; color: #fff; margin-right: 10px; margin-top: 10px; font-size: 14px; padding: 0 10px}
+.top .right .btn{float:right; height: 30px; line-height: 30px; background: #05c1af; border-radius: 5px; color: #fff; margin-right: 10px; margin-top: 10px; font-size: 14px; padding: 0 10px}
 .footer{background: rgba(0,0,0,0.8); width:100%; height: 50px; border-radius: 5px; margin: auto; position: fixed; left: 0;bottom: 0px; z-index: 999;}
 .footer .logo{float: left; height: 40px; margin-top: 5px; margin-left: 5px; margin-right: 10px}
 .footer .logo img{height: 40px; display: block;border-radius: 5px}
 .footer .info{float: left; font-size: 14px; color: #fff; padding-top: 5px}
 .footer .info p{line-height: 20px;}
 .footer .info p i{color:#f60 }
-.footer .download{float:right; height: 30px; line-height: 30px; background: #7507c2; border-radius: 5px; color: #fff; margin-right: 10px; margin-top: 10px; font-size: 14px; padding: 0 10px}
+.footer .download{float:right; height: 30px; line-height: 30px; background: #05c1af; border-radius: 5px; color: #fff; margin-right: 10px; margin-top: 10px; font-size: 14px; padding: 0 10px}
 .alert{width: 100%;}
 .alert img{width: 100%}
 .my-van-popup {background-color:transparent; width: 80%;}
@@ -668,4 +669,5 @@ export default {
 .down .hd{clear: both;}
 .down .bd{background: #fff; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; padding: 20px; overflow: hidden; padding-right: 0}
 .down .bd li{float: left; width: 50%; padding-right: 20px; box-sizing: border-box}
+.down .bd li.long{clear: both; width: 100%; margin-top: 10px;}
 </style>

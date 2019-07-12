@@ -6,6 +6,7 @@ const global = {
     SCHEME:'ausSingapore://startapp',
     IOS:'https://itunes.apple.com/cn/app/id1437373175?l=zh&ls=1&mt=8',
     ANDROIDS:'https://play.google.com/store/apps/details?id=com.ldw.singapore',
+    DOWNLOAD:'http://www.worldmedia.top/download/singapore.apk',
     //判断是否是微信浏览器的函数
     isWeiXin : function(){
         //window.navigator.userAgent属性包含了浏览器类型、版本、操作系统类型、浏览器引擎类型等信息，这个属性可以用来判断浏览器类型
@@ -29,8 +30,17 @@ const global = {
         if(ua.match(/AustraliaApp/i) == 'australiaapp'){
             return true;
         }else{
-            return false;
+            if(this.getQueryString('isApp')){
+                return true;
+            }else{
+                return false;
+            }
         }
+    },
+    getQueryString: function(name){
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r!=null)return  unescape(r[2]); return null;
     },
     checkMobile: function (checkVal) {
         var reg = /^[0-9]{8}$/;

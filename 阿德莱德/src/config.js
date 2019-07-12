@@ -6,6 +6,7 @@ const global = {
     SCHEME:'ausAdelaide://startapp',
     IOS:'https://itunes.apple.com/cn/app/id1386824572?l=zh&ls=1&mt=8',
     ANDROIDS:'https://play.google.com/store/apps/details?id=com.ldw.life',
+    DOWNLOAD:'http://www.worldmedia.top/download/adelaide.apk',
     //判断是否是微信浏览器的函数
     isWeiXin : function(){
         //window.navigator.userAgent属性包含了浏览器类型、版本、操作系统类型、浏览器引擎类型等信息，这个属性可以用来判断浏览器类型

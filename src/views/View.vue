@@ -123,7 +123,7 @@
         <div class="footer">
             <div class="logo"><img src="../assets/image/logo.jpg"></div>
             <div class="info">
-                <p>新加坡同城生活掌上宝</p>
+                <p>阿德莱德同城生活掌上宝</p>
                 <p>
                     <van-icon name="star" />
                     <van-icon name="star" />
@@ -383,10 +383,10 @@ export default {
 .top img{display: block; height: 46px;}
 .top .left{float: left;}
 .top .right{float: right;}
-.top .right .btn{float:right; height: 30px; line-height: 30px; background: #7507c2; border-radius: 5px; color: #fff; margin-right: 10px; margin-top: 10px; font-size: 14px; padding: 0 10px}
+.top .right .btn{float:right; height: 30px; line-height: 30px; background: #05c1af; border-radius: 5px; color: #fff; margin-right: 10px; margin-top: 10px; font-size: 14px; padding: 0 10px}
 
 .cateTitle{background: #fff; clear: both; overflow: hidden; margin-top: 3px; height: 40px; line-height: 40px; padding-right:5px; font-size: 14px;margin-bottom: 1px;}
-.cateTitle p{float: left; border-left: 2px #7507c2 solid; padding-left: 5px; font-weight: bold}
+.cateTitle p{float: left; border-left: 2px #05c1af solid; padding-left: 5px; font-weight: bold}
 .cateTitle span{display: block; float: right; font-size: 12px; color: #999}
 .ad{margin-top: 3px; clear: both; overflow: hidden; padding: 0 5px;}
 .ad img{border-radius: 5px; display: block;}
@@ -422,7 +422,7 @@ export default {
 .footer .info{float: left; font-size: 14px; color: #fff; padding-top: 5px}
 .footer .info p{line-height: 20px;}
 .footer .info p i{color:#f60 }
-.footer .download{float:right; height: 30px; line-height: 30px; background: #7507c2; border-radius: 5px; color: #fff; margin-right: 10px; margin-top: 10px; font-size: 14px; padding: 0 10px}
+.footer .download{float:right; height: 30px; line-height: 30px; background: #05c1af; border-radius: 5px; color: #fff; margin-right: 10px; margin-top: 10px; font-size: 14px; padding: 0 10px}
 
 .box{padding-top: 46px; padding-bottom: 60px; clear: both; overflow: hidden; background: #fff}
 

@@ -2,6 +2,7 @@
     <div class="wrap">
         <div class="header">
             <div class="tab">
+                <li @click="onClickLeft"><van-icon name="arrow-left" style="margin-top:8px"/></li>
                 <li @click="chat">话题</li>
                 <li class="active" v-show="token!=''">关注</li>
             </div>
@@ -118,8 +119,8 @@ export default {
     watch: {
         $route(to) {
             if (to.name == "focus") {
-                this.typeShow=false;
-                this.submitBtn=false;
+                this.typeShow = false;
+                this.submitBtn = false;
                 this.info = [];
                 this.page = 1;
                 this.onLoad();
@@ -136,11 +137,12 @@ export default {
             this.page = 1;
             this.onLoad();
             this.commendUser();
-        }else{
-            window.location.href='app://login'; 
         }
     },
     methods: {
+        onClickLeft() {
+            this.$router.push({'path':'/',query:{token:this.token}});
+        },
         share(info){
             let url = 'app://shareURL?url='+this.config.DOMAIN+'chat/comment?id='+info.id+'&title='+info.nickname+'的话题';
             window.location.href = url;
@@ -323,17 +325,17 @@ export default {
 };
 </script>
 <style scoped>
-.wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
+.wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
 .header{height: 46px; width: 100%; position: fixed;top: 0; left: 0; background: #fff}
 .tab{float: left; line-height: 46px;}
 .tab li{display: inline-block; font-size: 14px; padding:0 10px;}
-.tab li.active{color: #7507c2; font-size: 16px}
+.tab li.active{color: #05c1af; font-size: 16px}
 
 .right{float: right; padding-top: 12px}
 .right span{ padding:0 10px; font-size: 20px; position: relative;}
 .right span .dot{position: absolute;min-width:14px; height:14px; line-height:14px; border-radius:50%; background: #c00;top:0px; right: 0px; font-size:12px; color:#fff; text-align: center}
 
-.ball{background:rgba(117, 7, 194, 0.5); color: #fff; width: 50px; height: 50px; text-align: center; position: fixed; right: 5px; bottom: 100px; border-radius: 50%;}
+.ball{background:#191919; color: #fff; width: 50px; height: 50px; text-align: center; position: fixed; right: 5px; bottom: 100px; border-radius: 50%;}
 .ball i{font-size:24px;line-height: 50px}
 .selectType{width: 50px; position:fixed; right: 5px; bottom: 150px}
 .selectType li{width: 50px; height: 50px;line-height: 50px;font-size: 14px; text-align: center; border-radius: 50px; margin-bottom: 10px; background: #191919; color: #fff}
@@ -375,6 +377,6 @@ export default {
 .chat .bottom .action{float: right;}
 .chat .action li{float: left; text-align: center; font-size: 13px; line-height: 30px; color: #999; padding:0 10px}
 .chat .action li i{font-size: 16px; display: inline;}
-.chat .action li i.active{color: #7507c2}
+.chat .action li i.active{color: #05c1af}
 .btn{text-align: right; font-size: 14px; padding-right: 10px; color: #586a9c; margin-top: -10px; margin-bottom: 10px}
 </style>

@@ -4,9 +4,13 @@ let user = {
 };
 
 let token = GetQueryString('token');
+let agentid = GetQueryString('agentid');
 if(token!=''){
     user.status = true;
     user.token = token;
+}
+if(agentid!=''){
+    user.agentid = agentid;
 }
 
 function GetQueryString(name) {

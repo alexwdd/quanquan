@@ -12,7 +12,7 @@
         </div>
 
         <template v-for="item in cate">
-            <div class="indexList" :key="item.type" v-if="item.type!='chat'">
+            <div class="indexList" :key="item.type" v-if="item.type!='chat' && item.type!='phone'">
                 <div class="hd" @click="goto(item)">{{item.name}} <span>查看更多</span></div>
                 <div class="db">
                     <van-swipe :show-indicators=false :width="width">

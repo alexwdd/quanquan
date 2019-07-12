@@ -72,6 +72,9 @@ export default {
         onClickLeft() {
             this.$router.go(-1);
         },
+        gotoUser(id){
+            this.$router.push({'path':'/chat/user',query:{userid:id,token:this.token}});
+        },
         share(info){
             let url = 'app://shareURL?url='+this.config.DOMAIN+'chat/comment?id='+info.id+'&title='+info.nickname+'的话题';
             window.location.href = url;
@@ -149,10 +152,10 @@ export default {
 };
 </script>
 <style scoped>
-.wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
+.wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
 .tab{clear: both;overflow: hidden;}
 .tab li{display: inline-block; font-size: 14px; padding:0 10px;}
-.tab li.active{color: #7507c2;}
+.tab li.active{color: #05c1af;}
 
 .chat{background: #fff; clear: both; overflow: hidden; border-bottom: 1px #f1f1f1 solid; padding: 10px 0}
 .chat .user{clear: both; margin-bottom: 10px; overflow: hidden; padding: 0 10px}
@@ -160,9 +163,9 @@ export default {
 .chat .user .face img{display: block; width: 50px; height: 50px; border-radius: 5px;}
 .chat .user .name{float: left;font-size: 12px; line-height:20px; padding: 5px 0}
 .chat .user .name p{ margin: 0;}
-.chat .user .name p i{display:inline-block;min-width:14px; height:14px; line-height:14px; border-radius:7px; background: #7507c2;top:0px; right: 0px; font-size:12px; color:#fff; font-style: normal; margin-left: 5px; text-align: center; padding: 0 5px}
+.chat .user .name p i{display:inline-block;min-width:14px; height:14px; line-height:14px; border-radius:7px; background: #111;top:0px; right: 0px; font-size:12px; color:#fff; font-style: normal; margin-left: 5px; text-align: center; padding: 0 5px}
 .chat .user .name span{color: #999}
-.chat .user .focus{float: right; font-size: 12px; height: 24px; line-height: 24px; border-radius: 12px; background-color: #7507c2; width: 60px; text-align: center; color: #fff; margin-top: 10px; margin-right: 10px;}
+.chat .user .focus{float: right; font-size: 12px; height: 24px; line-height: 24px; border-radius: 12px; background-color: #05c1af; width: 60px; text-align: center; color: #fff; margin-top: 10px; margin-right: 10px;}
 .chat .user .focused{border: 1px #dbdbdb solid; background: #fff; color: #999; margin-right: 0}
 
 

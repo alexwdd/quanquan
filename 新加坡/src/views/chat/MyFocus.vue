@@ -3,11 +3,11 @@
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div class="userList">  
                 <li v-for="(vo,idx) in info" :key="vo.id">
-                    <div class="face">                        
+                    <div class="face" @click="gotoUser(vo.userID)">                       
                         <img :src="vo.headimg">                        
                     </div>
                     <div class="name">{{vo.nickname}}</div>
-                    <div class="focus focused" @click=doFocus(idx,vo)>已关注</div>
+                    <div class="focus focused" @click=doFocus(idx,vo)>取消关注</div>
                 </li>
              </div>
         </van-list> 

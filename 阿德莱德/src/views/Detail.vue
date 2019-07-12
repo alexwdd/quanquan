@@ -234,6 +234,7 @@
                 <div class="bd">
                     <li><a :href="config.ANDROIDS"><img src="../assets/image/googleplay.png"></a></li>
                     <li><a :href="config.IOS"><img src="../assets/image/appstore.png"></a></li>
+                    <li class="long"><a :href="config.DOWNLOAD"><img src="../assets/image/button.png"></a></li>
                 </div>
             </div>
         </van-popup>
@@ -612,7 +613,7 @@ Vue.filter('empty', function (value) {
 .down .hd{clear: both;}
 .down .bd{background: #fff; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; padding: 20px; overflow: hidden; padding-right: 0}
 .down .bd li{float: left; width: 50%; padding-right: 20px; box-sizing: border-box}
-
+.down .bd li.long{clear: both; width: 100%; margin-top: 10px;}
 .hideBg {
     width: 100%;
     padding-bottom: 0;    /* 方便渐变层遮挡 */
