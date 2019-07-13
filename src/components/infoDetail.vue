@@ -46,10 +46,9 @@
 
 <script>
 import Vue from 'vue';
-import def from '../assets/image/default_320.jpg';
 import { Lazyload } from 'vant';
 Vue.use(Lazyload,{
-    loading:def
+    loading:'/adelaide/static/image/default_320.jpg'
 });
 import '../assets/fonts/iconfont.css';
 export default {

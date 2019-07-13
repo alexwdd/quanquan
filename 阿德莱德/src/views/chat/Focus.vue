@@ -137,8 +137,6 @@ export default {
             this.page = 1;
             this.onLoad();
             this.commendUser();
-        }else{
-            window.location.href='app://login'; 
         }
     },
     methods: {

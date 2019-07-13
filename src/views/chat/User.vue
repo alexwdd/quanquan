@@ -19,7 +19,7 @@
                 <div class="focus focused" @click="doFocus" v-else="">已关注</div>
             </div>
             <div class="tab">
-                <van-tabs v-model="active" color="#05c1af" @click="onClickTab">
+                <van-tabs v-model="active" color="#7507c2" @click="onClickTab">
                 <van-tab title="资料"></van-tab>
                 <van-tab title="相册"></van-tab>
                 </van-tabs>
@@ -174,7 +174,7 @@ export default {
                     window.location.href='app://login';  
                 }else{
                     that.$dialog.alert({title:'错误信息',message:res.desc});
-                } 
+                }                
             });
         },
         getPhoto(){
@@ -235,7 +235,7 @@ export default {
 .wrap{background: #fff}
 .bg{background: #333; width: 100%; height:40vh; position: relative;}
 .bg .top{color: #fff; line-height: 40px; position: absolute; left: 0; top: 0;text-align: center; z-index: 88; width: 100%;}
-.bg .arrow{position: absolute; left: 10px; top: 10px; color: #fff;z-index: 99; background: rgba(0, 0, 0, 0.3); width: 30px; height: 30px; line-height: 30px; text-align: center; font-size: 20px; border-radius: 5px;}
+.bg .arrow{position: absolute; left: 10px; top: 10px; color: #fff;z-index: 99; background: rgba(0, 0, 0, 0.3); width: 30px; height: 30px; line-height: 30px; text-align: center; font-size: 20px; border-radius: 5px}
 .bg .edit{position: absolute; right: 10px; top: 10px; color: #fff;z-index: 99; background: rgba(0, 0, 0, 0.3); width: 30px; height: 30px; line-height: 30px; text-align: center; font-size: 20px; border-radius: 5px}
 .bg .arrow i,.bg .edit i{line-height: 30px}
 .bg .face{position: absolute; left: 40px; bottom: -35px; width:70px; height:70px; border-radius: 5px; background: #fff; box-shadow: 0 0 5px #666}
@@ -245,7 +245,7 @@ export default {
 .base{margin-top: 40px; padding: 10px}
 .base .name{float: left;}
 .base .name h1{font-size: 18px}
-.base .name .focus{float: right; font-size: 12px; height: 24px; line-height: 24px; border-radius: 12px; background-color: #05c1af; width: 60px; text-align: center; color: #fff; margin-top: 10px; margin-right: 10px;}
+.base .name .focus{float: right; font-size: 12px; height: 24px; line-height: 24px; border-radius: 12px; background-color: #7507c2; width: 60px; text-align: center; color: #fff; margin-top: 10px; margin-right: 10px;}
 .base .name .focused{border: 1px #dbdbdb solid; background: #fff; color: #999; margin-right: 0}
 .base .tab{float: right; width: 100px}
 

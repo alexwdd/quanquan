@@ -137,7 +137,7 @@
                 <div class="bd">
                     <li><a :href="config.ANDROIDS"><img src="../../assets/image/googleplay.png"></a></li>
                     <li><a :href="config.IOS"><img src="../../assets/image/appstore.png"></a></li>
-                    <li class="long"><a :href="config.DOWNLOAD"><img src="../../assets/image/button.png"></a></li>
+                    <li class="long" @click="downApk"><img src="../../assets/image/button.png"></li>
                 </div>
             </div>
         </van-popup>
@@ -220,6 +220,13 @@ export default {
             let info = this.info;
             let url = 'app://shareURL?url='+this.config.DOMAIN+'chat/comment?id='+info.id+'&title='+info.nickname+'的话题';
             window.location.href = url;
+        },
+        downApk(){
+            if(this.config.isWeiXin()){
+                this.show = true
+            }else{
+                window.location.href = this.config.DOWNLOAD;
+            }
         },
         openApp(){
             if(this.config.isWeiXin()){

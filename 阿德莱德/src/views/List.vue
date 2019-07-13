@@ -56,9 +56,10 @@
 
 <script>
 import Vue from 'vue';
+import def from '../assets/image/default_320.jpg';
 import { Lazyload } from 'vant';
 Vue.use(Lazyload,{
-    loading:'../static/image/default_320.jpg'
+    loading:def
 });
 
 import { Swipe, SwipeItem } from 'vue-swipe';

@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import user from './auth' // permission control
+import user from './auth'; // permission control
 export default {
     data() {
         return {
@@ -88,7 +88,7 @@ export default {
     created() {
         this.init()
     },
-    methods: {
+    methods: {        
         onClickLeft() {
             this.$router.go(-1);
         },
@@ -111,6 +111,7 @@ export default {
             }else{
                 that.compressImage(file,600,0,function(res){                    
                     file.content = res;
+                    console.log(file);
                     that.images = that.images.concat(file);
                     if(that.images.length>=9){
                         that.show = false;

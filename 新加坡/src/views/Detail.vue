@@ -234,7 +234,7 @@
                 <div class="bd">
                     <li><a :href="config.ANDROIDS"><img src="../assets/image/googleplay.png"></a></li>
                     <li><a :href="config.IOS"><img src="../assets/image/appstore.png"></a></li>
-                    <li class="long"><a :href="config.DOWNLOAD"><img src="../assets/image/button.png"></a></li>
+                    <li class="long" @click="downApk"><img src="../assets/image/button.png"></li>
                 </div>
             </div>
         </van-popup>
@@ -350,6 +350,13 @@ export default {
         },
         onHide: function(){
             this.isHide = true;    //点击onHide切换为true，显示为折叠画面
+        },
+        downApk(){
+            if(this.config.isWeiXin()){
+                this.show = true
+            }else{
+                window.location.href = this.config.DOWNLOAD;
+            }
         },
         openApp(){
             if(this.config.isWeiXin()){
