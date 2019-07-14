@@ -1,6 +1,5 @@
 module.exports = {
     // 基本路径
-    baseUrl: '/singapore/',
+    baseUrl: '/adelaide/',
     productionSourceMap: false
-
 }

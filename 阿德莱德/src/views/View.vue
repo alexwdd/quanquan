@@ -147,6 +147,7 @@
                 <div class="bd">
                     <li><a :href="config.ANDROIDS"><img src="../assets/image/googleplay.png"></a></li>
                     <li><a :href="config.IOS"><img src="../assets/image/appstore.png"></a></li>
+                    <li class="long" @click="downApk"><img src="../assets/image/button.png"></li>
                 </div>
             </div>
         </van-popup>
@@ -210,6 +211,13 @@ export default {
             }else{
                 this.$router.push('/')
             }            
+        },
+        downApk(){
+            if(this.config.isWeiXin()){
+                this.show = true
+            }else{
+                window.location.href = this.config.DOWNLOAD;
+            }
         },
         openApp(){
             if(this.config.isWeiXin()){
@@ -485,6 +493,7 @@ export default {
 .down .hd{clear: both;}
 .down .bd{background: #fff; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; padding: 20px; overflow: hidden; padding-right: 0}
 .down .bd li{float: left; width: 50%; padding-right: 20px; box-sizing: border-box}
+.down .bd li.long{clear: both; width: 100%; margin-top: 10px;}
 .custom-indicator {
     position: absolute;
     left: 0px;
