@@ -42,11 +42,12 @@ export default {
 
 
 </script>
+
 <style>
 body,html {width: 100%;height: 100%; background: #f1f1f1}
 li{list-style: none;}
 img{max-width: 100%;}
-*{margin: 0;padding: 0;font-family:'PingFang SC', Helvetica, 'STHeiti STXihei', 'Microsoft YaHei', Tohoma, Arial, sans-serif;}
+* {margin: 0;padding: 0;font-family:"Microsoft YaHei","微软雅黑","Microsoft JhengHei"}
 a{color: #666}
 .loadding{text-align: center; padding: 30px; margin: auto}
 [v-cloak] {display: none;}

@@ -270,7 +270,7 @@ export default {
 };
 </script>
 <style scoped>
-.wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
+.wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
 .search{height: 46px; background: #fff; position: fixed; width: 100%;left: 0; top: 0; display: flex}
 .search .ipt{flex: 1; padding:0 10px}
 .search .ipt input{height: 30px; border-radius: 15px; padding: 0 10px; margin: 0; border: 0; background: #f1f1f1; width: 100%; box-sizing: border-box; margin-top: 8px; font-size: 14px}
@@ -282,7 +282,7 @@ export default {
 .chat .user .name{float: left;font-size: 12px; line-height:20px; padding: 5px 0}
 .chat .user .name p{ margin: 0;}
 .chat .user .name span{color: #999}
-.chat .user .focus{float: right; font-size: 12px; height: 24px; line-height: 24px; border-radius: 12px; background-color: #05c1af; width: 60px; text-align: center; color: #fff; margin-top: 10px; margin-right: 10px;}
+.chat .user .focus{float: right; font-size: 12px; height: 24px; line-height: 24px; border-radius: 12px; background-color: #7507c2; width: 60px; text-align: center; color: #fff; margin-top: 10px; margin-right: 10px;}
 .chat .user .focused{border: 1px #dbdbdb solid; background: #fff; color: #999; margin-right: 0}
 
 .chat .user .arrowBtn{float: right; border:1px #dbdbdb solid; width: 22px; height: 22px; border-radius: 50%; text-align: center; margin-top: 10px}
@@ -297,6 +297,6 @@ export default {
 .chat .bottom .action{float: right;}
 .chat .action li{float: left; text-align: center; font-size: 13px; line-height: 30px; color: #999; padding:0 10px}
 .chat .action li i{font-size: 16px; display: inline;}
-.chat .action li i.active{color: #05c1af}
+.chat .action li i.active{color: #7507c2}
 .btn{text-align: right; font-size: 14px; padding-right: 10px; color: #586a9c; margin-top: -10px; margin-bottom: 10px}
 </style>
