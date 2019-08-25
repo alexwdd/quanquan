@@ -162,12 +162,14 @@ export default {
 };
 </script>
 <style scoped>
-.wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
+.wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
 .list{clear: both; overflow: hidden; padding-left: 10px;}
 .list li{float: left; width: 50%; padding-right: 10px; box-sizing: border-box; margin-top: 10px}
 .list li img{display: block}
+
 .cateTitle{text-align: center; padding: 20px 0; background: url(../assets/image/bg.png)}
 .cateTitle p{display: inline-block; background: #f1f1f1; padding: 0 10px}
+
 .cell-item{ padding:5px;}
 .cell-item>img{width: 100%; border-radius: 5px; display: block}
 .item-body{background: #fff}
