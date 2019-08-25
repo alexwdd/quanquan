@@ -2,7 +2,7 @@
     <div class="wrap">
         <div class="header">
             <div class="tab">
-                <li @click="onClickLeft"><van-icon name="arrow-left" style="margin-top:8px"/></li>
+                <li @click="onClickLeft" v-show="!config.isApp()"><van-icon name="arrow-left" style="margin-top:8px"/></li>
                 <li class="active">话题</li>
                 <li @click="focus" v-show="token!=''">关注</li>        
             </div>

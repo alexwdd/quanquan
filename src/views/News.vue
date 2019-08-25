@@ -105,7 +105,7 @@ export default {
 </script>
 
 <style scoped>
-.wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
+.wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
 #fallBox{width: 100%; height:100vh;}
 .fall{clear: both;background: #fff; overflow: hidden; padding: 5px;}
 .fall .title{font-size: 14px;clear: both;color:#000}
