@@ -246,7 +246,7 @@ export default {
 .right span{ padding:0 10px; font-size: 20px; position: relative;}
 .right span .dot{position: absolute;min-width:14px; height:14px; line-height:14px; border-radius:50%; background: #c00;top:0px; right: 0px; font-size:12px; color:#fff; text-align: center}
 
-.quick{clear: both; overflow: hidden;}
+.quick{clear: both; overflow: hidden; background: #fff; margin-bottom: 1px}
 .quick li{float: left; width: 20%; text-align: center}
 .quick li img{display: block; width: 70%; margin: auto; padding: 10px 0;}
 
@@ -261,7 +261,7 @@ export default {
 .topSearch .search span{display: block; float: left;}
 .topSearch .cateBtn{color: #fff; display: block; height: 30px; line-height: 30px;background: #05C1AF; color: #fff; margin-top: 5px; border-radius: 5px; width: 40px; text-align: center; margin-right: 5px;;}
 .hotKey{position: fixed; top: 86px; left: 0; width: 100%; background: #f7f7f7; height: 40px; line-height: 40px; color: #999; padding-left: 10px; box-sizing: border-box; font-size: 14px;z-index: 999;}
-.hotKey span{color: #333; padding-left: 10px}
+.hotKey span{color: #333; padding:3px 5px; background: #fff; border:1px #dbdbdb solid; margin-right: 5px; border-radius: 3px}
 .title{background: #fff; padding: 10px; clear: both; overflow: hidden; border-bottom: 1px #f1f1f1 solid;}
 .title p{float: left; border-left: 2px #05c1af solid; padding-left: 10px; font-size: 14px; font-weight: bold; color: #05C1AF; }
 .title span{float: right; font-size: 12px; color: #999;}
