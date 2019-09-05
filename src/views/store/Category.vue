@@ -15,13 +15,13 @@
             <div class="left">
                 <li v-for="vo in category" :key="vo.id" :class="{'active':params.path==vo.path}" @click="onClickBigCate(vo)">{{vo.name}}</li>                
             </div>
-            <div class="right">
-                <div class="cateFix" v-if="small!=''">
+            <div class="right" id="right">
+                <div class="cateFix" v-if="small.length > 1">
                     <div class="topCate">
                         <div class="cateTab">              
                             <van-tabs color="#05c1af" v-model="cateActive" :ellipsis=false>
-                                <van-tab v-for="vo in small" :key="vo.id">
-                                    <div class="tab-title" slot="title" @click="changeCate(vo)">{{vo.name}}</div>
+                                <van-tab v-for="(vo,index) in small" :key="vo.id">
+                                    <div class="tab-title" slot="title" @click="changeCate(vo.id,index)">{{vo.name}}</div>
                                 </van-tab>
                             </van-tabs>
                         </div>
@@ -32,14 +32,15 @@
                 <div class="cateList" v-show="cateTabShow">
                     <div class="hd">全部分类 <van-icon name="arrow-up" @click="show"></van-icon></div>
                     <div class="quick">
-                        <li v-for="vo in small" :key="vo.id" @click="changeCate1(vo)"><p>{{vo.name}}</p></li>
+                        <li v-for="(vo,index) in small" :key="vo.id" @click="changeCate(vo.id,index)"><p>{{vo.name}}</p></li>
                     </div>                                   
                 </div>
 
-                <div style="height:50px;clear:both; width:100%" v-if="small!=''"></div>
+                <div style="height:50px;clear:both; width:100%" v-if="small.length > 1"></div>
 
-                <van-list v-model="loading" :finished="finished" finished-text="没有了" @load="getCateGoods">            
-                    <div class="product" v-for="(f,idx) in goods" :key="f.id">
+                <template v-for="(vo,index) in small">
+                    <div v-if="small.length > 1" class="title" :key="vo.id" :id="'c'+vo.id"><p>{{vo.name}}</p></div>   
+                    <div class="product" v-for="(f,idx) in vo.goods" :key="f.id">
                         <div class="img"><img v-lazy="f.picname" @click="goDetail(f)"></div>
                         <div class="info">
                             <h1 @click="goDetail(f)">{{f.name}}</h1>
@@ -49,17 +50,16 @@
                                     <span class="m">${{f.price}} AUD</span>
                                     <span>约￥{{f.rmb}}</span>
                                 </p>
-                                <dir class="cartIcon" v-show="f.cartShow"><van-icon name="cart-o" @click="onClickIcon(idx)"/></dir>
+                                <dir class="cartIcon" v-show="f.cartShow"><van-icon name="cart-o" @click="onClickIcon(index,idx)"/></dir>
                                 <div class="numberAction" v-show="!f.cartShow">
-                                    <div class="set" @click="onClickNumber(idx,'dec')">-</div>
+                                    <div class="set" @click="onClickNumber(index,idx,'dec')">-</div>
                                     <div class="buyNumber">{{f.num}}</div>
-                                    <div class="set" @click="onClickNumber(idx,'inc')">+</div>
+                                    <div class="set" @click="onClickNumber(index,idx,'inc')">+</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </van-list>
-
+                </template>
             </div>
         </div>  
 
@@ -79,11 +79,11 @@
                                     <span class="m">${{f.price}} AUD</span>
                                     <span>约￥{{f.rmb}}</span>
                                 </p>
-                                <dir class="cartIcon" v-show="f.cartShow"><van-icon name="cart-o" @click="onClickIcon(idx)"/></dir>
+                                <dir class="cartIcon" v-show="f.cartShow"><van-icon name="cart-o" @click="onClickIcon1(idx)"/></dir>
                                 <div class="numberAction" v-show="!f.cartShow">
-                                    <div class="set" @click="onClickNumber(idx,'dec')">-</div>
+                                    <div class="set" @click="onClickNumber1(idx,'dec')">-</div>
                                     <div class="buyNumber">{{f.num}}</div>
-                                    <div class="set" @click="onClickNumber(idx,'inc')">+</div>
+                                    <div class="set" @click="onClickNumber1(idx,'inc')">+</div>
                                 </div>
                             </div>
                         </div>
@@ -167,13 +167,32 @@ export default {
         goDetail(item){
             this.$router.push({name:'storeDetail', params:{ id: item.goodsID,specid:item.id },query:{token:user.token,agentid:user.agentid}});
         },
-        onClickIcon(index){
+        onClickIcon(index,idx){
+            for (let i = 0; i < this.small.length; i++) {
+                for (let j = 0; j < this.small[i]['goods'].length; j++) {
+                    this.small[i]['goods'][j]['cartShow'] = true;
+                }
+            }
+            this.small[index]['goods'][idx]['cartShow'] = false;
+        },
+        onClickNumber(index,idx,type){
+            if(type=='inc'){
+                this.small[index]['goods'][idx]['num']++;
+            }else{
+                if(this.small[index]['goods'][idx]['num']==0){
+                    return false;
+                }
+                this.small[index]['goods'][idx]['num']--;
+            }
+            this.setCartNumber(this.small[index]['goods'][idx],type);
+        },
+        onClickIcon1(index){
             for (let i = 0; i < this.goods.length; i++) {
                 this.goods[i]['cartShow'] = true;
             }
             this.goods[index]['cartShow'] = false;
         },
-        onClickNumber(index,type){
+        onClickNumber1(index,type){
             if(type=='inc'){
                 this.goods[index]['num']++;
             }else{
@@ -242,7 +261,7 @@ export default {
                     this.params.fid = that.category[0]['id'];
                     this.params.path = that.category[0]['path'];                  
                     this.getCate();
-                    this.getCateGoods();
+                    //this.getCateGoods();
                 }else{
                     that.$dialog.alert({title:'错误信息',message:res.desc});
                 }
@@ -259,14 +278,19 @@ export default {
                 }
             });
         },
-        changeCate(item){
-            this.params.smallID = item.id;
+        changeCate(id,index){
+            /* this.params.smallID = item.id;
             this.goods = [];
             this.page = 1;
             this.loading = true;
             this.finished = false;
             this.canPost = true;
-            this.getCateGoods();
+            this.getCateGoods(); */
+            this.cateActive = index;
+            this.cateTabShow = false;
+            document.getElementById("c"+id).scrollIntoView();
+            document.getElementById("right").scrollTop = document.getElementById("right").scrollTop-90;
+            //document.documentElement.scrollTop = document.documentElement.scrollTop-90;
         },
         changeCate1(item){
             this.cateTabShow = false;
@@ -292,25 +316,21 @@ export default {
             this.canPost = true;
             this.cateTabShow = false;
             this.getCate();
-            this.getCateGoods();
         },
         getCate(){
             var that = this;
             let data = {
                 token : user.token,
                 agentid : user.agentid,
-                fid:that.params.fid
+                cid:that.params.fid
             };
-            that.$http.post("v1/store/category",data).then(result => {
+            that.$http.post("v1/store/cateGoods",data).then(result => {
                 let res = result.data;
                 if (res.code == 0) {
                     // 加载状态结束      
                     that.small = [];
-                    that.cateActive = 0;
-                    if(res.body.length > 0){
-                        that.small = [{id:'',index:0,name:'全部'}];
-                        that.small = that.small.concat(res.body);
-                    }              
+                    that.cateActive = 0;               
+                    that.small = res.body.data;                  
                 }else{
                     that.$dialog.alert({title:'错误信息',message:res.desc});
                 }
@@ -427,4 +447,7 @@ export default {
 .product .cartIcon i{background: rgb(247, 65, 125); width: 26px; height: 26px; text-align: center; line-height: 26px; color: #fff; border-radius: 50%;position:static}
 .numberAction{float: right;}
 .numberAction div{display: block; float: left; min-width: 20px; height: 20px; line-height:20px ;text-align: center; border: 1px #dbdbdb solid; margin-left: 5px; font-size: 12px; cursor: pointer;}
+
+.title{background: #fff; padding: 10px; clear: both; overflow: hidden; border-bottom: 1px #f1f1f1 solid;}
+.title p{float: left; border-left: 2px #05c1af solid; padding-left: 10px; font-size: 14px; font-weight: bold; color: #05C1AF; }
 </style>

@@ -27,6 +27,7 @@ import Store from './views/store/Index.vue'
 import StoreSearch from './views/store/Search.vue'
 import StoreCate from './views/store/Category.vue'
 import StoreGoods from './views/store/Goods.vue'
+import StoreCateGoods from './views/store/CateGoods.vue'
 import StoreAddress from './views/store/Address.vue'
 import StoreAddressAdd from './views/store/AddressAdd.vue'
 import StoreAddressEdit from './views/store/AddressEdit.vue'
@@ -177,6 +178,7 @@ export default new Router({
         {path: "/store/search",name: "storeSearch",meta:{index:2},component: StoreSearch},
         {path: "/store/cate",name: "storeCate",meta:{index:2},component: StoreCate},
         {path: "/store/goods",name: "storeGoods",meta:{index:2},component: StoreGoods},
+        {path: "/store/cateGoods",name: "storeCateGoods",meta:{index:2},component: StoreCateGoods},
         {path: "/store/address",name: "storeAddress",meta:{index:1},component: StoreAddress},
         {path: "/store/addressAdd",name: "storeAddressAdd",meta:{index:2},component: StoreAddressAdd},
         {path: "/store/addressEdit/:id",name: "storeAddressEdit",meta:{index:2},component: StoreAddressEdit},

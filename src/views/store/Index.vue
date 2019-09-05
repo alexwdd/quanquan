@@ -140,7 +140,7 @@ export default {
             this.$router.push({path:'/store/cate',query:{token:user.token,agentid:user.agentid}});
         },
         onClickMore(info){
-            this.$router.push({path:'/store/goods',query:{path:info.path,token:user.token,agentid:user.agentid}});
+            this.$router.push({path:'/store/cateGoods',query:{cid:info.id,token:user.token,agentid:user.agentid}});
         },
         goDetail(item){
             this.$router.push({name:'storeDetail', params:{ id: item.goodsID,specid:item.id },query:{token:user.token,agentid:user.agentid}});
