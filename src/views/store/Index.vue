@@ -27,16 +27,19 @@
 
         <div style="height:126px"></div>
 
-        <van-notice-bar
-        color="#05C1AF"
-        background="#e6fffc"
-        :text="notice"
-        left-icon="volume-o"
-        />
-    
-        <van-swipe :autoplay="3000" indicator-color="white">
-			<van-swipe-item v-for="vo in banner" :key="vo.id"><div class="banner"><img :src="vo.image" @click="goLink(vo)"/></div></van-swipe-item>
-		</van-swipe>
+        <div class="bannerBox">
+            <van-swipe :autoplay="3000" indicator-color="white">
+                <van-swipe-item v-for="vo in banner" :key="vo.id"><div class="banner"><img :src="vo.image" @click="goLink(vo)"/></div></van-swipe-item>
+                
+            </van-swipe>
+            <van-notice-bar
+            class="notice"
+            color="#FFF"
+            :text="notice"
+            left-icon="volume-o"
+            />
+        </div>
+        
 
         <div class="quick">
             <li v-for="vo in quick" :key="vo.id"><img :src="vo.image" @click="goLink(vo)"/></li>  
@@ -246,11 +249,14 @@ export default {
 .right span{ padding:0 10px; font-size: 20px; position: relative;}
 .right span .dot{position: absolute;min-width:14px; height:14px; line-height:14px; border-radius:50%; background: #c00;top:0px; right: 0px; font-size:12px; color:#fff; text-align: center}
 
+.bannerBox{position: relative;}
+.notice{position: absolute;top: 0; left: 0; width: 100%; z-index: 999; background: rgba(0, 0, 0, 0.5)}
+
 .quick{clear: both; overflow: hidden; background: #fff; margin-bottom: 1px}
 .quick li{float: left; width: 20%; text-align: center}
 .quick li img{display: block; width: 70%; margin: auto; padding: 10px 0;}
 
-.ad{clear: both; overflow: hidden; padding-left: 10px;}
+.ad{clear: both; overflow: hidden; padding-left: 10px;background: #fff;}
 .ad li{float: left; width: 50%; margin-bottom: 10px; height: 100px;padding-right: 10px; box-sizing: border-box}
 .ad li:first-child{height: 210px;}
 .ad li img{ width: 100%; height: 100%; display: block}
