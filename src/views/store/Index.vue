@@ -255,12 +255,12 @@ export default {
 .ad li:first-child{height: 210px;}
 .ad li img{ width: 100%; height: 100%; display: block}
 .topSearch{height: 40px; width: 100%; line-height: 40px; background: #fff; position: fixed; top: 46px; left: 0; z-index: 999; display: flex; overflow: hidden; font-size: 14px;}
-.topSearch .search{flex:1; text-align: left; padding-left: 10px; color: #eee}
+.topSearch .search{flex:1; text-align: left; padding-left: 10px; color: #666}
 .topSearch .search a{color: #eee; display: block; height: 100%}
 .topSearch .search i{display: block; float: left; line-height: 40px; font-size:18px; margin-right: 10px}
 .topSearch .search span{display: block; float: left;}
 .topSearch .cateBtn{color: #fff; display: block; height: 30px; line-height: 30px;background: #05C1AF; color: #fff; margin-top: 5px; border-radius: 5px; width: 40px; text-align: center; margin-right: 5px;;}
-.hotKey{position: fixed; top: 86px; left: 0; width: 100%; background: #f7f7f7; height: 40px; line-height: 40px; color: #999; padding-left: 10px; box-sizing: border-box; font-size: 14px;z-index: 999;}
+.hotKey{position: fixed; top: 86px; left: 0; width: 100%; background: #f7f7f7; height: 40px; line-height: 40px; color: #05C1AF; padding-left: 10px; box-sizing: border-box; font-size: 14px;z-index: 999;}
 .hotKey span{color: #333; padding:3px 5px; background: #fff; border:1px #dbdbdb solid; margin-right: 5px; border-radius: 3px}
 .title{background: #fff; padding: 10px; clear: both; overflow: hidden; border-bottom: 1px #f1f1f1 solid;}
 .title p{float: left; border-left: 2px #05c1af solid; padding-left: 10px; font-size: 14px; font-weight: bold; color: #05C1AF; }
