@@ -447,7 +447,14 @@ export default {
 
 
 .product{clear: both; overflow: hidden; background: #fff; display: flex; padding: 10px; border-bottom: 1px #f1f1f1 double}
-.product .img{float: left; width: 100px; margin-right: 10px}
+.product .img{float: left; width: 100px; margin-right: 10px; position: relative;}
+.product .img .tag{position: absolute; left: 0; top: 0; width:60%;
+transform:rotate(-25deg);
+-ms-transform:rotate(-25deg); 	/* IE 9 */
+-moz-transform:rotate(-25deg); 	/* Firefox */
+-webkit-transform:rotate(-25deg); /* Safari 和 Chrome */
+-o-transform:rotate(-25deg); 	/* Opera */}
+
 .product .info{flex: 1; font-size: 14px}
 .product .info h1{font-size: 14px; margin-bottom: 5px;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;}
 .product .info h2{font-weight: normal; font-size: 12px; color: #999; margin-bottom: 5px;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;}
