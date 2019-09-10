@@ -64,12 +64,14 @@
                         <span class="m">${{f.price}} AUD</span>
                         <span>约￥{{f.rmb}}</span>
                     </p>
+                    <template v-if="f.empty==0">
                     <dir class="cartIcon" v-show="f.cartShow"><van-icon name="cart-o" @click="onClickIcon(index,idx)"/></dir>
                     <div class="numberAction" v-show="!f.cartShow">
                         <div class="set" @click="onClickNumber(index,idx,'dec')">-</div>
                         <div class="buyNumber">{{f.num}}</div>
                         <div class="set" @click="onClickNumber(index,idx,'inc')">+</div>
                     </div>
+                    </template>
                 </div>
             </div>
         </div>

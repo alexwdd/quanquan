@@ -41,10 +41,15 @@
                 <template v-for="(vo,index) in small">
                     <div v-if="small.length > 1" class="title" :key="vo.id" :id="'c'+vo.id"><p>{{vo.name}}</p></div>   
                     <div class="product" v-for="(f,idx) in vo.goods" :key="f.id">
-                        <div class="img"><img v-lazy="f.picname" @click="goDetail(f)"></div>
+                        <div class="img">
+                            <img v-lazy="f.picname" @click="goDetail(f)">
+                            <div class="tag" v-if="f.tag>0"><img :src="f.tagImg"/></div>
+                        </div>
                         <div class="info">
                             <h1 @click="goDetail(f)">{{f.name}}</h1>
                             <h2 @click="goDetail(f)">{{f.say}}</h2>
+
+                            <template v-if="f.empty==0">
                             <div class="price">
                                 <p>
                                     <span class="m">${{f.price}} AUD</span>
@@ -57,6 +62,7 @@
                                     <div class="set" @click="onClickNumber(index,idx,'inc')">+</div>
                                 </div>
                             </div>
+                            </template>
                         </div>
                     </div>
                 </template>
@@ -70,7 +76,10 @@
             <div class="right">
                 <van-list v-model="loading" :finished="finished" finished-text="没有了" @load="getBrandGoods">            
                     <div class="product" v-for="(f,idx) in goods" :key="f.id">
-                        <div class="img"><img v-lazy="f.picname" @click="goDetail(f)"></div>
+                        <div class="img">
+                            <img v-lazy="f.picname" @click="goDetail(f)">
+                            <div class="tag" v-if="f.tag>0"><img :src="f.tagImg"/></div>
+                        </div>
                         <div class="info">
                             <h1 @click="goDetail(f)">{{f.name}}</h1>
                             <h2 @click="goDetail(f)">{{f.say}}</h2>
@@ -79,12 +88,15 @@
                                     <span class="m">${{f.price}} AUD</span>
                                     <span>约￥{{f.rmb}}</span>
                                 </p>
+
+                                <template v-if="f.empty==0">
                                 <dir class="cartIcon" v-show="f.cartShow"><van-icon name="cart-o" @click="onClickIcon1(idx)"/></dir>
                                 <div class="numberAction" v-show="!f.cartShow">
                                     <div class="set" @click="onClickNumber1(idx,'dec')">-</div>
                                     <div class="buyNumber">{{f.num}}</div>
                                     <div class="set" @click="onClickNumber1(idx,'inc')">+</div>
                                 </div>
+                                </template>
                             </div>
                         </div>
                     </div>
