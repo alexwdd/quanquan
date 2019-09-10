@@ -26,20 +26,16 @@
         </div>
 
         <div style="height:126px"></div>
+        <van-notice-bar
+        class="notice"
+        color="#FFF"
+        :text="notice"
+        left-icon="volume-o"
+        />
 
-        <div class="bannerBox">
-            <van-swipe :autoplay="3000" indicator-color="white">
-                <van-swipe-item v-for="vo in banner" :key="vo.id"><div class="banner"><img :src="vo.image" @click="goLink(vo)"/></div></van-swipe-item>
-                
-            </van-swipe>
-            <van-notice-bar
-            class="notice"
-            color="#FFF"
-            :text="notice"
-            left-icon="volume-o"
-            />
-        </div>
-        
+        <van-swipe :autoplay="3000" indicator-color="white">
+            <van-swipe-item v-for="vo in banner" :key="vo.id"><div class="banner"><img :src="vo.image" @click="goLink(vo)"/></div></van-swipe-item>            
+        </van-swipe>
 
         <div class="quick">
             <li v-for="vo in quick" :key="vo.id"><img :src="vo.image" @click="goLink(vo)"/></li>  
@@ -250,7 +246,7 @@ export default {
 .right span .dot{position: absolute;min-width:14px; height:14px; line-height:14px; border-radius:50%; background: #c00;top:0px; right: 0px; font-size:12px; color:#fff; text-align: center}
 
 .bannerBox{position: relative;}
-.notice{position: absolute;top: 0; left: 0; width: 100%; z-index: 999; background: rgba(0, 0, 0, 0.5)}
+.notice{position:fixed; top:126px; left: 0; width: 100%; z-index: 999; background: rgba(0, 0, 0, 0.5); box-sizing: border-box; height: auto;}
 
 .quick{clear: both; overflow: hidden; background: #fff; margin-bottom: 1px}
 .quick li{float: left; width: 20%; text-align: center}

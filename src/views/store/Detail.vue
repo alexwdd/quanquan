@@ -10,7 +10,7 @@
 
         <div class="goodsInfo">
             <div class="goodsName"><span v-if="info.empty==1">【售罄】</span>{{info.name}}</div>
-            <div class="intr">{{info.say}}</div>
+            <div class="intr">{{info.intr}}</div>
             <div class="price">${{price}}</div>
             <div class="desc">                
                 <li>重量 {{info.weight}}kg</li>  
