@@ -434,7 +434,7 @@ export default {
 .cateBox .left li.active{background: #fff; color: #05c1af; border-left: 2px #05c1af solid}
 .cateBox .right{flex: 1; height: calc(100vh - 46px); overflow: auto}
 
-.cateFix{position: fixed; left: 80px; top: 46px; width:calc(100% - 80px);}
+.cateFix{position: fixed; left: 80px; top: 46px; width:calc(100% - 80px);z-index: 999;}
 .topCate{width: 100%; display: flex; background: #fff; z-index: 999; }
 .cateTab{flex: 1}
 .cateBar{width: 40px; height: 44px; text-align: center}
