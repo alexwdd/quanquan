@@ -1,10 +1,10 @@
 <template>
     <div class="wrap">
         <div class="header">
-            <div class="left">
-                <van-icon name="arrow-left" @click="onClickLeft"/>
+            <div class="left" @click="onClickLeft">
+                <van-icon name="arrow-left"/>
             </div>
-            <div class="center">回国礼品店</div>
+            <div class="center" v-text="shopName"></div>
             <div class="right">
                 <span><van-icon name="share" @click="onClickShare"/></span>
                 <span><van-icon name="cart-o" @click="onClickCart"/><div class="dot" v-if="cartNumber>0">{{cartNumber}}</div></span>
@@ -50,7 +50,7 @@
             <p>{{vo.name}}</p>
             <span @click="onClickMore(vo)">更多</span>
         </div>
-        <div class="product" v-for="(f,idx) in vo.goods" :key="f.id">
+        <div class="product" v-for="(f,idx) in vo.goods">
             <div class="img">
                 <img v-lazy="f.picname" @click="goDetail(f)">
                 <div class="tag" v-if="f.tag>0"><img :src="f.tagImg"/></div>
@@ -91,6 +91,7 @@ Vue.use(Lazyload,{
 export default {
     data() {
         return {
+            shopName:'',
             banner : [],
             quick:[],
             ad:[],
@@ -109,7 +110,7 @@ export default {
         }
     },
     created() {        
-       this.init();
+        this.init();
     },
     methods: {
         onClickLeft(){
@@ -117,7 +118,7 @@ export default {
         },
         goLink(value){
             if(value.url!=''){
-                window.location.href = value.url;
+                window.location.href = value.url+"&token="+user.token;
             }else{
                 if(value.goodsId>0){
                     this.$router.push({name:'storeDetail', params:{ id: value.goodsId,specid:item.id },query:{token:user.token,agentid:user.agentid}});
@@ -161,6 +162,7 @@ export default {
             that.$http.post("/V1/store/getMain",data).then(result => {
                 let res = result.data;
                 if (res.code == 0) {
+                    that.shopName = res.body.shopName;
                     that.banner = res.body.banner;
                     that.quick = res.body.quick;
                     that.ad = res.body.ad;
@@ -241,8 +243,8 @@ export default {
 </script>
 <style scoped>
 .header{height: 46px; width: 100%; position: fixed;top: 0; left: 0; background: #05c1af; color: #fff; padding: 0 10px; box-sizing: border-box; z-index: 999;}
-.left{float: left; line-height: 46px;}
-.center{position:absolute; width: 100%; text-align: center; line-height: 46px; left: 0; top: 0;}
+.left{float: left; line-height: 46px; z-index: 10;}
+.center{position:absolute; width:80%; text-align: center; line-height: 46px; left: 10%; top: 0; z-index: 0;}
 .right{float: right; padding-top: 12px}
 .right span{ padding:0 10px; font-size: 20px; position: relative;}
 .right span .dot{position: absolute;min-width:14px; height:14px; line-height:14px; border-radius:50%; background: #c00;top:0px; right: 0px; font-size:12px; color:#fff; text-align: center}
