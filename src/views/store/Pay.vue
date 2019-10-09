@@ -36,7 +36,7 @@
                 <div class="payType">
                     <li @click="setPay(1)"><img src="../../assets/image/type1.png" :class="{'active':payType==1}"></li>
                     <li @click="setPay(2)"><img src="../../assets/image/type2.png" :class="{'active':payType==2}"></li>
-                    <li @click="setPay(3)"><img src="../../assets/image/type3.png" :class="{'active':payType==3}"></li>
+                    <!-- <li @click="setPay(3)"><img src="../../assets/image/type3.png" :class="{'active':payType==3}"></li> -->
                 </div>
             </div>
         </div>
@@ -104,7 +104,7 @@ export default {
                 this.payInfo.total = this.info.total;
                 this.payInfo.rmb = this.info.rmb;
             }else{
-                console.log(value);
+                //console.log(value);
                 let shouxufei = this.info.total * (this.shouxufei / 100);
                 let total = parseFloat(this.info.total) + parseFloat(shouxufei);
                 let rmb = total * parseFloat(this.payInfo.huilv);

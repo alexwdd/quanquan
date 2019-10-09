@@ -51,14 +51,15 @@
             </div>
         </div>
 
-        <div style="height:60px"></div>
+        <div style="height:100px"></div>
+        <div class="footer" v-show="info.length>0">   
+            <div class="info">
+                <p>合计：$<i>{{heji.total}}</i></p>
+                <span>约：￥{{heji.rmb}}</span>
+            </div>
+            <div class="btn" @click="onSubmit">去结算</div>
+        </div>
 
-        <van-submit-bar
-        :price="heji.total"
-        currency="$"
-        button-text="去结算"
-        @submit="onSubmit"
-        />
         </template>
     </div>
 </template>
@@ -125,8 +126,7 @@ export default {
                 if (res.code == 0) {
                     that.info = res.body.goods;
                     that.wuliu = res.body.wuliu;
-                    that.heji = res.body.heji;
-                    that.heji.total = that.heji.total*100;
+                    that.heji = res.body.heji;          
                 }else if(res.code==999){
                     window.location.href='app://login';  
                 }else{
@@ -156,8 +156,7 @@ export default {
             that.$http.post("/v1/store/setCartNumber",data).then(result => {
                 let res = result.data;
                 if (res.code == 0) {
-                    that.heji = res.body.heji;
-                    that.heji.total = that.heji.total*100;                   
+                    that.heji = res.body.heji;             
                 }else if(res.code==999) {
                     that.$dialog.alert({title:'错误信息',message:res.desc}).then(() => {
                         window.location.href = 'app://login';
@@ -263,4 +262,11 @@ export default {
 .kdResult .kdBaoguo li .goods{ clear: both; padding: 0 5px}
 .kdResult .kdBaoguo li .goods p{margin: 0; font-size: 12px;}
 .kdResult .kdBaoguo li .yunfei{ clear: both; text-align: right; padding: 0 5px; font-size: 12px; color: #000}
+
+.footer{position: fixed; bottom: 50px; width: 100%; height: 50px; border-top: 1px #f1f1f1 solid; background: #fff}
+.footer .info{float: left; padding-left: 10px; padding-top: 5px}
+.footer .info p{color: #F2493C; font-size:12px;}
+.footer .info p i{font-size: 18px; font-weight: bold; font-style: normal}
+.footer .info span{display: block; font-size: 12px;}
+.footer .btn{float: right; background: #F0454C; font-size: 18px; line-height:50px; width: 100px; height: 50px; color: #fff; text-align: center;}
 </style>

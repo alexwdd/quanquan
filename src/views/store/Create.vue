@@ -52,14 +52,14 @@
             </div>
         </div>
 
-        <div style="height:60px"></div>
-
-        <van-submit-bar
-        :price="total"
-        currency="$"
-        button-text="去支付"
-        @submit="onSubmit"
-        />
+        <div style="height:100px"></div>
+        <div class="footer">   
+            <div class="info">
+                <p>合计：$<i>{{total}}</i></p>
+                <span>约：￥{{rmb}}</span>
+            </div>
+            <div class="btn" @click="onSubmit">去支付</div>
+        </div>
 
     </div>
 </template>
@@ -79,6 +79,7 @@ export default {
             money:[],
             baoguo:[],
             total:0,
+            rmb:0
         };
     },
     watch: {
@@ -114,9 +115,9 @@ export default {
                     that.address = res.body.address;
                     that.sender = res.body.sender;
                     that.total = res.body.total;
+                    that.rmb = res.body.rmb;
                     that.money = res.body.money;
-                    that.baoguo = res.body.baoguo;
-                    that.total = that.total*100;
+                    that.baoguo = res.body.baoguo;     
                     if(res.body.flag==1){
                         that.show = true;
                     }
@@ -204,4 +205,11 @@ export default {
 .panel .hd{clear: both; overflow: hidden;}
 .user{padding: 10px 15px; font-size: 14px}
 .user p{color: #666;}
+
+.footer{position: fixed; bottom: 50px; width: 100%; height: 50px; border-top: 1px #f1f1f1 solid; background: #fff}
+.footer .info{float: left; padding-left: 10px; padding-top: 5px}
+.footer .info p{color: #F2493C; font-size:12px;}
+.footer .info p i{font-size: 18px; font-weight: bold; font-style: normal}
+.footer .info span{display: block; font-size: 12px;}
+.footer .btn{float: right; background: #F0454C; font-size: 18px; line-height:50px; width: 100px; height: 50px; color: #fff; text-align: center;}
 </style>

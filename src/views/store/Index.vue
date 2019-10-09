@@ -118,7 +118,12 @@ export default {
         },
         goLink(value){
             if(value.url!=''){
-                window.location.href = value.url+"&token="+user.token;
+                var urlArr = value.url.split('?');//url不能写死
+                if(urlArr.length>1){
+                    window.location.href = value.url+"&token="+user.token;
+                }else{
+                    window.location.href = value.url+"?token="+user.token;
+                }                
             }else{
                 if(value.goodsId>0){
                     this.$router.push({name:'storeDetail', params:{ id: value.goodsId,specid:item.id },query:{token:user.token,agentid:user.agentid}});

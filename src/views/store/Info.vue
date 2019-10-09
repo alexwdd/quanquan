@@ -69,11 +69,13 @@
                     <p style="float: left;margin: 0">{{f.kuaidi}},运费${{f.payment}},重量{{f.weight}}kg</p>
                     <p style="float: right;;margin: 0">
                     <template v-if="f.kdNo!=''">
-                        <a href="#" target="_blank" v-if="f.type==12 || f.type==13 || f.type==14">物流查询</a>
-                    </template>
-                    <template v-else="">
-                    <a href="{:url('order/wuliu','kd='.$f['kdNo'])}">物流查询</a>
-                    </template>               
+                        <template v-if="f.url!=''">
+                        <a :href="f.url" target="_blank">物流查询</a>
+                        </template>
+                        <template v-else>
+                        <a href="javascript:void(0)" @click="onClickSearch(f.kdNo)">物流查询</a>
+                        </template>
+                    </template>                                
                     </p>
                 </div>
                 <div class="list">
@@ -81,9 +83,9 @@
                         <p>快递单号</p>
                         <span>未生成</span>
                     </li>
-                    <li v-for="kd in f.kdNo">
+                    <li v-else>
                         <p>快递单号</p>
-                        <span class="copyBtn">{{kd}} 复制</span>
+                        <span class="copyBtn" @click="copy" :data-clipboard-text="f.kdNo">{{f.kdNo}} 复制</span>
                     </li>       
                 </div>     
                 <div class="bd">
@@ -100,6 +102,7 @@
 
 <script>
 import user from '../chat/auth'
+import Clipboard from 'clipboard'
 export default {
     data() {
         return {
@@ -125,6 +128,9 @@ export default {
         },
         onClickPay(info){
             this.$router.push({name:'storePay',params:{order_no:info.order_no},query:{token:user.token,agentid:user.agentid}});
+        },
+        onClickSearch(kdNo){
+            this.$router.push({name:'storeOrderProgress',params:{No:kdNo},query:{token:user.token}});
         },
         onClickDel(info,index){
             var that = this;
@@ -166,7 +172,21 @@ export default {
                     that.$dialog.alert({title:'错误信息',message:res.desc});
                 }
             });
-        }
+        },
+        copy() {
+            var clipboard = new Clipboard(".copyBtn");
+            clipboard.on("success", e => {
+                this.$toast("复制成功");
+                // 释放内存
+                clipboard.destroy();
+            });
+            clipboard.on("error", e => {
+                // 不支持复制
+                this.$toast("该浏览器不支持自动复制");
+                // 释放内存
+                clipboard.destroy();
+            });
+        },
     }
 };
 </script>

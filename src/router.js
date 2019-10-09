@@ -41,6 +41,7 @@ import StorePay from './views/store/Pay.vue'
 import StoreCardPay from './views/store/Card.vue'
 import StoreOrder from './views/store/Order.vue'
 import StoreOrderInfo from './views/store/Info.vue'
+import StoreOrderProgress from "./views/store/OrderProgress";
 
 
 
@@ -172,8 +173,6 @@ export default new Router({
             component: MyFocus
         },
 
-
-
         {path: "/store",name: "store",meta:{index:1},component: Store},
         {path: "/store/search",name: "storeSearch",meta:{index:2},component: StoreSearch},
         {path: "/store/cate",name: "storeCate",meta:{index:2},component: StoreCate},
@@ -192,6 +191,7 @@ export default new Router({
         {path: "/store/pay/:order_no",name: "storePay",meta:{index:3},component: StorePay},
         {path: "/store/cardPay/:order_no",name: "storeCardPay",meta:{index:3},component: StoreCardPay},
         {path: "/store/order",name: "storeOrder",meta:{index:3},component: StoreOrder},
-        {path: "/store/orderInfo/:id",name: "storeOrderInfo",meta:{index:9},component: StoreOrderInfo},
+        {path: "/store/orderInfo/:id",name: "storeOrderInfo",meta:{index:8},component: StoreOrderInfo},
+        {path:"/store/progress/:No",name:"storeOrderProgress",meta:{index:9,top:false},component:StoreOrderProgress},
     ]
 })
