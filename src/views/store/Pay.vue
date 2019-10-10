@@ -82,10 +82,10 @@ export default {
             var that = this;            
             var data = {
                 token:user.token,
-                agentid:user.agentid,
+                //agentid:user.agentid,
                 order_no:that.$route.params.order_no
             };
-            that.$http.post("/V1/store/orderInfo",data).then(result => {
+            that.$http.post("/V1/order/orderInfo",data).then(result => {
                 let res = result.data;
                 if (res.code == 0) {
                     that.info = res.body.data;

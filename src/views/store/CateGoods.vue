@@ -1,6 +1,14 @@
 <template>
     <div class="wrap">
         <van-nav-bar fixed :title="cate.name" left-arrow @click-left="onClickLeft"/>
+
+        <van-nav-bar fixed :title="cate.name" left-arrow @click-left="onClickLeft">
+            <div slot="right" class="topRight">
+                <van-icon name="search" @click="onClickSearch"/>
+                <van-icon name="cart-o" @click="onClickCart"/>               
+            </div>
+        </van-nav-bar>
+
         <div style="height:46px"></div>
 
         <template v-if="info.length > 1">
@@ -88,6 +96,12 @@ export default {
         show(){
             this.cateShow = !this.cateShow;
         },
+        onClickSearch(){ 
+            this.$router.push({path:'/store/search',query:{token:user.token,agentid:user.agentid}});                  
+        },
+        onClickCart(){
+            this.$router.push({path:'/store/cart',query:{token:user.token,agentid:user.agentid}});
+        },
         changeCate(id,index){
             this.cateActive = index;
             this.cateShow = false;
@@ -166,6 +180,8 @@ export default {
 .van-nav-bar {background-color: #05c1af; color: #fff}
 .van-nav-bar__title{color: #fff}
 .van-nav-bar__text{color: #fff}
+.topRight i{font-size: 20px; margin-left:10px}
+
 .search{height: 46px; background: #fff; position: fixed; width: 100%;left: 0; top: 0; display: flex}
 .search .ipt{flex: 1; padding:0 10px}
 .search .ipt input{height: 30px; border-radius: 15px; padding: 0 10px; margin: 0; border: 0; background: #f1f1f1; width: 100%; box-sizing: border-box; margin-top: 8px; font-size: 14px}

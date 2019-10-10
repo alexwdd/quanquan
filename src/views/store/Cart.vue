@@ -134,7 +134,9 @@ export default {
                 }
             });      
         },
-        onClickNumber(index,type){            
+        onClickNumber(index,type){    
+            this.thisWuliu = [];   
+            this.kdInfo = '';     
             if(type=='inc'){
                 this.info[index]['number']++;
             }else{
@@ -207,6 +209,7 @@ export default {
                     let res = result.data;
                     if (res.code == 0) {
                         that.kdInfo = res.body.data;
+                        that.heji = res.body.heji;
                         that.kdInfo.number = that.kdInfo.baoguo.length;
                     }else if(res.code==999){
                         window.location.href='app://login';  
