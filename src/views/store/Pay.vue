@@ -1,6 +1,6 @@
 <template>
     <div class="wrap">
-        <van-nav-bar title="选择支付方式"/>
+        <van-nav-bar title="选择支付方式" left-arrow @click-left="onClickLeft"/>
 
         <div class="payPrice">
             <li>
@@ -74,7 +74,10 @@ export default {
     created(){
         this.init();
     },
-    methods: {        
+    methods: {    
+        onClickLeft() {
+            this.$router.go(-1);
+        },    
         init(){
             var that = this;            
             var data = {

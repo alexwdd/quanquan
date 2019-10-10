@@ -33,7 +33,7 @@
         <van-cell title="备注" :value="order.remark" v-if="order.cancel==1"/>
 
 
-        <div class="card" v-for="vo in person">
+        <div class="card" v-for="(vo,index) in person">
             <div class="header">收件人：{{vo.name}}，{{vo.mobile}}</div>
             <div class="content">
                 <div class="list">
@@ -49,11 +49,10 @@
                         <p>身份证照片</p>
                         <span class="personImg">
                             <template v-if="vo.front==''">
-                            <a href="#">上传身份证</a>
+                            <span @click="showPersonCard(index)" style="color:#f00">上传身份证</span>
                             </template>
-                            <template v-else="">
-                            <a href="#" target="_blank"><img :src="vo.front"></a>
-                            <a href="#" target="_blank"><img :src="vo.back"></a>
+                            <template v-else="">      
+                            <span @click="showPersonCard(index)">查看身份证</span>
                             </template>
                         </span>
                     </li>
@@ -97,6 +96,30 @@
                 </div>
             </div> 
         </div>
+
+        <van-popup v-model="showCard" position="bottom" :style="{ height: '100%' }" style="background:#f1f1f1">
+            <div class="close"><p>上传身份证</p><van-icon name="cross" @click="closeCard"/></div>
+            <div class="cardPerson">
+                <li>
+                    <van-uploader
+                        :after-read="onReadFront"
+                        accept="image/gif, image/jpeg, image/png"
+                        style="width:100%"
+                        >
+                        <div class="face" v-if="card.front!=''"><img :src="card.front" /></div>
+                        <div class="face" v-else=""><img src="../../assets/image/sn1.png" /></div>
+                    </van-uploader>  
+                </li>                
+                <li>
+                    <van-uploader
+                        :after-read="onReadBack"
+                        accept="image/gif, image/jpeg, image/png">
+                        <div class="face" v-if="card.back!=''"><img :src="card.back" /></div>
+                        <div class="face" v-else=""><img src="../../assets/image/sn2.png" /></div>
+                    </van-uploader>
+                </li>
+            </div>
+        </van-popup>
     </div>
 </template>
 
@@ -109,7 +132,14 @@ export default {
             name:'',
             goods:[],
             order:[],
-            person:[]
+            person:[],
+            showCard:false,
+            card:[{
+                index:0,
+                id:0,
+                front:'',
+                back:''
+            }],
         };
     },
     watch: {
@@ -187,6 +217,83 @@ export default {
                 clipboard.destroy();
             });
         },
+        showPersonCard(index){
+            this.card.front = this.person[index].front;
+            this.card.back = this.person[index].back;
+            this.card.id = this.person[index].id;
+            this.card.index = index;
+            this.showCard = true;
+        },
+        closeCard(){
+            this.showCard = false;
+        },
+        onReadFront(file){
+            var that = this;
+            that.compressImage(file,800,0,function(res){
+                let data = {
+                    token:user.token,
+                    id : that.card.id,
+                    front : res
+                };
+                that.$toast.loading({duration:0});
+                that.$http.post("/V1/order/updatePersonCard",data).then(result => {
+                    that.$toast.clear();
+                    let res = result.data;
+                    if (res.code == 0) {
+                        that.person[that.card.index].front = res.body.front;
+                        that.card.front = res.body.front;                        
+                    }else{
+                        that.$dialog.alert({title:'错误信息',message:res.desc});
+                    }
+                });
+            });           
+        },
+        onReadBack(file){
+            var that = this;
+            that.compressImage(file,800,0,function(res){                    
+                let data = {
+                    token:user.token,
+                    id : that.card.id,
+                    back : res
+                };
+                that.$toast.loading({duration:0});
+                that.$http.post("/V1/order/updatePersonCard",data).then(result => {
+                    that.$toast.clear();
+                    let res = result.data;
+                    if (res.code == 0) {
+                        that.person[that.card.index].back = res.body.back;
+                        that.card.back = res.body.back;
+                        console.log(that.card.back);
+                    }else{
+                        that.$dialog.alert({title:'错误信息',message:res.desc});
+                    }
+                });     
+            });           
+        },
+        compressImage(file,width,height=0,callback){
+            var img = new Image();
+            img.src = file.content
+            img.onload = function() {
+                var that = this;
+                if(height>0){
+                    var w = width,h = height;
+                }else{
+                    //生成比例
+                    var w = that.width,h = that.height,scale = w / h;
+                    w = width || w;
+                    h = w / scale;
+                }
+                //生成canvas
+                let canvas = document.createElement('canvas');
+                let ctx = canvas.getContext('2d');      
+                canvas.width = w;
+                canvas.height = h;
+                ctx.drawImage(that, 0, 0, w, h);
+                // 生成base64            
+                let base64 =  canvas.toDataURL(file.file.type, 0.8);
+                callback(base64)
+            };
+        },
     }
 };
 </script>
@@ -221,4 +328,12 @@ export default {
 .wimg{clear: both; overflow: hidden; width: 100%}
 .wimg a{display: block; overflow: hidden; text-align: center; padding: 5px 10px}
 .wimg img{width:100%;display: block; margin: auto}
+
+.close{clear: both; overflow: hidden; padding: 10px; background: #fff}
+.close p{float: left; padding-left: 10px;}
+.close i{color: #dbdbdb; display: block; width: 20px; height: 20px; line-height: 20px; border:1px #dbdbdb solid; float: right; border-radius: 50%; text-align: center}
+.cardPerson{clear: both; overflow: hidden;}
+.cardPerson li{clear: both; text-align: center; padding: 20px 0; width: 60%; margin: auto}
+.cardPerson li .face{margin: auto; text-align: center; width:60vw;}
+.cardPerson li .face img{width: 100%; display: block}
 </style>

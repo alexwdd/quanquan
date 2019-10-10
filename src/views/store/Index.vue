@@ -34,7 +34,7 @@
         />
 
         <van-swipe :autoplay="3000" indicator-color="white">
-            <van-swipe-item v-for="vo in banner" :key="vo.id"><div class="banner"><img :src="vo.image" @click="goLink(vo)"/></div></van-swipe-item>            
+            <van-swipe-item v-for="vo in banner" :key="vo.id"><div class="banner"><img :src="vo.image" @click="goLink1(vo)"/></div></van-swipe-item>            
         </van-swipe>
 
         <div class="quick">
@@ -115,6 +115,15 @@ export default {
     methods: {
         onClickLeft(){
             window.location.href = 'app://goback';
+        },
+        goLink1(value){
+            if(value.url!=''){              
+                window.location.href = "app://html?url="+value.url;                        
+            }else{
+                if(value.goodsId>0){
+                    this.$router.push({name:'storeDetail', params:{ id: value.goodsId,specid:item.id },query:{token:user.token,agentid:user.agentid}});
+                }
+            }
         },
         goLink(value){
             if(value.url!=''){
