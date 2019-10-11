@@ -31,6 +31,7 @@
         <template v-if="info.length > 0">
         <div class="title">
             <p>选择快递公司</p>
+            <div style="clear:both; font-size:12px; color:#999;padding-left:12px">可在澳邮官网，收件人管理，订单详情上传身份证</div>
         </div>
         <div class="kuaidi">
 	        <li :class="{'active':thisWuliu.name==vo.name}" v-for="vo in wuliu" :key="vo.id" @click="onClickWuliu(vo)">{{vo.name}}</li>
@@ -119,7 +120,9 @@ export default {
             this.$router.push({name:'storeAddressEdit', params:{ id: item.id },query:{token:user.token}});
         }, 
         init(){
-            var that = this;
+            var that = this;    
+            that.thisWuliu = [];
+            that.kdInfo = [];
             var data = {token:user.token,agentid:user.agentid};
             that.$http.post("/V1/store/cart",data).then(result => {
                 let res = result.data;
@@ -231,6 +234,7 @@ export default {
 };
 </script>
 <style scoped>
+.wrap{min-height: 100vh}
 .wrap >>> .van-nav-bar .van-icon {color: #fff;}
 .van-nav-bar {background-color: #05c1af; color: #fff}
 .van-nav-bar__title{color: #fff}
@@ -266,7 +270,7 @@ export default {
 .kdResult .kdBaoguo li .goods p{margin: 0; font-size: 12px;}
 .kdResult .kdBaoguo li .yunfei{ clear: both; text-align: right; padding: 0 5px; font-size: 12px; color: #000}
 
-.footer{position: fixed; bottom: 50px; width: 100%; height: 50px; border-top: 1px #f1f1f1 solid; background: #fff}
+.footer{position: fixed; bottom: 0px; width: 100%; height: 50px; border-top: 1px #f1f1f1 solid; background: #fff}
 .footer .info{float: left; padding-left: 10px; padding-top: 5px}
 .footer .info p{color: #F2493C; font-size:12px;}
 .footer .info p i{font-size: 18px; font-weight: bold; font-style: normal}

@@ -43,7 +43,7 @@ const global = {
         if(r!=null)return  unescape(r[2]); return null;
     },
     checkMobile: function (checkVal) {
-        var reg = /^[0-9]{8}$/;
+        var reg = /^1[3|4|5|6|7|8|9][0-9]{9}$|^04[0-9]{8}$/;
         if (!reg.test(checkVal)) {
             return false;
         } else {

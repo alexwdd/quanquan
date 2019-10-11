@@ -18,8 +18,7 @@
             </div>
             
             <div class="cateBtn" @click="onClickCate">分类</div>
-        </div>
-
+        </div>        
         <div class="hotKey">
             热门
             <span v-for="vo in hotkey" :key="vo" @click="onClickSearch(vo)">{{vo}}</span>
@@ -172,7 +171,9 @@ export default {
                 token:user.token,
                 agentid:user.agentid
             };
+            that.$toast.loading({duration:0});
             that.$http.post("/V1/store/getMain",data).then(result => {
+                that.$toast.clear();
                 let res = result.data;
                 if (res.code == 0) {
                     that.shop = res.body.shop;
@@ -228,7 +229,7 @@ export default {
                         window.location.href = 'app://login';
                     });
                 }else{
-                    that.$dialog.alert({title:'错误信息',message:res.desc});
+                    that.$dialog.alert({title:res.desc});
                 }
             });
         },

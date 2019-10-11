@@ -77,7 +77,7 @@ export default {
                 that.$toast('请输入手机号码');
                 return false;
             }
-            if(!that.config.checkCnMobile(that.formData.mobile)){
+            if(!that.config.checkMobile(that.formData.mobile)){
                 that.$toast('手机号码格式错误');
                 return false;
             }          

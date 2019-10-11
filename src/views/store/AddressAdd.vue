@@ -27,6 +27,17 @@
             label="详细地址"
             placeholder="街道门牌、楼层房间号等信息"
         />
+
+        <div class="title">
+            <p><i class="icon icon-edit"></i> 智能填写</p>
+            <span @click="onClickClear">清空</span>
+        </div>
+
+        <div class="textBox">
+            <textarea class="textarea" v-model="text" placeholder="快速录入格式:收件人，电话，地址自动提取（或空格间隔）"></textarea>
+            <div class="tBtn" @click="onClickTiqu">提取</div>
+        </div>
+
         <van-field
             v-model="formData.sn"
             clearable
@@ -71,6 +82,7 @@ import user from '../chat/auth'
 export default {
     data() {
         return {
+            text : '',
             areaList:area,
             area:'',
             formData:{
@@ -105,6 +117,36 @@ export default {
     methods: {
         onClickLeft() {
             this.$router.go(-1);
+        },
+        onClickClear(){
+            this.text = '';
+        },
+        onClickTiqu(){
+            var that = this;
+            if (that.text == "") {
+                that.$toast('请输入需要转换的文字');
+                return false;
+            }
+            var data = {
+                token : user.token,
+                text : that.text
+            }
+            this.$toast.loading({duration:0});
+            that.$http.post("/V1/address/textToAddress",data).then(result => {
+                this.$toast.clear();
+                let res = result.data;
+                if (res.code == 0) {              
+                    that.formData.name = res.body.name;
+                    that.formData.mobile = res.body.mobile;
+                    that.formData.province = res.body.province_name;
+                    that.formData.city = res.body.city_name;
+                    that.formData.area = res.body.county_name;
+                    that.formData.address = res.body.detail;
+                    that.area = res.body.province_name+' '+res.body.city_name+' '+res.body.county_name;
+                }else{
+                    that.$dialog.alert({title:'错误信息',message:res.desc});
+                }
+            });
         },
         onClickArea(){
             this.show = true;
@@ -216,4 +258,11 @@ export default {
 .sn li{float: left; width: 40%;padding: 20px; box-sizing: border-box}
 .btn{padding: 10px; width: 100%; box-sizing: border-box}
 .my-btn{background: #05c1af; color: #fff;}
+
+.title{background: #fff; clear: both; font-size: 14px; padding: 10px; overflow: hidden;}
+.title p{float: left;}
+.title span{float: right;}
+.textBox{padding:0 10px; background:#fff; box-sizing: border-box; clear: both; position: relative;}
+.textarea{background: #f1f1f1; border-radius: 5px; margin: 0 5px; border: 0; width: 100%; font-size: 14px; box-sizing: border-box; margin: 0; padding: 10px; height:80px; display: block}
+.tBtn{position: absolute; right: 10px; bottom: 0; background: #F2493C; color: #fff; width:60px; line-height: 30px; border-radius: 5px; border-top-right-radius: 0; border-bottom-left-radius: 0; text-align: center; font-size: 14px;}
 </style>

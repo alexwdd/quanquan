@@ -243,7 +243,7 @@ export default {
                         window.location.href = 'app://login';
                     });
                 }else{
-                    that.$dialog.alert({title:'错误信息',message:res.desc});
+                    that.$dialog.alert({title:res.desc});
                 }
             });
         },

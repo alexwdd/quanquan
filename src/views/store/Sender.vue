@@ -47,10 +47,14 @@ export default {
             this.$router.push({name:'storeSenderEdit', params:{ id: item.id },query:{token:user.token,agentid:user.agentid}});
         }, 
         onClickSender(item){
-            if(this.$route.query.agentid){
-                this.$store.commit('SET_SENDER',item);
-                this.$router.push({name:'storeCreate',query:{token:user.token,agentid:user.agentid}});
-            }
+            if(this.$route.query.flag){
+                if(this.$route.query.agentid){
+                    this.$store.commit('SET_SENDER',item);
+                    this.$router.push({name:'storeCreate',query:{token:user.token,agentid:user.agentid}});
+                }
+            }else{
+                this.onClickEdit(item);
+            }            
         },
         init(){
             var that = this;

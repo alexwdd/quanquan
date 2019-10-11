@@ -1,5 +1,5 @@
 <template>
-    <div class="app-container">
+    <div class="app-container" v-cloak>
         <div class="routerBox">
             <transition :name="transitionName">
                 <keep-alive>
@@ -16,7 +16,8 @@ export default {
         return {
             user: [],
             activeIndex: "/",
-            transitionName: ""
+            transitionName: "",
+            show : false,
         };
     },
     watch: {
@@ -35,7 +36,8 @@ export default {
         }
     },
     created() {},
-    mounted() {},
+    mounted() {
+    },
     methods: {
     }
 };

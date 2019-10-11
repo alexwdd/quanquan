@@ -47,10 +47,14 @@ export default {
             this.$router.push({name:'storeAddressEdit', params:{ id: item.id },query:{token:user.token,agentid:user.agentid}});
         }, 
         onClickAddress(item){
-            if(this.$route.query.agentid){
-                this.$store.commit('SET_ADDRESS',item);
-                this.$router.push({name:'storeCreate',query:{token:user.token,agentid:user.agentid}});
-            }
+            if(this.$route.query.flag){
+                if(this.$route.query.agentid){
+                    this.$store.commit('SET_ADDRESS',item);
+                    this.$router.push({name:'storeCreate',query:{token:user.token,agentid:user.agentid}});
+                }
+            }else{
+                this.onClickEdit(item);
+            }            
         },
         init(){
             var that = this;
@@ -98,7 +102,7 @@ export default {
 .van-nav-bar__text{color: #fff}
 .address{clear: both; overflow: hidden; padding: 10px; background: #fff; display: flex; border-bottom: 1px #f1f1f1 solid}
 .address .action{width: 60px; text-align: center}
-.address .action i{text-align: right; display: block; line-height: 20px;}
-.address .info{font-size: 14px; flex: 1}
-.address .info span{color: #999}
+.address .action i{text-align: right; display: block; line-height: 26px;}
+.address .info{font-size: 14px; flex: 1; padding-top: 5px}
+.address .info span{color: #999;}
 </style>
