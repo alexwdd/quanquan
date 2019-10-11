@@ -1,12 +1,15 @@
 <template>
     <div class="wrap">
         <van-nav-bar fixed>
-            <van-icon name="home-o" slot="left" @click="gotoHome"/>
+            <van-icon name="wap-home-o" slot="left" @click="gotoHome"/>
             <div class="tab" slot="title">
                 <span :class="{active:cateShow}" @click="onClickTab(1)">按分类</span>
                 <span :class="{active:brandShow}" @click="onClickTab(2)">按品牌</span>
             </div>
-            <van-icon name="search" slot="right" @click="gotoSearch"/>
+            <div slot="right" class="topRight">
+                <span><van-icon name="search" @click="gotoSearch"/></span>
+                <span><van-icon name="cart-o" @click="onClickCart"/><div class="dot" v-if="cartNumber>0">{{cartNumber}}</div></span>
+            </div>            
         </van-nav-bar>
 
         <div style="height:46px"></div>
@@ -132,7 +135,9 @@ export default {
             brandShow:false,
 
             cateActive:0,
-            cateTabShow:false
+            cateTabShow:false,
+
+            cartNumber : 0,
         };
     },
     watch: {
@@ -151,6 +156,9 @@ export default {
         },
         gotoSearch() {
             this.$router.push({path:'/store/search',query:{token:user.token,agentid:user.agentid}});
+        },
+        onClickCart(){
+            this.$router.push({path:'/store/cart',query:{token:user.token,agentid:user.agentid}});
         },
         show(){
             this.cateTabShow = !this.cateTabShow;
@@ -229,7 +237,7 @@ export default {
             that.$http.post("/v1/store/cartAdd",data).then(result => {
                 let res = result.data;
                 if (res.code == 0) {
-
+                    this.getCartNumber();
                 }else if(res.code==999) {
                     that.$dialog.alert({title:'错误信息',message:res.desc}).then(() => {
                         window.location.href = 'app://login';
@@ -244,6 +252,8 @@ export default {
             that.small = [];  
             that.brand = [];
             that.goods = []; 
+            that.cartNumber = 0;
+            that.getCartNumber();
 
             that.params = {
                 fid:0,
@@ -285,6 +295,25 @@ export default {
                     // 加载状态结束      
                     that.brand = res.body;
                     that.params.brandID = that.brand[0]['id'];
+                }else{
+                    that.$dialog.alert({title:'错误信息',message:res.desc});
+                }
+            });
+        },
+        getCartNumber() {  
+            var that = this;          
+            var data = {
+                token:user.token,
+                agentid:user.agentid
+            };
+            that.$http.post("/v1/store/cartNumber",data).then(result => {
+                let res = result.data;
+                if (res.code == 0) {              
+                    that.cartNumber = res.body;
+                }else if(res.code==999) {
+                    that.$dialog.alert({title:'错误信息',message:res.desc}).then(() => {
+                        window.location.href = 'app://login';
+                    });
                 }else{
                     that.$dialog.alert({title:'错误信息',message:res.desc});
                 }
@@ -421,18 +450,23 @@ export default {
 };
 </script>
 <style scoped>
-.wrap >>> .van-nav-bar .van-icon {color: #fff; font-size: 18px}
+.wrap >>> .van-nav-bar .van-icon {color: #fff; font-size:20px}
 .van-nav-bar {background-color: #05c1af; color: #fff}
 .van-nav-bar__title{color: #fff}
 .van-nav-bar__text{color: #fff}
 .tab span{ padding: 8px 10px; font-size: 14px; border-radius: 4px}
 .tab span.active{background: rgba(255, 255, 255, .3)}
+.topRight >>> .van-nav-bar .van-icon { font-size: 24px;}
+
+.topRight{float: right; padding-top: 12px}
+.topRight span{ padding:0 10px; position: relative;}
+.topRight span .dot{position: absolute;min-width:14px; height:14px; line-height:14px; border-radius:50%; background: #c00;top:0px; right: 0px; font-size:12px; color:#fff; text-align: center}
 
 .cateBox{background: #fff; display: flex; position: fixed; width: 100%; top: 46px; left: 0; z-index: 88;}
-.cateBox .left{width:80px;  background: #f7f7f7; height: calc(100vh - 46px); overflow: auto; z-index: 999;}
-.cateBox .left li{font-size: 12px; padding:10px 5px;}
+.cateBox .left{width:80px;  background: #f7f7f7; height: calc(100vh - 46px); overflow: auto; z-index: 999; overflow-y: scroll;-webkit-overflow-scrolling: touch}
+.cateBox .left li{font-size: 14px; padding:10px 5px; text-align: center}
 .cateBox .left li.active{background: #fff; color: #05c1af; border-left: 2px #05c1af solid}
-.cateBox .right{flex: 1; height: calc(100vh - 46px); overflow: auto}
+.cateBox .right{flex: 1; height: calc(100vh - 46px); overflow-y: scroll;-webkit-overflow-scrolling: touch}
 
 .cateFix{position: fixed; left: 80px; top: 46px; width:calc(100% - 80px);z-index: 999;}
 .topCate{width: 100%; display: flex; background: #fff; z-index: 999; }
