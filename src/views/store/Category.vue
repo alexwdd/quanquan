@@ -40,7 +40,7 @@
                 </div>
 
                 <div style="height:50px;clear:both; width:100%" v-if="small.length > 1"></div>
-
+                <div class="inner">
                 <template v-for="(vo,index) in small">
                     <div v-if="small.length > 1" class="title" :key="vo.id" :id="'c'+vo.id"><p>{{vo.name}}</p></div>   
                     <div class="product" v-for="(f,idx) in vo.goods" :key="f.id">
@@ -69,6 +69,7 @@
                         </div>
                     </div>
                 </template>
+                </div>
             </div>
         </div>  
 
@@ -77,6 +78,7 @@
                 <li v-for="(vo) in brand" :key="vo.id" :class="{'active':params.brandID==vo.id}" @click="onClickBrand(vo)">{{vo.name}}</li>
             </div>
             <div class="right">
+                <div class="inner">
                 <van-list v-model="loading" :finished="finished" finished-text="没有了" @load="getBrandGoods">            
                     <div class="product" v-for="(f,idx) in goods" :key="f.id">
                         <div class="img">
@@ -104,6 +106,7 @@
                         </div>
                     </div>
                 </van-list>   
+                </div>
             </div>
         </div>   
     </div>
@@ -466,11 +469,11 @@ export default {
 .cateBox .left{width:80px;  background: #f7f7f7; height: calc(100vh - 46px); overflow: auto; z-index: 999; overflow-y: scroll;-webkit-overflow-scrolling: touch}
 .cateBox .left li{font-size: 14px; padding:10px 5px; text-align: center}
 .cateBox .left li.active{background: #fff; color: #05c1af; border-left: 2px #05c1af solid}
-.cateBox .right{flex: 1; height: calc(100vh - 46px); overflow-y: scroll;-webkit-overflow-scrolling: touch}
-
+.cateBox .right{flex: 1; height: calc(100vh - 46px); overflow: auto}
+.inner{overflow-y: scroll;-webkit-overflow-scrolling: touch; height:100vh}
 .cateFix{position: fixed; left: 80px; top: 46px; width:calc(100% - 80px);z-index: 999;}
 .topCate{width: 100%; display: flex; background: #fff; z-index: 999; }
-.cateTab{flex: 1}
+.cateTab{width:calc(100% - 40px);}
 .cateBar{width: 40px; height: 44px; text-align: center}
 .cateBar i{line-height: 44px;color: #05c1af;}
 .cateList{position: fixed; top:46px; width:calc(100% - 80px); z-index: 999; background: #fff}
