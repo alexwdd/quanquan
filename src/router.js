@@ -42,6 +42,7 @@ import StoreCardPay from './views/store/Card.vue'
 import StoreOrder from './views/store/Order.vue'
 import StoreOrderInfo from './views/store/Info.vue'
 import StoreOrderProgress from "./views/store/OrderProgress";
+import StoreKefu from "./views/store/Kefu";
 
 
 
@@ -193,5 +194,6 @@ export default new Router({
         {path: "/store/order",name: "storeOrder",meta:{index:3},component: StoreOrder},
         {path: "/store/orderInfo/:id",name: "storeOrderInfo",meta:{index:8},component: StoreOrderInfo},
         {path:"/store/progress/:No",name:"storeOrderProgress",meta:{index:9,top:false},component:StoreOrderProgress},
+        {path:"/store/kefu",name:"storeKefu",meta:{index:9,top:false},component:StoreKefu},
     ]
 })

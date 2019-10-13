@@ -61,6 +61,22 @@
                 </div>
             </div>
         </template>
+
+        <van-popup position="top" v-model="apkShow">
+            <div class="alert">
+                <img src="../../assets/image/alert.jpg">
+            </div>
+        </van-popup>
+        <van-popup v-model="downShow" class="my-van-popup">
+            <div class="down">
+                <div class="hd"><img src="../../assets/image/down.png"></div>
+                <div class="bd">
+                    <li><a :href="config.ANDROIDS"><img src="../../assets/image/googleplay.png"></a></li>
+                    <li><a :href="config.IOS"><img src="../../assets/image/appstore.png"></a></li>
+                    <li class="long" @click="downApk"><img src="../../assets/image/button.png"></li>
+                </div>
+            </div>
+        </van-popup>
     </div>
 </template>
 
@@ -73,6 +89,9 @@ export default {
             cateShow:false,
             cate:[],
             info:[],
+
+            downShow:false,
+            apkShow:false,
         };
     },
     watch: {
@@ -99,7 +118,18 @@ export default {
         onClickSearch(){ 
             this.$router.push({path:'/store/search',query:{token:user.token,agentid:user.agentid}});                  
         },
+        downApk(){
+            if(this.config.isWeiXin()){
+                this.apkShow = true
+            }else{
+                window.location.href = this.config.DOWNLOAD;
+            }
+        },
         onClickCart(){
+            if(user.token=='' || user.token==undefined){
+                this.downShow = true;
+                return false;
+            }
             this.$router.push({path:'/store/cart',query:{token:user.token,agentid:user.agentid}});
         },
         changeCate(id,index){
@@ -112,6 +142,10 @@ export default {
             this.$router.push({name:'storeDetail', params:{ id: item.goodsID,specid:item.id },query:{token:user.token,agentid:user.agentid}});
         },
         onClickIcon(index,idx){
+            if(user.token=='' || user.token==undefined){
+                this.downShow = true;
+                return false;
+            }
             for (let i = 0; i < this.info.length; i++) {
                 for (let j = 0; j < this.info[i]['goods'].length; j++) {
                     this.info[i]['goods'][j]['cartShow'] = true;
@@ -188,7 +222,7 @@ export default {
 .search .cancel{width: 40px; text-align: center; line-height: 46px; font-size: 14px}
 
 .topCate{position: fixed; width: 100%; display: flex;background: #fff; z-index: 999; top: 46px}
-.cateTab{flex: 1}
+.cateTab{width:calc(100% - 40px);}
 .cateBar{width: 40px; height: 44px; text-align: center}
 .cateBar i{line-height: 44px;color: #05c1af;}
 .cateList{position: fixed; top:46px; width: 100%; z-index: 999; background: #fff}
@@ -222,4 +256,14 @@ transform:rotate(-25deg);
 
 .title{background: #fff; padding: 10px; clear: both; overflow: hidden; border-bottom: 1px #f1f1f1 solid;}
 .title p{float: left; border-left: 2px #05c1af solid; padding-left: 10px; font-size: 14px; font-weight: bold; color: #05C1AF; }
+
+.alert{width: 100%;}
+.alert img{width: 100%}
+.my-van-popup {background-color:transparent; width: 80%;}
+.down{clear: both; overflow: hidden;}
+.down img{display: block}
+.down .hd{clear: both;}
+.down .bd{background: #fff; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; padding: 20px; overflow: hidden; padding-right: 0}
+.down .bd li{float: left; width: 50%; padding-right: 20px; box-sizing: border-box}
+.down .bd li.long{clear: both; width: 100%; margin-top: 10px;}
 </style>

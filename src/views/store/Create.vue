@@ -1,16 +1,18 @@
 <template>
     <div class="wrap">
-        <van-nav-bar title="结算中心" left-arrow @click-left="onClickLeft"/>
+        <van-nav-bar title="结算中心" fixed left-arrow @click-left="onClickLeft"/>
 
+        <div style="height:46px"></div>
+        
         <div class="panel">
             <div class="hd">
                 <p>收件人</p>
                 <span @click="onClickAddress">+选择</span>
             </div>
             <div class="bd">
-                <div class="user">
+                <div class="user" v-if="address">
                     <p>{{address.name}} {{address.mobile}}</p>
-                    <p>{{address.province}}{{address.city}}{{address.county}}{{address.addressDetail}}</p>
+                    <p>{{address.province}}{{address.city}}{{address.area}}{{address.address}}</p>
                 </div>
             </div>
         </div>
@@ -21,7 +23,7 @@
                 <span @click="onClickSender">+选择</span>
             </div>
             <div class="bd">
-                <div class="user">
+                <div class="user" v-if="sender">
                     <p>{{sender.name}} {{sender.mobile}}</p>
                 </div>
             </div>
@@ -62,7 +64,7 @@
             </div>
             <div class="bd">
                 <van-cell title="商品金额" :value="'$'+money.total" />
-                <van-cell title="服务费" :value="'$'+money.serverMoney" />
+                <van-cell title="特殊打包服务费" :value="'$'+money.serverMoney" />
                 <van-cell title="运费" :value="'$'+baoguo.totalPrice" />
                 <van-cell title="偏远地区附加费" :value="'$'+baoguo.totalExtend" />
             </div>
@@ -100,7 +102,7 @@ export default {
     },
     watch: {
         $route(to) {
-            if (to.name == "storeCreate") {
+            if (to.name == "storeCreate") {                
                 this.init();
             }
         }
@@ -110,8 +112,8 @@ export default {
     },
     methods: {        
         onClickLeft() {
-            //this.$router.push({name:'storeCart',query:{token:user.token,agentid:user.agentid}});
-            this.$router.go(-1);
+            this.$router.push({name:'storeCart',query:{token:user.token,agentid:user.agentid}});
+            //this.$router.go(-1);
         },
         onClickSender(){
             this.$router.push({path:'/store/sender',query:{token:user.token,agentid:user.agentid,flag:1}});
@@ -121,6 +123,17 @@ export default {
         },
         init(){                    
             var that = this;
+            that.info = [];
+            that.heji = [];
+            that.kdInfo = [];
+            that.address = '';
+            that.sender = '';
+            that.sign = '';
+            that.show = false;
+            that.money = [];
+            that.baoguo = [];
+            that.total = 0;
+            that.rmb = 0;
             if(that.$store.state.order.wuliu==undefined){
                 this.$router.push({path:'/store',query:{token:user.token,agentid:user.agentid}});
             }
@@ -222,6 +235,7 @@ export default {
 };
 </script>
 <style scoped>
+.wrap{min-height: 100vh}
 .wrap >>> .van-nav-bar .van-icon {color: #fff;}
 .van-nav-bar {background-color: #05c1af; color: #fff}
 .van-nav-bar__title{color: #fff}
@@ -239,7 +253,7 @@ export default {
 .footer .info{float: left; padding-left: 10px; padding-top: 5px}
 .footer .info p{color: #F2493C; font-size:12px;}
 .footer .info p i{font-size: 18px; font-weight: bold; font-style: normal}
-.footer .info span{display: block; font-size: 12px;}
+.footer .info span{display: block; font-size: 12px; padding-left: 12px}
 .footer .btn{float: right; background: #F0454C; font-size: 18px; line-height:50px; width: 100px; height: 50px; color: #fff; text-align: center;}
 
 .goods{clear: both; overflow: hidden; padding: 0 10px}

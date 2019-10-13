@@ -1,6 +1,8 @@
 <template>
     <div class="wrap">
-        <van-nav-bar title="购物车" left-arrow @click-left="onClickLeft" right-text="清空" @click-right="onClickClear"/>
+        <van-nav-bar title="购物车" fixed left-arrow @click-left="onClickLeft" right-text="清空" @click-right="onClickClear"/>
+
+        <div style="height:46px"></div>
         
         <template v-if="info.length==0">
         <div class="emptyCart">
@@ -15,7 +17,7 @@
                 <h1><template v-if="vo.goods.wuliu!=''">【{{vo.goods.wuliu}}】</template>{{vo.goods.name}}{{vo.extends}}</h1>
                 <div class="price">${{vo.goods.price}}<span>{{vo.goods.weight}}kg</span></div>
                 <div class="serverLi" v-for="s in vo.server" :key="s.name">
-                {{s.name}} ${{s.price}}/件，数量{{vo.goodsNumber * vo.number}}，合计${{s.price * vo.goodsNumber * vo.number}}
+                {{s.name}} ${{s.price}}/件，数量{{vo.goodsNumber * vo.number}}，合计${{Math.round((s.price * vo.goodsNumber * vo.number) * 100) / 100}}
                 </div>
                 <div class="action">
                     <div class="numberAction">
@@ -92,7 +94,8 @@ export default {
             this.$router.push({path:'/store',query:{token:user.token,agentid:user.agentid}});
         },
         onClickLeft() {
-            this.$router.go(-1);
+            //this.$router.go(-1);
+            this.$router.push({path:'/store',query:{token:user.token,agentid:user.agentid}});
         },
         onClickClear(){
             var that = this;
@@ -271,9 +274,9 @@ export default {
 .kdResult .kdBaoguo li .yunfei{ clear: both; text-align: right; padding: 0 5px; font-size: 12px; color: #000}
 
 .footer{position: fixed; bottom: 0px; width: 100%; height: 50px; border-top: 1px #f1f1f1 solid; background: #fff}
-.footer .info{float: left; padding-left: 10px; padding-top: 5px}
+.footer .info{float: left; padding-left: 15px; padding-top: 5px}
 .footer .info p{color: #F2493C; font-size:12px;}
 .footer .info p i{font-size: 18px; font-weight: bold; font-style: normal}
-.footer .info span{display: block; font-size: 12px;}
+.footer .info span{display: block; font-size: 12px; padding-left: 12px}
 .footer .btn{float: right; background: #F0454C; font-size: 18px; line-height:50px; width: 100px; height: 50px; color: #fff; text-align: center;}
 </style>

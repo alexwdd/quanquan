@@ -109,6 +109,22 @@
                 </div>
             </div>
         </div>   
+
+        <van-popup position="top" v-model="apkShow">
+            <div class="alert">
+                <img src="../../assets/image/alert.jpg">
+            </div>
+        </van-popup>
+        <van-popup v-model="downShow" class="my-van-popup">
+            <div class="down">
+                <div class="hd"><img src="../../assets/image/down.png"></div>
+                <div class="bd">
+                    <li><a :href="config.ANDROIDS"><img src="../../assets/image/googleplay.png"></a></li>
+                    <li><a :href="config.IOS"><img src="../../assets/image/appstore.png"></a></li>
+                    <li class="long" @click="downApk"><img src="../../assets/image/button.png"></li>
+                </div>
+            </div>
+        </van-popup>
     </div>
 </template>
 
@@ -141,6 +157,9 @@ export default {
             cateTabShow:false,
 
             cartNumber : 0,
+
+            downShow:false,
+            apkShow:false,
         };
     },
     watch: {
@@ -161,6 +180,10 @@ export default {
             this.$router.push({path:'/store/search',query:{token:user.token,agentid:user.agentid}});
         },
         onClickCart(){
+            if(user.token=='' || user.token==undefined){
+                this.downShow = true;
+                return false;
+            }
             this.$router.push({path:'/store/cart',query:{token:user.token,agentid:user.agentid}});
         },
         show(){
@@ -190,7 +213,18 @@ export default {
         goDetail(item){
             this.$router.push({name:'storeDetail', params:{ id: item.goodsID,specid:item.id },query:{token:user.token,agentid:user.agentid}});
         },
+        downApk(){
+            if(this.config.isWeiXin()){
+                this.apkShow = true
+            }else{
+                window.location.href = this.config.DOWNLOAD;
+            }
+        },
         onClickIcon(index,idx){
+            if(user.token=='' || user.token==undefined){
+                this.downShow = true;
+                return false;
+            }
             for (let i = 0; i < this.small.length; i++) {
                 for (let j = 0; j < this.small[i]['goods'].length; j++) {
                     this.small[i]['goods'][j]['cartShow'] = true;
@@ -506,4 +540,14 @@ transform:rotate(-25deg);
 
 .title{background: #fff; padding: 10px; clear: both; overflow: hidden; border-bottom: 1px #f1f1f1 solid;}
 .title p{float: left; border-left: 2px #05c1af solid; padding-left: 10px; font-size: 14px; font-weight: bold; color: #05C1AF; }
+
+.alert{width: 100%;}
+.alert img{width: 100%}
+.my-van-popup {background-color:transparent; width: 80%;}
+.down{clear: both; overflow: hidden;}
+.down img{display: block}
+.down .hd{clear: both;}
+.down .bd{background: #fff; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; padding: 20px; overflow: hidden; padding-right: 0}
+.down .bd li{float: left; width: 50%; padding-right: 20px; box-sizing: border-box}
+.down .bd li.long{clear: both; width: 100%; margin-top: 10px;}
 </style>

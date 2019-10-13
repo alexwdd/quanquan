@@ -62,6 +62,22 @@
             <div class="btn" @click="onClickAdd">加入购物车</div>
             <div class="btnBuy" @click="onClickAdd('buy')">立即购买</div>
         </div>
+
+        <van-popup position="top" v-model="apkShow">
+            <div class="alert">
+                <img src="../../assets/image/alert.jpg">
+            </div>
+        </van-popup>
+        <van-popup v-model="downShow" class="my-van-popup">
+            <div class="down">
+                <div class="hd"><img src="../../assets/image/down.png"></div>
+                <div class="bd">
+                    <li><a :href="config.ANDROIDS"><img src="../../assets/image/googleplay.png"></a></li>
+                    <li><a :href="config.IOS"><img src="../../assets/image/appstore.png"></a></li>
+                    <li class="long" @click="downApk"><img src="../../assets/image/button.png"></li>
+                </div>
+            </div>
+        </van-popup>
     </div>
 </template>
 
@@ -80,7 +96,10 @@ export default {
             spec:[],
             thisSpec:[],
             cartNumber:0,
-            show:false
+            show:false,
+
+            downShow:false,
+            apkShow:false,
         };
     },
     watch:{
@@ -101,9 +120,24 @@ export default {
             this.show = !this.show;
         },         
         onClickCart(){
+            if(user.token=='' || user.token==undefined){
+                this.downShow = true;
+                return false;
+            }
             this.$router.push({name:'storeCart',query:{token:user.token,agentid:user.agentid}});
         },
+        downApk(){
+            if(this.config.isWeiXin()){
+                this.apkShow = true
+            }else{
+                window.location.href = this.config.DOWNLOAD;
+            }
+        },
         onClickAdd(type){
+            if(user.token=='' || user.token==undefined){
+                this.downShow = true;
+                return false;
+            }
             var that = this;
             let data = {
                 token : user.token,
@@ -223,6 +257,7 @@ export default {
 };
 </script>
 <style scoped>
+.wrap{min-height: 100vh}
 .wrap >>> .van-nav-bar .van-icon {color: #fff;}
 .van-nav-bar {background-color: #05c1af; color: #fff}
 .van-nav-bar__title{color: #fff}
@@ -255,4 +290,14 @@ export default {
 .goodsAction .cartInfo em.none{background: #ccc;}
 .goodsAction .btn{flex: 1; background-color: #15a093; color: #fff; line-height: 46px; text-align: center}
 .goodsAction .btnBuy{flex: 1; background-color: #05c1af; color: #fff; line-height: 46px; text-align: center}
+
+.alert{width: 100%;}
+.alert img{width: 100%}
+.my-van-popup {background-color:transparent; width: 80%;}
+.down{clear: both; overflow: hidden;}
+.down img{display: block}
+.down .hd{clear: both;}
+.down .bd{background: #fff; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; padding: 20px; overflow: hidden; padding-right: 0}
+.down .bd li{float: left; width: 50%; padding-right: 20px; box-sizing: border-box}
+.down .bd li.long{clear: both; width: 100%; margin-top: 10px;}
 </style>

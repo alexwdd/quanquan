@@ -1,7 +1,23 @@
 <template>
     <div class="wrap">
-        <van-nav-bar title="选择支付方式" left-arrow @click-left="onClickLeft"/>
+        <van-nav-bar fixed title="选择支付方式" left-arrow @click-left="onClickLeft"/>
 
+        <div style="height:46px"></div>
+
+        <div class="panel">
+            <div class="hd">
+                <p>选择支付方式</p>
+            </div>
+            <div class="bd">
+                <div class="intr">支付宝、微信支付手续费{{shouxufei}}%</div>
+                <div class="payType">
+                    <li @click="setPay(1)"><img src="../../assets/image/type1.png" :class="{'active':payType==1}"></li>
+                    <li @click="setPay(2)"><img src="../../assets/image/type2.png" :class="{'active':payType==2}"></li>
+                    <!-- <li @click="setPay(3)"><img src="../../assets/image/type3.png" :class="{'active':payType==3}"></li> -->
+                </div>
+            </div>
+        </div>
+        
         <div class="payPrice">
             <li>
                 <label>支付手续费</label>
@@ -27,19 +43,7 @@
             </div>
         </div>
 
-        <div class="panel">
-            <div class="hd">
-                <p>选择支付方式</p>
-            </div>
-            <div class="bd">
-                <div class="intr">支付宝、微信支付手续费{{shouxufei}}%</div>
-                <div class="payType">
-                    <li @click="setPay(1)"><img src="../../assets/image/type1.png" :class="{'active':payType==1}"></li>
-                    <li @click="setPay(2)"><img src="../../assets/image/type2.png" :class="{'active':payType==2}"></li>
-                    <!-- <li @click="setPay(3)"><img src="../../assets/image/type3.png" :class="{'active':payType==3}"></li> -->
-                </div>
-            </div>
-        </div>
+        
 
         <div class="btn">
             <van-button size="large" class="my-btn" @click="onSubmit">确认支付</van-button>
@@ -76,7 +80,8 @@ export default {
     },
     methods: {    
         onClickLeft() {
-            this.$router.go(-1);
+            this.$router.push({name:'store',query:{token:user.token,agentid:user.agentid}});
+            //this.$router.go(-1);
         },    
         init(){
             var that = this;            

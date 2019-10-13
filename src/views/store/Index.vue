@@ -11,6 +11,8 @@
             </div>
         </div>
 
+        <div class="kefu" @click="onClickKefu"><van-icon name="service-o"></van-icon></div>
+
         <div class="topSearch">            
             <div class="search" @click="onClickSearch('')">   
                 <van-icon name="search" />
@@ -75,6 +77,24 @@
             </div>
         </div>
         </template>
+
+        
+
+        <van-popup position="top" v-model="apkShow">
+            <div class="alert">
+                <img src="../../assets/image/alert.jpg">
+            </div>
+        </van-popup>
+        <van-popup v-model="downShow" class="my-van-popup">
+            <div class="down">
+                <div class="hd"><img src="../../assets/image/down.png"></div>
+                <div class="bd">
+                    <li><a :href="config.ANDROIDS"><img src="../../assets/image/googleplay.png"></a></li>
+                    <li><a :href="config.IOS"><img src="../../assets/image/appstore.png"></a></li>
+                    <li class="long" @click="downApk"><img src="../../assets/image/button.png"></li>
+                </div>
+            </div>
+        </van-popup>
     </div>
 </template>
 
@@ -98,6 +118,8 @@ export default {
             hotkey : '',
             goods:[],
             cartNumber : 0,
+            downShow:false,
+            apkShow:false,
         };
     },
     watch: {
@@ -112,7 +134,11 @@ export default {
     },
     methods: {
         onClickLeft(){
-            window.location.href = 'app://goback';
+            if(user.token!='' && user.token!=undefined){
+                window.location.href = 'app://goback';
+            }else{
+                window.location.href = this.config.DOMAIN;
+            }
         },
         goLink1(value){
             if(value.url!=''){              
@@ -138,7 +164,11 @@ export default {
             }
         },
         onClickShare(){
-            window.location.href = 'app://shareURL?title='+this.shop.shareTitle+'&url=http://wx.worldmedia.top/adelaide/store?agent='+user.agentid;
+            if(user.token!='' && user.token!=undefined){
+                window.location.href = 'app://shareURL?title='+this.shop.shareTitle+'&url=http://wx.worldmedia.top/adelaide/store?agentid='+user.agentid;
+            }else{
+                this.downShow = true;
+            }            
         },
         onClickSearch(keyword){
             if(keyword!=''){
@@ -147,8 +177,22 @@ export default {
                 this.$router.push({path:'/store/search',query:{token:user.token,agentid:user.agentid}});
             }            
         },
-        onClickCart(){
-            this.$router.push({path:'/store/cart',query:{token:user.token,agentid:user.agentid}});
+        downApk(){
+            if(this.config.isWeiXin()){
+                this.apkShow = true
+            }else{
+                window.location.href = this.config.DOWNLOAD;
+            }
+        },
+        onClickKefu(){
+            this.$router.push({path:'/store/kefu',query:{agentid:user.agentid}});
+        },
+        onClickCart(){            
+            if(user.token!='' && user.token!=undefined){
+                this.$router.push({path:'/store/cart',query:{token:user.token,agentid:user.agentid}});
+            }else{
+                this.downShow = true;
+            }
         },
         onClickCate(){
             this.$router.push({path:'/store/cate',query:{token:user.token,agentid:user.agentid}});
@@ -190,15 +234,20 @@ export default {
                 }               
             });       
         },
-        onClickIcon(index,idx){
-            for (let i = 0; i < this.goods.length; i++) {
-                for (let j = 0; j < this.goods[i]['goods'].length; j++) {
-                    this.goods[i]['goods'][j]['cartShow'] = true;
+        onClickIcon(index,idx){           
+            if(user.token!='' && user.token!=undefined){
+                for (let i = 0; i < this.goods.length; i++) {
+                    for (let j = 0; j < this.goods[i]['goods'].length; j++) {
+                        this.goods[i]['goods'][j]['cartShow'] = true;
+                    }
                 }
-            }
-            this.goods[index]['goods'][idx]['cartShow'] = false;
+                this.goods[index]['goods'][idx]['cartShow'] = false;
+            }else{
+                this.downShow = true;
+                return false;
+            }            
         },
-        onClickNumber(index,idx,type){
+        onClickNumber(index,idx,type){            
             if(type=='inc'){
                 this.goods[index]['goods'][idx]['num']++;
             }else{
@@ -309,4 +358,17 @@ transform:rotate(-25deg);
 .product .cartIcon i{background: rgb(247, 65, 125); width: 26px; height: 26px; text-align: center; line-height: 26px; color: #fff; border-radius: 50%}
 .numberAction{float: right;}
 .numberAction div{display: block; float: left; min-width: 24px; height: 24px; line-height:24px ;text-align: center; border: 1px #dbdbdb solid; margin-left: 5px; font-size: 12px; cursor: pointer;}
+
+.kefu{position: fixed; right: 0; bottom:100px; z-index: 99; background: #05C1AF; color: #fff; width: 40px; height:40px;border-radius: 50%; text-align: center}
+.kefu i{line-height: 40px; font-size: 24px}
+
+.alert{width: 100%;}
+.alert img{width: 100%}
+.my-van-popup {background-color:transparent; width: 80%;}
+.down{clear: both; overflow: hidden;}
+.down img{display: block}
+.down .hd{clear: both;}
+.down .bd{background: #fff; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; padding: 20px; overflow: hidden; padding-right: 0}
+.down .bd li{float: left; width: 50%; padding-right: 20px; box-sizing: border-box}
+.down .bd li.long{clear: both; width: 100%; margin-top: 10px;}
 </style>
