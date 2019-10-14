@@ -23,7 +23,7 @@
             <div class="serverBox" v-if="spec!=''">
                 <div class="hd">套餐</div>
                 <div class="fd">
-                    <li v-for="vo in spec" :key="vo.id" :class="{'active':vo.id==specid}" @click="onClickSpec(vo)"><template v-if="vo.wuliu!=''">【{{vo.wuliu}}】包邮</template>{{vo.name}} {{vo.weight}}kg ${{vo.price}}</li>
+                    <li v-for="vo in spec" :key="vo.id" :class="{'active':vo.id==specid}" @click="onClickSpec(vo)"><template v-if="vo.single==1">包邮</template>{{vo.name}} {{vo.weight}}kg ${{vo.price}}</li>
                 </div>  
             </div>
 

@@ -14,7 +14,7 @@
         <div class="product" v-for="(vo,index) in info" :key="vo.id">
             <div class="img"><img :src="vo.goods.picname"></div>
             <div class="info">
-                <h1><template v-if="vo.goods.wuliu!=''">【{{vo.goods.wuliu}}】</template>{{vo.goods.name}}{{vo.extends}}</h1>
+                <h1>{{vo.goods.name}}{{vo.extends}}</h1>
                 <div class="price">${{vo.goods.price}}<span>{{vo.goods.weight}}kg</span></div>
                 <div class="serverLi" v-for="s in vo.server" :key="s.name">
                 {{s.name}} ${{s.price}}/件，数量{{vo.goodsNumber * vo.number}}，合计${{Math.round((s.price * vo.goodsNumber * vo.number) * 100) / 100}}
@@ -45,7 +45,7 @@
                 <li v-if="kdInfo.totalExtend > 0"><div class="goods">偏远地区加收邮费</div><div class="yunfei">${{kdInfo.totalExtend}}</div></li>
                 <li v-for="vo in kdInfo.baoguo">
                     <div class="goods">
-                        <p v-for="f in vo.goods">{{f.goodsNumber}} * {{f.name}}</p>
+                        <p v-for="f in vo.goods">{{f.trueNumber}} * {{f.name}}</p>
                     </div>
                     <div class="yunfei">
                         {{vo.kuaidi}} - 约{{vo.totalWuliuWeight}}kg - ${{vo.yunfei}}
@@ -186,6 +186,8 @@ export default {
                     id:info.id
                 };                
                 that.$http.post("/V1/store/cartDel",data).then(result => {
+                    that.thisWuliu = [];   
+                    that.kdInfo = ''; 
                     let res = result.data;
                     if (res.code == 0) {
                         that.info.splice(index, 1);

@@ -189,7 +189,7 @@ export default new Router({
         {path: "/store/detail/:id/:specid",name: "storeDetail",meta:{index:2},component: StoreDetail},
         {path: "/store/cart",name: "storeCart",meta:{index:2},component: StoreCart},
         {path: "/store/create",name: "storeCreate",meta:{index:3},component: StoreCreate},
-        {path: "/store/pay/:order_no",name: "storePay",meta:{index:3},component: StorePay},
+        {path: "/store/pay/:order_no",name: "storePay",meta:{index:9},component: StorePay},
         {path: "/store/cardPay/:order_no",name: "storeCardPay",meta:{index:3},component: StoreCardPay},
         {path: "/store/order",name: "storeOrder",meta:{index:3},component: StoreOrder},
         {path: "/store/orderInfo/:id",name: "storeOrderInfo",meta:{index:8},component: StoreOrderInfo},

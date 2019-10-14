@@ -164,7 +164,8 @@ export default {
                 }else if(res.code==999){
                     window.location.href='app://login';  
                 }else{
-                    that.$dialog.alert({title:'错误信息',message:res.desc});
+                    this.$router.push({name:'store',query:{token:user.token,agentid:user.agentid}})
+                    //that.$dialog.alert({title:'错误信息',message:res.desc});
                 }
             });      
         },

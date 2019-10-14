@@ -65,11 +65,11 @@ export default {
                 rmb:0,
             },
             shouxufei:0,
-            payType:'',
+            payType:''
         };
     },
     watch: {
-        $route(to) {
+        $route(to,from) {
             if (to.name == "storePay") {
                 this.init();
             }
@@ -80,8 +80,8 @@ export default {
     },
     methods: {    
         onClickLeft() {
-            this.$router.push({name:'store',query:{token:user.token,agentid:user.agentid}});
-            //this.$router.go(-1);
+            this.$router.go(-1);  
+            //this.$router.push({name:'store',query:{token:user.token,agentid:user.agentid}});           
         },    
         init(){
             var that = this;            
