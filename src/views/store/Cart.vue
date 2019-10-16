@@ -17,7 +17,7 @@
                 <h1>{{vo.goods.name}}{{vo.extends}}</h1>
                 <div class="price">${{vo.goods.price}}<span>{{vo.goods.weight}}kg</span></div>
                 <div class="serverLi" v-for="s in vo.server" :key="s.name">
-                {{s.name}} ${{s.price}}/件，数量{{vo.goodsNumber * vo.number}}，合计${{Math.round((s.price * vo.goodsNumber * vo.number) * 100) / 100}}
+                {{s.name}} ${{s.price}}/件，数量{{vo.trueNumber * vo.number}}，合计${{Math.round((s.price * vo.trueNumber * vo.number) * 100) / 100}}
                 </div>
                 <div class="action">
                     <div class="numberAction">

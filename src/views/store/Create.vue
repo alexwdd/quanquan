@@ -63,7 +63,7 @@
                 <p>费用明细</p>
             </div>
             <div class="bd">
-                <van-cell title="商品金额" :value="'$'+money.total" />
+                <van-cell title="商品金额" :value="'$'+money.goodsMoney" />
                 <van-cell title="特殊打包服务费" :value="'$'+money.serverMoney" />
                 <van-cell title="运费" :value="'$'+baoguo.totalPrice" />
                 <van-cell title="偏远地区附加费" :value="'$'+baoguo.totalExtend" />
