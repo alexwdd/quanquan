@@ -171,11 +171,11 @@ export default {
         },
         onSubmit(){
             var that = this;
-            if(this.address==''){
+            if(that.address=='' || that.address==null || that.address==undefined){
                 this.$toast('请选择收件人');
                 return false;
             }
-            if(this.sender==''){
+            if(that.sender=='' || that.sender==null || that.sender==undefined){
                 this.$toast('请选择发件人');
                 return false;
             }
