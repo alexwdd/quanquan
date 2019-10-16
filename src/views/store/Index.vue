@@ -134,10 +134,10 @@ export default {
     },
     methods: {
         onClickLeft(){
-            if(user.token!='' && user.token!=undefined){
-                window.location.href = 'app://goback';
-            }else{
+            if(this.config.isWeiXin()){
                 window.location.href = this.config.DOMAIN;
+            }else{
+                window.location.href = 'app://goback';
             }
         },
         goLink1(value){
@@ -164,11 +164,11 @@ export default {
             }
         },
         onClickShare(){
-            if(user.token!='' && user.token!=undefined){
-                window.location.href = 'app://shareURL?title='+this.shop.shareTitle+'&url=http://wx.worldmedia.top/adelaide/store?agentid='+user.agentid;
-            }else{
+            if(this.config.isWeiXin()){
                 this.downShow = true;
-            }            
+            }else{
+                window.location.href = 'app://shareURL?title='+this.shop.shareTitle+'&url=http://wx.worldmedia.top/adelaide/store?agentid='+user.agentid;
+            }         
         },
         onClickSearch(keyword){
             if(keyword!=''){
@@ -187,11 +187,11 @@ export default {
         onClickKefu(){
             this.$router.push({path:'/store/kefu',query:{agentid:user.agentid}});
         },
-        onClickCart(){            
-            if(user.token!='' && user.token!=undefined){
-                this.$router.push({path:'/store/cart',query:{token:user.token,agentid:user.agentid}});
-            }else{
+        onClickCart(){       
+            if(this.config.isWeiXin()){
                 this.downShow = true;
+            }else{
+                this.$router.push({path:'/store/cart',query:{token:user.token,agentid:user.agentid}});
             }
         },
         onClickCate(){
@@ -234,18 +234,18 @@ export default {
                 }               
             });       
         },
-        onClickIcon(index,idx){           
-            if(user.token!='' && user.token!=undefined){
+        onClickIcon(index,idx){
+            if(this.config.isWeiXin()){
+                this.downShow = true;
+                return false;
+            }else{
                 for (let i = 0; i < this.goods.length; i++) {
                     for (let j = 0; j < this.goods[i]['goods'].length; j++) {
                         this.goods[i]['goods'][j]['cartShow'] = true;
                     }
                 }
                 this.goods[index]['goods'][idx]['cartShow'] = false;
-            }else{
-                this.downShow = true;
-                return false;
-            }            
+            }       
         },
         onClickNumber(index,idx,type){            
             if(type=='inc'){
@@ -330,7 +330,7 @@ export default {
 .topSearch .search i{display: block; float: left; line-height: 40px; font-size:18px; margin-right: 10px}
 .topSearch .search span{display: block; float: left;}
 .topSearch .cateBtn{color: #fff; display: block; height: 30px; line-height: 30px;background: #05C1AF; color: #fff; margin-top: 5px; border-radius: 5px; width: 40px; text-align: center; margin-right: 5px;;}
-.hotKey{position: fixed; top: 86px; left: 0; width: 100%; background: #f7f7f7; height: 40px; line-height: 40px; color: #05C1AF; padding-left: 10px; box-sizing: border-box; font-size: 14px;z-index: 999;}
+.hotKey{position: fixed; top: 86px; left: 0; width: 100%; background: #f7f7f7; height: 40px; line-height: 40px; color: #05C1AF; padding-left: 10px; box-sizing: border-box; font-size:3.5vw;z-index: 999;}
 .hotKey span{color: #333; padding:3px 5px; background: #fff; border:1px #dbdbdb solid; margin-right: 5px; border-radius: 3px}
 .title{background: #fff; padding: 10px; clear: both; overflow: hidden; border-bottom: 1px #f1f1f1 solid;}
 .title p{float: left; border-left: 2px #05c1af solid; padding-left: 10px; font-size: 14px; font-weight: bold; color: #05C1AF; }

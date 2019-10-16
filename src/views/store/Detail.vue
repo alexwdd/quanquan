@@ -120,10 +120,10 @@ export default {
             this.show = !this.show;
         },         
         onClickCart(){
-            if(user.token=='' || user.token==undefined){
+            if(this.config.isWeiXin()){
                 this.downShow = true;
                 return false;
-            }
+            } 
             this.$router.push({name:'storeCart',query:{token:user.token,agentid:user.agentid}});
         },
         downApk(){
@@ -134,10 +134,10 @@ export default {
             }
         },
         onClickAdd(type){
-            if(user.token=='' || user.token==undefined){
+            if(this.config.isWeiXin()){
                 this.downShow = true;
                 return false;
-            }
+            } 
             var that = this;
             let data = {
                 token : user.token,

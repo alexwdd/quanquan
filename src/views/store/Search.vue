@@ -111,10 +111,10 @@ export default {
             }
         },
         onClickIcon(index){
-            if(user.token=='' || user.token==undefined){
+            if(this.config.isWeiXin()){
                 this.downShow = true;
                 return false;
-            }
+            } 
             for (let i = 0; i < this.info.length; i++) {
                 this.info[i]['cartShow'] = true;
             }

@@ -15,8 +15,10 @@
         <div class="base">
             <div class="name">
                 <h1>{{info.nickname}}</h1>
-                <div class="focus" @click="doFocus" v-if="info.focus==0">关注</div>
-                <div class="focus focused" @click="doFocus" v-else="">已关注</div>
+                <div v-show="!info.edit">
+                    <div class="focus" @click="doFocus" v-if="info.focus==0">关注</div>
+                    <div class="focus focused" @click="doFocus" v-else="">已关注</div>
+                </div>
             </div>
             <div class="tab">
                 <van-tabs v-model="active" color="#05c1af" @click="onClickTab">

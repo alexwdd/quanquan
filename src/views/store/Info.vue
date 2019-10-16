@@ -7,7 +7,7 @@
             v-for="vo in goods"
             :thumb="vo.goods.picname"
         >
-        <div slot="title"><template v-if="vo.goods.wuliu!=''">【{{vo.goods.wuliu}}】</template>{{vo.goods.name}}{{vo.extends}}</div>
+        <div slot="title">{{vo.goods.name}}{{vo.extends}}</div>
         <div slot="desc">
             <p>{{vo.goods.weight}}kg</p>
             <p>${{vo.price}} X {{vo.goodsNumber}}</p>            
@@ -19,7 +19,10 @@
         <van-cell title="下单时间" :value="order.createTime" />  
         <van-cell title="商品金额" :value="'$'+order.goodsMoney" />  
         <van-cell title="运费" :value="'$'+order.payment" />
+        <van-cell title="支付手续费" :value="'$'+order.shouxufei" />
         <van-cell title="订单总金额" :value="'$'+order.total" />
+        <van-cell title="实付总金额" :value="'$'+order.trueMoney" />
+        <van-cell title="折合人民币" :value="'￥'+order.rmb" />
         <van-cell title="支付方式" :value="order.payType" />
         <div class="status">
             <p>状态</p>

@@ -180,10 +180,10 @@ export default {
             this.$router.push({path:'/store/search',query:{token:user.token,agentid:user.agentid}});
         },
         onClickCart(){
-            if(user.token=='' || user.token==undefined){
+            if(this.config.isWeiXin()){
                 this.downShow = true;
                 return false;
-            }
+            } 
             this.$router.push({path:'/store/cart',query:{token:user.token,agentid:user.agentid}});
         },
         show(){
@@ -221,10 +221,10 @@ export default {
             }
         },
         onClickIcon(index,idx){
-            if(user.token=='' || user.token==undefined){
+            if(this.config.isWeiXin()){
                 this.downShow = true;
                 return false;
-            }
+            } 
             for (let i = 0; i < this.small.length; i++) {
                 for (let j = 0; j < this.small[i]['goods'].length; j++) {
                     this.small[i]['goods'][j]['cartShow'] = true;

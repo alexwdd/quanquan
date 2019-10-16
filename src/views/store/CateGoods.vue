@@ -126,10 +126,10 @@ export default {
             }
         },
         onClickCart(){
-            if(user.token=='' || user.token==undefined){
+            if(this.config.isWeiXin()){
                 this.downShow = true;
                 return false;
-            }
+            } 
             this.$router.push({path:'/store/cart',query:{token:user.token,agentid:user.agentid}});
         },
         changeCate(id,index){
@@ -142,7 +142,7 @@ export default {
             this.$router.push({name:'storeDetail', params:{ id: item.goodsID,specid:item.id },query:{token:user.token,agentid:user.agentid}});
         },
         onClickIcon(index,idx){
-            if(user.token=='' || user.token==undefined){
+            if(this.config.isWeiXin()){
                 this.downShow = true;
                 return false;
             }
