@@ -84,7 +84,7 @@
         </div>
         <div class="ball" @click="onClickRight" v-show="submitBtn"><van-icon name="plus" /></div>
 
-        <van-actionsheet
+        <van-action-sheet
         v-model="actionShow"
         :actions="actions"
         cancel-text="取消"

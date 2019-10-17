@@ -50,7 +50,7 @@
             </div>
         </van-list>   
 
-        <van-actionsheet
+        <van-action-sheet
         v-model="actionShow"
         :actions="actions"
         cancel-text="取消"

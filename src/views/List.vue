@@ -212,8 +212,8 @@ export default {
 <style scoped>
 .wrap >>> .van-nav-bar .van-icon {color: #05c1af;}
 .topCate{position: fixed; width: 100%; display: flex;background: #fff; z-index: 999;}
-.cateTab{flex: 1}
-.cateBar{width: 40px; height: 44px; text-align: center}
+.cateTab{flex: 1; width: 80%;}
+.cateBar{width: 40px; height: 44px; text-align: center;}
 .cateBar i{line-height: 44px;color: #05c1af;}
 .cateList{position: fixed; top:46px; width: 100%; z-index: 999; background: #fff}
 .cateList .hd{height: 44px; line-height: 44px; text-align: center; position: relative; background: #05c1af; color: #fff}

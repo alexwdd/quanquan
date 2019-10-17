@@ -96,14 +96,14 @@
             </div>            
         </van-popup>
 
-        <van-actionsheet
+        <van-action-sheet
         v-model="actionShow"
         :actions="actions"
         cancel-text="取消"
         @select="onSelect"
         />
 
-        <van-actionsheet
+        <van-action-sheet
         v-model="commentShow"
         :actions="commentActions"
         cancel-text="取消"

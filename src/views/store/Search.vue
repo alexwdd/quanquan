@@ -72,7 +72,7 @@ export default {
     watch: {
         $route(to) {
             if (to.name == "storeSearch") {
-                let keyword = this.$route.query.keyword;
+                let keyword = this.$route.query.keyword;  
                 if(keyword!='' && keyword!=undefined){
                     this.keyword = keyword;
                 }else{
@@ -94,7 +94,14 @@ export default {
             }
         }
     },
-    created() {        
+    created() {    
+        let keyword = this.$route.query.keyword;  
+        if(keyword!='' && keyword!=undefined){
+            this.keyword = keyword;
+        }else{
+            this.keyword = '';
+            this.info = []
+        }
     },
     methods: {
         onClickLeft() {
