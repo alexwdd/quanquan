@@ -11,7 +11,7 @@
         <div slot="desc">
             <p>{{vo.goods.weight}}kg</p>
             <p>${{vo.price}} X {{vo.goodsNumber}}</p>            
-            <div class="serverLi" v-for="s in vo.server">{{s.name}}${{s.price}}/件，数量{{vo.num}}，合计${{s.price*vo.num}}</div>
+            <div class="serverLi" v-for="s in vo.server">{{s.name}}${{s.price}}/件，数量{{vo.num}}，合计${{Math.round(s.price*vo.num*100)/100}}</div>
         </div>
         </van-card>
 
