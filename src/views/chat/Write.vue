@@ -22,7 +22,7 @@
             </template>
         </van-cell>
         <van-cell-group>
-            <van-switch-cell v-model="checked" title="公开" active-color="#7507c2"/>
+            <van-switch-cell v-model="checked" title="公开" active-color="#05C1AF"/>
         </van-cell-group>
         
         <div class="btn">
@@ -270,16 +270,17 @@ export default {
 };
 </script>
 <style scoped>
-.wrap >>> .van-nav-bar .van-icon {color: #7507c2;}
+.wrap >>> .van-nav-bar .van-icon {color: #05C1AF;}
 .wrap{background: #fff; height: 100vh; width: 100%;}
 .text{border: 0; padding: 10px; font-size: 14px; width: 100%; box-sizing: border-box; min-height: 20vh}
 .images-list{ padding: 10px; clear: both; overflow: hidden;}
 .photo{background: #f1f1f1; width: 60px; height: 60px; text-align: center; line-height: 60px; float: left; margin-right: 10px; margin-bottom: 10px; overflow: hidden; position: relative;}
 .del{position: absolute; right: 0; top: 0; background:rgba(0, 0, 0, 0.8); color: #fff;}
-.cam{font-size: 30px; line-height: 60px; color: #ccc}
+.cam{font-size: 30px; line-height: 60px; color: #ccc; display: block; margin: auto; width: 60px}
 .photo img{display: block; width: 100%}
+
 .btn{padding: 10px; width: 100%; box-sizing: border-box}
-.my-btn{background: #7507c2; color: #fff;}
+.my-btn{background: #05C1AF; color: #fff;}
 
 .quick{clear: both; overflow: hidden; padding:20px;}
 .quick li{float: left;text-align: center;font-size: 12px; padding:5px 10px; border:1px #dbdbdb solid; border-radius:14px; margin-right: 10px; margin-bottom: 10px}
@@ -294,6 +295,6 @@ export default {
 .tag .fd li span{border:1px #dbdbdb solid; line-height: 26px; height: 26px; display: block; float: left; border-radius: 13px; font-size: 14px; padding-left:10px; padding-right: 3px;}
 .tag .fd li span i{background: #ccc; color: #fff; font-size: 12px; line-height: 20px; width: 20px; border-radius: 50%; text-align: center; display:inline-block; font-style: normal; margin-left:10px}
 .tag .ad{clear: both; overflow: hidden;}
-.tag .ad .selectBtn{background: #7507c2; color: #fff; width: 80px; margin: auto; line-height: 40px; border-radius: 20px; text-align: center; font-size: 14px}
+.tag .ad .selectBtn{background: #05C1AF; color: #fff; width: 80px; margin: auto; line-height: 40px; border-radius: 20px; text-align: center; font-size: 14px}
 .custom-text{padding-left: 5px;}
 </style>
