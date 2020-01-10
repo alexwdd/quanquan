@@ -1,7 +1,7 @@
 <template>
     <div class="wrap">
         <div class="header">
-            <div class="left" @click="onClickLeft">
+            <div class="left" @click="onClickLeft" v-show="leftShow">
                 <van-icon name="arrow-left"/>
             </div>
             <div class="center" v-text="shop.shopName"></div>
@@ -120,6 +120,7 @@ export default {
             cartNumber : 0,
             downShow:false,
             apkShow:false,
+            leftShow:false
         };
     },
     watch: {
@@ -210,7 +211,9 @@ export default {
             that.goods = [];
             that.cartNumber = 0;
             that.getCartNumber();
-
+            if(user.agentid!=5){
+                that.leftShow = true;
+            };
             var data = {
                 token:user.token,
                 agentid:user.agentid
