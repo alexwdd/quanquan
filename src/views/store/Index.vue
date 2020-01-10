@@ -1,9 +1,9 @@
 <template>
     <div class="wrap">
         <div class="header">
-            <div class="left" @click="onClickLeft" v-show="leftShow">
+            <!-- <div class="left" @click="onClickLeft" v-show="leftShow">
                 <van-icon name="arrow-left"/>
-            </div>
+            </div> -->
             <div class="center" v-text="shop.shopName"></div>
             <div class="right">
                 <span><van-icon name="share" @click="onClickShare"/></span>
@@ -311,7 +311,7 @@ export default {
 .header{height: 46px; width: 100%; position: fixed;top: 0; left: 0; background: #05c1af; color: #fff; padding: 0 10px; box-sizing: border-box; z-index: 999;}
 .left{float: left; line-height: 46px; z-index: 10;}
 .left i{font-size:30px; margin-top: 8px;}
-.center{position:absolute; width:80%; text-align: center; line-height: 46px; left: 10%; top: 0; z-index: 0; font-size:18px; font-weight: bold}
+.center{position:absolute; width:80%; text-align: left; line-height: 46px; left: 10px; top: 0; z-index: 0; font-size:18px;}
 .right{float: right; padding-top: 12px}
 .right span{ padding:0 10px; font-size: 24px; position: relative;}
 .right span .dot{position: absolute;min-width:14px; height:14px; line-height:14px; border-radius:50%; background: #c00;top:0px; right: 0px; font-size:12px; color:#fff; text-align: center}
