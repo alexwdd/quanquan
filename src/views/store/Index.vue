@@ -143,7 +143,7 @@ export default {
         },
         goLink1(value){
             if(value.url!=''){              
-                window.location.href = "app://html?url="+value.url;                        
+                window.location.href = "app://html?url="+value.url+"&title"+value.name;                        
             }else{
                 if(value.goodsId>0){
                     this.$router.push({name:'storeDetail', params:{ id: value.goodsId,specid:item.id },query:{token:user.token,agentid:user.agentid}});
